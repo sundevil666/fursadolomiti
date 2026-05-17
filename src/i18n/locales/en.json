@@ -2,7 +2,9 @@
   "app": {
     "name": "Fursa Dolomiti",
     "logo": "Logo",
-    "language": "Language"
+    "language": "Language",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "form": {
     "title": "Request",
@@ -12,5 +14,56 @@
     "send": "Send",
     "success": "Request is ready to be sent.",
     "error": "Could not send the request."
+  },
+  "home": {
+    "slide1": {
+      "title": "Hotels in Val Gardena: Personal Dolomites Selection",
+      "text": "Personal selection of premium hotels and chalets from an expert. With Fursa Dolomiti you get more than with regular booking."
+    },
+    "slide2": {
+      "title": "Mountain vacation without hassle",
+      "text": "We'll match the area, hotel, transfer and season to your trip so all details come together before departure."
+    },
+    "slide3": {
+      "title": "Dolomites with a local expert",
+      "text": "We'll advise where to stay, ski, walk and dine, and solve important questions personally and quickly."
+    },
+    "hero": {
+      "quote": "I've lived with my family in the Dolomites - in Val Gardena - since 2000. I help guests from all over the world find the best place to vacation in one of the world's best ski resorts.",
+      "watchHotels": "View Hotels",
+      "whatsapp": "WhatsApp",
+      "photo": "Expert photo"
+    },
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide",
+    "hotels": {
+      "title": "Hotels with personal bonuses",
+      "viewAll": "View all hotels",
+      "bookWithBonus": "Book with bonus",
+      "features": "Features:",
+      "alpenroyal": {
+        "name": "Alpenroyal 5★",
+        "location": "Selva",
+        "description": "Secluded hotel with high level of service and calm atmosphere in Selva",
+        "features": [
+          "Direct slope access",
+          "Spa and wellness",
+          "Fine dining restaurant"
+        ]
+      },
+      "edenselva": {
+        "name": "Edenselva 4★",
+        "location": "Selva",
+        "description": "Family hotel with cozy atmosphere and excellent location",
+        "features": [
+          "Kids club",
+          "Heated pool",
+          "Dinner on the snow"
+        ]
+      }
+    }
+  },
+  "page": {
+    "eyebrow": "Fursa Dolomiti"
   }
 }

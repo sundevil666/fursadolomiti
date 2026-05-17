@@ -2,7 +2,9 @@
   "app": {
     "name": "Fursa Dolomiti",
     "logo": "Logo",
-    "language": "Lingua"
+    "language": "Lingua",
+    "openMenu": "Apri menu",
+    "closeMenu": "Chiudi menu"
   },
   "form": {
     "title": "Richiesta",
@@ -12,5 +14,56 @@
     "send": "Invia",
     "success": "La richiesta e pronta per l'invio.",
     "error": "Impossibile inviare la richiesta."
+  },
+  "home": {
+    "slide1": {
+      "title": "Hotel in Val Gardena: Selezione Personale Dolomiti",
+      "text": "Selezione personale di hotel premium e chalet da un esperto. Con Fursa Dolomiti ottieni di piu che con una prenotazione normale."
+    },
+    "slide2": {
+      "title": "Vacanza in montagna senza stress",
+      "text": "Troveremo l'area, l'hotel, il trasferimento e la stagione adatti al tuo viaggio, cosi tutti i dettagli saranno pronti prima della partenza."
+    },
+    "slide3": {
+      "title": "Dolomiti con un esperto locale",
+      "text": "Consigliamo dove alloggiare, sciare, passeggiare e cenare, e risolviamo questioni importanti personalmente e rapidamente."
+    },
+    "hero": {
+      "quote": "Vivo con la mia famiglia nelle Dolomiti - in Val Gardena - dal 2000. Aiuto ospiti da tutto il mondo a trovare il miglior luogo per vacanze in uno dei migliori stazioni sciistici del mondo.",
+      "watchHotels": "Vedi Hotel",
+      "whatsapp": "WhatsApp",
+      "photo": "Foto dell'esperta"
+    },
+    "previousSlide": "Slide precedente",
+    "nextSlide": "Slide successiva",
+    "hotels": {
+      "title": "Hotel con bonus personali",
+      "viewAll": "Vedi tutti gli hotel",
+      "bookWithBonus": "Prenota con bonus",
+      "features": "Caratteristiche:",
+      "alpenroyal": {
+        "name": "Alpenroyal 5★",
+        "location": "Selva",
+        "description": "Hotel riservato con alto livello di servizio e atmosfera tranquilla a Selva",
+        "features": [
+          "Accesso diretto alle piste",
+          "Spa e wellness",
+          "Ristorante di alta cucina"
+        ]
+      },
+      "edenselva": {
+        "name": "Edenselva 4★",
+        "location": "Selva",
+        "description": "Hotel familiare con atmosfera accogliente e ottima posizione",
+        "features": [
+          "Club per bambini",
+          "Piscina riscaldata",
+          "Cena sulla neve"
+        ]
+      }
+    }
+  },
+  "page": {
+    "eyebrow": "Fursa Dolomiti"
   }
 }
