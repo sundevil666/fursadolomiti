@@ -1,0 +1,16 @@
+{
+  "app": {
+    "name": "Fursa Dolomiti",
+    "logo": "Logo",
+    "language": "Lingua"
+  },
+  "form": {
+    "title": "Richiesta",
+    "name": "Nome",
+    "phone": "Telefono",
+    "message": "Messaggio",
+    "send": "Invia",
+    "success": "La richiesta e pronta per l'invio.",
+    "error": "Impossibile inviare la richiesta."
+  }
+}

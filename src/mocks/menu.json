@@ -1,0 +1,38 @@
+[
+  {
+    "id": "hotels",
+    "routeName": "hotels",
+    "labels": {
+      "ru": "Отели",
+      "en": "Hotels",
+      "it": "Hotel"
+    }
+  },
+  {
+    "id": "rental",
+    "routeName": "rental",
+    "labels": {
+      "ru": "Прокат",
+      "en": "Rental",
+      "it": "Noleggio"
+    }
+  },
+  {
+    "id": "helicopters",
+    "routeName": "helicopters",
+    "labels": {
+      "ru": "Вертолеты",
+      "en": "Helicopters",
+      "it": "Elicotteri"
+    }
+  },
+  {
+    "id": "webcams",
+    "routeName": "webcams",
+    "labels": {
+      "ru": "Веб-камеры",
+      "en": "Webcams",
+      "it": "Webcam"
+    }
+  }
+]

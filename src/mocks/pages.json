@@ -1,0 +1,92 @@
+[
+  {
+    "id": "home",
+    "title": {
+      "ru": "Главная страница",
+      "en": "Home page",
+      "it": "Pagina principale"
+    },
+    "lead": {
+      "ru": "Базовый экран для будущей адаптивной верстки сайта о сервисах в Доломитах.",
+      "en": "A base screen for the future responsive layout of a Dolomites services website.",
+      "it": "Una schermata di base per il futuro layout responsive del sito sui servizi nelle Dolomiti."
+    },
+    "body": {
+      "ru": "Здесь будет размещен вводный контент, промо-блоки, навигационные карточки и форма заявки. Пока это рыба-текст для проверки структуры, маршрутов и мультиязычности.",
+      "en": "Introductory content, promo sections, navigation cards and a request form will be placed here. For now, this is placeholder text used to test structure, routes and multilingual content.",
+      "it": "Qui saranno inseriti contenuti introduttivi, sezioni promozionali, schede di navigazione e un modulo di richiesta. Per ora e un testo segnaposto per verificare struttura, rotte e multilingua."
+    }
+  },
+  {
+    "id": "hotels",
+    "title": {
+      "ru": "Отели",
+      "en": "Hotels",
+      "it": "Hotel"
+    },
+    "lead": {
+      "ru": "Подборка вариантов размещения для отдыха и поездок в горы.",
+      "en": "A collection of accommodation options for holidays and mountain trips.",
+      "it": "Una selezione di alloggi per vacanze e viaggi in montagna."
+    },
+    "body": {
+      "ru": "На этой странице появятся описания отелей, фильтры, преимущества и блоки бронирования. Сейчас контент служит заглушкой для будущей верстки по макету.",
+      "en": "This page will contain hotel descriptions, filters, benefits and booking sections. The current content is a placeholder for the upcoming design implementation.",
+      "it": "Questa pagina conterra descrizioni degli hotel, filtri, vantaggi e sezioni di prenotazione. Il contenuto attuale e un segnaposto per il futuro layout."
+    }
+  },
+  {
+    "id": "rental",
+    "title": {
+      "ru": "Прокат",
+      "en": "Rental",
+      "it": "Noleggio"
+    },
+    "lead": {
+      "ru": "Раздел для проката снаряжения, транспорта и сопутствующих услуг.",
+      "en": "A section for equipment, transport and related service rental.",
+      "it": "Una sezione per il noleggio di attrezzature, trasporti e servizi correlati."
+    },
+    "body": {
+      "ru": "Позже здесь будут категории проката, карточки товаров, условия и быстрый запрос. Заглушка нужна для проверки переключения языков и структуры страниц.",
+      "en": "Later this page will include rental categories, item cards, terms and a quick request flow. The placeholder helps verify language switching and page structure.",
+      "it": "In seguito questa pagina includera categorie di noleggio, schede, condizioni e richiesta rapida. Il segnaposto aiuta a verificare lingua e struttura."
+    }
+  },
+  {
+    "id": "helicopters",
+    "title": {
+      "ru": "Вертолеты",
+      "en": "Helicopters",
+      "it": "Elicotteri"
+    },
+    "lead": {
+      "ru": "Будущий раздел для трансферов, экскурсий и авиационных услуг.",
+      "en": "A future section for transfers, excursions and aviation services.",
+      "it": "Una futura sezione per transfer, escursioni e servizi aerei."
+    },
+    "body": {
+      "ru": "Здесь можно будет разместить маршруты, преимущества, стоимость и форму обращения. Пока страница показывает тестовый текст из моков.",
+      "en": "Routes, benefits, pricing and a request form can be added here. For now, the page displays mock-based test content.",
+      "it": "Qui si potranno aggiungere rotte, vantaggi, prezzi e modulo di richiesta. Per ora la pagina mostra contenuto di test dai mock."
+    }
+  },
+  {
+    "id": "webcams",
+    "title": {
+      "ru": "Веб-камеры",
+      "en": "Webcams",
+      "it": "Webcam"
+    },
+    "lead": {
+      "ru": "Страница для будущих трансляций и погодных виджетов.",
+      "en": "A page for future live streams and weather widgets.",
+      "it": "Una pagina per future dirette e widget meteo."
+    },
+    "body": {
+      "ru": "В дальнейшем здесь появятся карточки камер, статусы, превью и ссылки на трансляции. Сейчас это placeholder-контент, подключенный через JSON-мок.",
+      "en": "Camera cards, statuses, previews and stream links will be added later. At the moment this is placeholder content loaded from a JSON mock.",
+      "it": "In futuro saranno aggiunte schede webcam, stati, anteprime e link alle dirette. Ora e contenuto segnaposto caricato da un mock JSON."
+    }
+  }
+]
