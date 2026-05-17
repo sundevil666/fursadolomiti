@@ -61,6 +61,113 @@
           "Dinner on the snow"
         ]
       }
+    },
+    "howItWorks": {
+      "title": "How to book and receive your bonus",
+      "note": "Booking through FursaDolomiti is more than a convenient way to find the right hotel for your stay. It gives you access to bonuses that are not available with a direct booking.",
+      "help": "If you need help choosing a hotel or chalet, message me and I will help you find the right option.",
+      "whatsapp": "Write on WhatsApp",
+      "hotels": "View hotels",
+      "disclaimer": "The size and format of the bonus depend on the hotel and booking period.",
+      "steps": [
+        {
+          "id": 1,
+          "title": "Choose a hotel",
+          "text": "Only four- and five-star hotels that I have worked with personally for many years."
+        },
+        {
+          "id": 2,
+          "title": "Go to the hotel website",
+          "text": "Click “Book with bonus” and the form for entering your details will open."
+        },
+        {
+          "id": 3,
+          "title": "Enter your name, surname and email",
+          "text": "This lets me identify you as a FursaDolomiti guest and prepare your personal bonus."
+        },
+        {
+          "id": 4,
+          "title": "Use the FursaDolomiti promo code",
+          "text": "When searching or booking a room, enter the promo code in the dedicated field or add it to the booking comments."
+        },
+        {
+          "id": 5,
+          "title": "Book independently",
+          "text": "Use the usual process directly on the hotel’s official website. No intermediaries."
+        },
+        {
+          "id": 6,
+          "title": "Receive your bonus at check-in",
+          "text": "I will personally prepare a bonus for your stay, and it will be waiting for you when you arrive."
+        }
+      ]
+    },
+    "whyMe": {
+      "title": "Why guests book through me",
+      "imageAlt": "Hotel interior in the Dolomites",
+      "eyebrow": "Personal support",
+      "panelTitle": "You book directly, while I help you get more",
+      "lead": "I have lived in Val Gardena since 2000 and personally know the hotels, areas, seasons and small details that shape a Dolomites stay.",
+      "reasons": [
+        {
+          "id": 1,
+          "title": "Direct hotel contacts",
+          "text": "I work directly with owners and managers, so I can clarify details and guest opportunities faster."
+        },
+        {
+          "id": 2,
+          "title": "A match for your trip",
+          "text": "I help choose the area, service level, stay format and dates without random compromises."
+        },
+        {
+          "id": 3,
+          "title": "Bonuses at check-in",
+          "text": "I prepare a personal bonus for FursaDolomiti guests when it is available at the selected hotel."
+        },
+        {
+          "id": 4,
+          "title": "Inside knowledge of the resort",
+          "text": "I advise where it is best to stay for skiing, walks, restaurants and a calm family holiday."
+        },
+        {
+          "id": 5,
+          "title": "Help before the trip",
+          "text": "I help with transfer, season, location and the details that matter before you arrive."
+        },
+        {
+          "id": 6,
+          "title": "A person on site",
+          "text": "If you need a clarification or advice during your stay, you can contact someone who lives nearby."
+        }
+      ]
+    },
+    "personalSelection": {
+      "title": "Didn’t find the right option?",
+      "note": "In addition to the hotels shown on the website, I work with private chalets and other accommodation options in the Dolomites.",
+      "help": "Personal selection is available by individual request.",
+      "cta": "Send a request"
+    },
+    "instructor": {
+      "title": "Russian-speaking instructors in the Dolomites",
+      "lead": "In high season, good instructors get booked quickly.",
+      "text1": "I work with trusted schools and instructors I know personally.",
+      "text2": "I arrange direct booking with your skiing level and age in mind.",
+      "organizeTitle": "What I arrange:",
+      "features": [
+        {
+          "id": 1,
+          "text": "Russian-speaking instructors and schools"
+        },
+        {
+          "id": 2,
+          "text": "For adults and children, any level"
+        },
+        {
+          "id": 3,
+          "text": "Private and group lessons"
+        }
+      ],
+      "cta": "Write on WhatsApp"
     }
   },
   "page": {
