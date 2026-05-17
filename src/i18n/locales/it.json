@@ -61,6 +61,113 @@
           "Cena sulla neve"
         ]
       }
+    },
+    "howItWorks": {
+      "title": "Come prenotare e ricevere il bonus",
+      "note": "Prenotare tramite FursaDolomiti non e solo un modo comodo per trovare l'hotel giusto per il soggiorno. Ti da accesso a bonus non disponibili con una prenotazione diretta.",
+      "help": "Se hai bisogno di aiuto per scegliere un hotel o uno chalet, scrivimi e ti aiutero a trovare l'opzione giusta.",
+      "whatsapp": "Scrivi su WhatsApp",
+      "hotels": "Vedi hotel",
+      "disclaimer": "La dimensione e il formato del bonus dipendono dall'hotel e dal periodo di prenotazione.",
+      "steps": [
+        {
+          "id": 1,
+          "title": "Scegli l'hotel",
+          "text": "Solo hotel a quattro e cinque stelle con cui lavoro personalmente da molti anni."
+        },
+        {
+          "id": 2,
+          "title": "Vai al sito dell'hotel",
+          "text": "Clicca su “Prenota con bonus” e si aprira il modulo per inserire i tuoi dati."
+        },
+        {
+          "id": 3,
+          "title": "Inserisci nome, cognome ed email",
+          "text": "Cosi posso identificarti come ospite FursaDolomiti e preparare il tuo bonus personale."
+        },
+        {
+          "id": 4,
+          "title": "Usa il codice promo FursaDolomiti",
+          "text": "Durante la ricerca o la prenotazione della camera, inserisci il codice promo nel campo dedicato o nei commenti della prenotazione."
+        },
+        {
+          "id": 5,
+          "title": "Prenota in autonomia",
+          "text": "Con il metodo abituale, direttamente sul sito ufficiale dell'hotel. Nessun intermediario."
+        },
+        {
+          "id": 6,
+          "title": "Ricevi il bonus al check-in",
+          "text": "Preparero personalmente un bonus per il tuo soggiorno, che ti aspettera al tuo arrivo."
+        }
+      ]
+    },
+    "whyMe": {
+      "title": "Perche si prenota tramite me",
+      "imageAlt": "Interno di un hotel nelle Dolomiti",
+      "eyebrow": "Supporto personale",
+      "panelTitle": "Prenoti direttamente, mentre io ti aiuto a ottenere di piu",
+      "lead": "Vivo in Val Gardena dal 2000 e conosco personalmente hotel, zone, stagioni e dettagli che fanno la differenza nelle Dolomiti.",
+      "reasons": [
+        {
+          "id": 1,
+          "title": "Contatti diretti con gli hotel",
+          "text": "Lavoro direttamente con proprietari e manager, quindi posso chiarire piu rapidamente dettagli e opportunita per gli ospiti."
+        },
+        {
+          "id": 2,
+          "title": "Scelta su misura per il viaggio",
+          "text": "Ti aiuto a scegliere zona, livello di servizio, formato del soggiorno e date senza compromessi casuali."
+        },
+        {
+          "id": 3,
+          "title": "Bonus al check-in",
+          "text": "Preparo un bonus personale per gli ospiti FursaDolomiti quando e disponibile nell'hotel scelto."
+        },
+        {
+          "id": 4,
+          "title": "Conoscenza diretta della localita",
+          "text": "Consiglio dove soggiornare per sci, passeggiate, ristoranti e una vacanza familiare tranquilla."
+        },
+        {
+          "id": 5,
+          "title": "Aiuto prima del viaggio",
+          "text": "Aiuto con transfer, stagione, posizione e dettagli importanti prima dell'arrivo."
+        },
+        {
+          "id": 6,
+          "title": "Una persona sul posto",
+          "text": "Se durante il soggiorno serve un chiarimento o un consiglio, puoi contattare chi vive vicino."
+        }
+      ]
+    },
+    "personalSelection": {
+      "title": "Non hai trovato l'opzione giusta?",
+      "note": "Oltre agli hotel presentati sul sito, lavoro con chalet privati e altre soluzioni di soggiorno nelle Dolomiti.",
+      "help": "La selezione personalizzata e disponibile su richiesta individuale.",
+      "cta": "Invia richiesta"
+    },
+    "instructor": {
+      "title": "Maestri di sci russofoni nelle Dolomiti",
+      "lead": "In alta stagione, i migliori maestri vengono prenotati rapidamente.",
+      "text1": "Collaboro con scuole e maestri verificati che conosco personalmente.",
+      "text2": "Organizzo la prenotazione diretta in base al livello di sci e all'eta.",
+      "organizeTitle": "Cosa organizzo:",
+      "features": [
+        {
+          "id": 1,
+          "text": "Maestri e scuole russofone"
+        },
+        {
+          "id": 2,
+          "text": "Per adulti e bambini, qualsiasi livello"
+        },
+        {
+          "id": 3,
+          "text": "Lezioni private e di gruppo"
+        }
+      ],
+      "cta": "Scrivi su WhatsApp"
     }
   },
   "page": {
