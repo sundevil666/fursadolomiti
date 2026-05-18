@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import PageContent from '@/components/PageContent.vue'
+import HotelsPreviewSection from '@/components/sections/HotelsPreviewSection.vue'
 </script>
 
 <template>
-  <q-page class="page-shell">
-    <PageContent page-id="hotels" />
+  <q-page class="hotels-page">
+    <HotelsPreviewSection />
   </q-page>
 </template>
