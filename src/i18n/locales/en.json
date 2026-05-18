@@ -168,9 +168,65 @@
         }
       ],
       "cta": "Write on WhatsApp"
+    },
+    "reviews": {
+      "eyebrow": "Guest reviews",
+      "title": "What Fursa Dolomiti guests say",
+      "lead": "Every trip is shaped around a real family, season and expectation, which is why guests come back and recommend me to friends.",
+      "cta": "Discuss your trip",
+      "previous": "Previous review",
+      "next": "Next review",
+      "items": [
+        {
+          "id": 1,
+          "text": "At first we chose one option ourselves, but after Tatiana’s advice we stopped at another one, and it turned out to be the best decision. The location, service and atmosphere fully matched our expectations.",
+          "author": "Alexey",
+          "location": "Germany",
+          "date": "May, 2026",
+          "source": "instagram"
+        },
+        {
+          "id": 2,
+          "text": "We travelled with children and were worried about the organization: it was important that everything felt convenient, calm and free from unnecessary complications. In the end the trip was easy and very comfortable. The hotel was a truly successful choice: a convenient location near the lifts, with a quiet atmosphere away from noise and rush.",
+          "author": "Irina",
+          "location": "Russia",
+          "date": "February, 2026",
+          "source": "google"
+        }
+      ]
     }
   },
   "page": {
     "eyebrow": "Fursa Dolomiti"
+  },
+  "footer": {
+    "tagline": "Not a platform. A person.",
+    "contacts": "Contacts",
+    "menu": "Menu",
+    "gallery": "Dolomites photos",
+    "partners": "Partner and resort logos",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie",
+    "vat": "VAT ID: 02598270214",
+    "images": {
+      "ski": "Ski holiday in the Dolomites",
+      "hotel": "Hotel in Val Gardena",
+      "dolomites": "Dolomites landscape",
+      "chalet": "Mountain chalet"
+    },
+    "logos": {
+      "valGardena": {
+        "title": "Val Gardena",
+        "text": "Dolomites"
+      },
+      "dolomitiSuperski": {
+        "title": "Dolomiti",
+        "text": "Superski"
+      },
+      "southTyrol": {
+        "title": "South Tyrol",
+        "text": "Alto Adige"
+      }
+    }
   }
 }

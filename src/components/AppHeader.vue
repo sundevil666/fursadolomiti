@@ -6,14 +6,11 @@ import { locales, type AppLocale } from '@/i18n'
 import menuItemsMock from '@/mocks/menu.json'
 import type { MenuItem } from '@/types'
 import AnimatedText from '@/components/AnimatedText.vue'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
 const { locale, t } = useI18n()
 const menuItems = menuItemsMock as MenuItem[]
 const isMobileMenuOpen = ref(false)
-const isLanguageOpen = ref(false)
-const languageSpark = ref(0)
-const isLanguageChanging = ref(false)
-const languageOptions = computed<AppLocale[]>(() => [...locales].reverse())
 
 const currentLocale = computed<AppLocale>({
   get: () => locale.value as AppLocale,
@@ -25,16 +22,7 @@ const currentLocale = computed<AppLocale>({
 })
 
 const selectLocale = (value: AppLocale) => {
-  if (currentLocale.value !== value) {
-    isLanguageChanging.value = true
-    currentLocale.value = value
-    languageSpark.value += 1
-    setTimeout(() => {
-      isLanguageChanging.value = false
-    }, 600)
-  }
-
-  isLanguageOpen.value = false
+  currentLocale.value = value
 }
 </script>
 
@@ -76,58 +64,7 @@ const selectLocale = (value: AppLocale) => {
         <a href="tel:+393341822113">+39 334 1822 113</a>
       </div>
 
-      <div
-        class="app-header__language"
-        :class="{
-          'app-header__language--open': isLanguageOpen,
-          'app-header__language--changing': isLanguageChanging,
-        }"
-      >
-        <button
-          class="app-header__language-trigger"
-          type="button"
-          :aria-label="t('app.language')"
-          :aria-expanded="isLanguageOpen"
-          @click="isLanguageOpen = !isLanguageOpen"
-        >
-          <span class="app-header__language-glow" aria-hidden="true" />
-          <Transition name="language-code" mode="out-in">
-            <span :key="`${currentLocale}-${languageSpark}`" class="app-header__language-code">
-              {{ currentLocale.toUpperCase() }}
-            </span>
-          </Transition>
-          <q-icon class="app-header__language-icon" name="expand_more" />
-          <Transition name="language-spark">
-            <span
-              v-if="languageSpark"
-              :key="languageSpark"
-              class="app-header__language-spark"
-              aria-hidden="true"
-            >
-              <span />
-              <span />
-              <span />
-            </span>
-          </Transition>
-        </button>
-
-        <Transition name="language-menu">
-          <div v-if="isLanguageOpen" class="app-header__language-menu" role="listbox">
-            <button
-              v-for="value in languageOptions"
-              :key="value"
-              class="app-header__language-option"
-              :class="{ 'app-header__language-option--active': currentLocale === value }"
-              type="button"
-              role="option"
-              :aria-selected="currentLocale === value"
-              @click="selectLocale(value)"
-            >
-              <AnimatedText :text="value.toUpperCase()" tag="span" />
-            </button>
-          </div>
-        </Transition>
-      </div>
+      <LanguageSwitcher class="app-header__language" />
 
       <q-btn
         class="app-header__menu-button"

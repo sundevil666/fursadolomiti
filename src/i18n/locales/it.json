@@ -168,9 +168,65 @@
         }
       ],
       "cta": "Scrivi su WhatsApp"
+    },
+    "reviews": {
+      "eyebrow": "Recensioni degli ospiti",
+      "title": "Cosa dicono gli ospiti di Fursa Dolomiti",
+      "lead": "Ogni viaggio viene costruito intorno a una famiglia reale, alla stagione e alle aspettative: per questo gli ospiti tornano e mi consigliano agli amici.",
+      "cta": "Parliamo del viaggio",
+      "previous": "Recensione precedente",
+      "next": "Recensione successiva",
+      "items": [
+        {
+          "id": 1,
+          "text": "All'inizio avevamo scelto una soluzione da soli, ma dopo il consiglio di Tatiana ci siamo fermati su un'altra, e alla fine e stata la decisione migliore. Posizione, servizio e atmosfera hanno corrisposto pienamente alle aspettative.",
+          "author": "Alexey",
+          "location": "Germania",
+          "date": "Maggio, 2026",
+          "source": "instagram"
+        },
+        {
+          "id": 2,
+          "text": "Abbiamo viaggiato con bambini e avevamo qualche timore sull'organizzazione: per noi era importante che tutto fosse comodo, tranquillo e senza complicazioni inutili. Alla fine il viaggio e stato facile e molto confortevole. L'hotel si e rivelato davvero adatto: posizione comoda vicino agli impianti e atmosfera tranquilla, senza rumore e confusione.",
+          "author": "Irina",
+          "location": "Russia",
+          "date": "Febbraio, 2026",
+          "source": "google"
+        }
+      ]
     }
   },
   "page": {
     "eyebrow": "Fursa Dolomiti"
+  },
+  "footer": {
+    "tagline": "Non una piattaforma. Una persona.",
+    "contacts": "Contatti",
+    "menu": "Menu",
+    "gallery": "Foto delle Dolomiti",
+    "partners": "Loghi partner e localita",
+    "privacy": "Informativa sulla privacy",
+    "cookies": "Cookie",
+    "vat": "P. IVA: 02598270214",
+    "images": {
+      "ski": "Vacanza sugli sci nelle Dolomiti",
+      "hotel": "Hotel in Val Gardena",
+      "dolomites": "Paesaggio delle Dolomiti",
+      "chalet": "Chalet in montagna"
+    },
+    "logos": {
+      "valGardena": {
+        "title": "Val Gardena",
+        "text": "Dolomites"
+      },
+      "dolomitiSuperski": {
+        "title": "Dolomiti",
+        "text": "Superski"
+      },
+      "southTyrol": {
+        "title": "South Tyrol",
+        "text": "Alto Adige"
+      }
+    }
   }
 }

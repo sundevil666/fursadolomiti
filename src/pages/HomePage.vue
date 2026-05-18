@@ -15,7 +15,7 @@ type HeroSlide = {
 
 type HotelPreview = {
   id: string
-  image: string
+  images: string[]
   nameKey: string
   locationKey: string
   descriptionKey: string
@@ -37,6 +37,15 @@ type WhyMeReason = {
 type InstructorFeature = {
   id: number
   text: string
+}
+
+type Review = {
+  id: number
+  text: string
+  author: string
+  location: string
+  date: string
+  source: 'instagram' | 'google'
 }
 
 const slides: HeroSlide[] = [
@@ -63,7 +72,7 @@ const slides: HeroSlide[] = [
 const hotels: HotelPreview[] = [
   {
     id: 'alpenroyal',
-    image: '/mockup-assets/image7.png',
+    images: ['/mockup-assets/image7.png', '/mockup-assets/image1.png', '/mockup-assets/image2.png'],
     nameKey: 'home.hotels.alpenroyal.name',
     locationKey: 'home.hotels.alpenroyal.location',
     descriptionKey: 'home.hotels.alpenroyal.description',
@@ -71,7 +80,7 @@ const hotels: HotelPreview[] = [
   },
   {
     id: 'edenselva',
-    image: '/mockup-assets/image8.png',
+    images: ['/mockup-assets/image8.png', '/mockup-assets/image3.png', '/mockup-assets/image4.png'],
     nameKey: 'home.hotels.edenselva.name',
     locationKey: 'home.hotels.edenselva.location',
     descriptionKey: 'home.hotels.edenselva.description',
@@ -81,14 +90,32 @@ const hotels: HotelPreview[] = [
 
 const activeSlide = ref(0)
 const touchStartX = ref<number | null>(null)
+const activeHotelSlides = ref<Record<string, number>>(
+  Object.fromEntries(hotels.map((hotel) => [hotel.id, 0])),
+)
+const reviewTouchStartX = ref<number | null>(null)
+const activeReviewIndex = ref(0)
+const isReviewAutoplayPaused = ref(false)
 const activeHero = computed(() => slides[activeSlide.value])
 const howItWorksSteps = computed(() => tm('home.howItWorks.steps') as HowItWorksStep[])
 const whyMeReasons = computed(() => tm('home.whyMe.reasons') as WhyMeReason[])
 const instructorFeatures = computed(() => tm('home.instructor.features') as InstructorFeature[])
+const reviews = computed(() => tm('home.reviews.items') as Review[])
+const visibleReviews = computed(() => {
+  if (reviews.value.length <= 2) return reviews.value
+
+  return [reviews.value[activeReviewIndex.value], reviews.value[(activeReviewIndex.value + 1) % reviews.value.length]]
+})
 const autoplayDelay = 8000
+const hotelAutoplayDelay = 5200
+const reviewAutoplayDelay = 6000
 let autoplayTimer: number | undefined
+let hotelAutoplayTimer: number | undefined
+let reviewAutoplayTimer: number | undefined
 
 const getHotelFeatures = (key: string) => tm(key) as string[]
+
+const getActiveHotelSlide = (hotelId: string) => activeHotelSlides.value[hotelId] ?? 0
 
 const setSlide = (index: number, shouldRestartAutoplay = true) => {
   activeSlide.value = (index + slides.length) % slides.length
@@ -117,6 +144,83 @@ const restartAutoplay = () => {
   startAutoplay()
 }
 
+const setHotelSlide = (hotelId: string, index: number, shouldRestartAutoplay = true) => {
+  const hotel = hotels.find((item) => item.id === hotelId)
+
+  if (!hotel) return
+
+  activeHotelSlides.value = {
+    ...activeHotelSlides.value,
+    [hotelId]: (index + hotel.images.length) % hotel.images.length,
+  }
+
+  if (shouldRestartAutoplay) {
+    restartHotelAutoplay()
+  }
+}
+
+const startHotelAutoplay = () => {
+  stopHotelAutoplay()
+  hotelAutoplayTimer = window.setInterval(() => {
+    hotels.forEach((hotel) => {
+      setHotelSlide(hotel.id, getActiveHotelSlide(hotel.id) + 1, false)
+    })
+  }, hotelAutoplayDelay)
+}
+
+const stopHotelAutoplay = () => {
+  if (!hotelAutoplayTimer) return
+
+  window.clearInterval(hotelAutoplayTimer)
+  hotelAutoplayTimer = undefined
+}
+
+const restartHotelAutoplay = () => {
+  stopHotelAutoplay()
+  startHotelAutoplay()
+}
+
+const setReview = (index: number, shouldRestartAutoplay = true) => {
+  if (!reviews.value.length) return
+
+  activeReviewIndex.value = (index + reviews.value.length) % reviews.value.length
+
+  if (shouldRestartAutoplay && !isReviewAutoplayPaused.value) {
+    restartReviewAutoplay()
+  }
+}
+
+const startReviewAutoplay = () => {
+  if (isReviewAutoplayPaused.value) return
+
+  stopReviewAutoplay()
+  reviewAutoplayTimer = window.setInterval(() => {
+    setReview(activeReviewIndex.value + 1, false)
+  }, reviewAutoplayDelay)
+}
+
+const stopReviewAutoplay = () => {
+  if (!reviewAutoplayTimer) return
+
+  window.clearInterval(reviewAutoplayTimer)
+  reviewAutoplayTimer = undefined
+}
+
+const restartReviewAutoplay = () => {
+  stopReviewAutoplay()
+  startReviewAutoplay()
+}
+
+const pauseReviewAutoplay = () => {
+  isReviewAutoplayPaused.value = true
+  stopReviewAutoplay()
+}
+
+const resumeReviewAutoplay = () => {
+  isReviewAutoplayPaused.value = false
+  startReviewAutoplay()
+}
+
 const handleTouchStart = (event: TouchEvent) => {
   touchStartX.value = event.touches[0]?.clientX ?? null
 }
@@ -134,8 +238,34 @@ const handleTouchEnd = (event: TouchEvent) => {
   touchStartX.value = null
 }
 
-onMounted(startAutoplay)
-onBeforeUnmount(stopAutoplay)
+const handleReviewTouchStart = (event: TouchEvent) => {
+  reviewTouchStartX.value = event.touches[0]?.clientX ?? null
+}
+
+const handleReviewTouchEnd = (event: TouchEvent) => {
+  if (reviewTouchStartX.value === null) return
+
+  const endX = event.changedTouches[0]?.clientX ?? reviewTouchStartX.value
+  const distance = reviewTouchStartX.value - endX
+
+  if (Math.abs(distance) > 38) {
+    setReview(activeReviewIndex.value + (distance > 0 ? 1 : -1))
+  }
+
+  reviewTouchStartX.value = null
+}
+
+onMounted(() => {
+  startAutoplay()
+  startHotelAutoplay()
+  startReviewAutoplay()
+})
+
+onBeforeUnmount(() => {
+  stopAutoplay()
+  stopHotelAutoplay()
+  stopReviewAutoplay()
+})
 </script>
 
 <template>
@@ -229,27 +359,41 @@ onBeforeUnmount(stopAutoplay)
       <article v-for="hotel in hotels" :key="hotel.id" class="hotel-preview">
         <div class="hotel-preview__media">
           <img
+            v-for="(image, index) in hotel.images"
+            :key="image"
             class="hotel-preview__image"
-            :src="hotel.image"
+            :class="{ 'hotel-preview__image--active': index === getActiveHotelSlide(hotel.id) }"
+            :src="image"
             :alt="t(hotel.nameKey)"
             loading="lazy"
           />
           <button
             class="hotel-preview__arrow hotel-preview__arrow--prev"
             type="button"
-            aria-hidden="true"
+            :aria-label="t('home.previousSlide')"
+            @click="setHotelSlide(hotel.id, getActiveHotelSlide(hotel.id) - 1)"
           >
             <q-icon name="chevron_left" />
           </button>
           <button
             class="hotel-preview__arrow hotel-preview__arrow--next"
             type="button"
-            aria-hidden="true"
+            :aria-label="t('home.nextSlide')"
+            @click="setHotelSlide(hotel.id, getActiveHotelSlide(hotel.id) + 1)"
           >
             <q-icon name="chevron_right" />
           </button>
-          <div class="hotel-preview__progress" aria-hidden="true">
-            <span />
+          <div class="hotel-preview__progress">
+            <button
+              v-for="(_, index) in hotel.images"
+              :key="index"
+              class="hotel-preview__progress-part"
+              :class="{ 'hotel-preview__progress-part--active': index === getActiveHotelSlide(hotel.id) }"
+              :style="{ '--hotel-slide-duration': `${hotelAutoplayDelay}ms` }"
+              type="button"
+              :aria-label="`${t(hotel.nameKey)} ${index + 1}`"
+              @click="setHotelSlide(hotel.id, index)"
+            />
           </div>
         </div>
 
@@ -465,6 +609,85 @@ onBeforeUnmount(stopAutoplay)
         </q-btn>
       </div>
     </section>
-    <section>reviews.svg</section>
+    <section
+      class="reviews-section"
+      aria-labelledby="reviews-title"
+      @touchstart.passive="handleReviewTouchStart"
+      @touchend.passive="handleReviewTouchEnd"
+      @mouseenter="pauseReviewAutoplay"
+      @mouseleave="resumeReviewAutoplay"
+      @focusin="pauseReviewAutoplay"
+      @focusout="resumeReviewAutoplay"
+    >
+      <div class="reviews-section__shell">
+        <h2 id="reviews-title" class="reviews-section__title">
+          <AnimatedText :text="t('home.reviews.title')" tag="span" />
+        </h2>
+
+        <div class="reviews-section__stage">
+          <button
+            class="reviews-section__nav reviews-section__nav--prev"
+            type="button"
+            :aria-label="t('home.reviews.previous')"
+            @click="setReview(activeReviewIndex - 1)"
+          >
+            <q-icon name="chevron_left" />
+          </button>
+
+          <Transition name="review-slide" mode="out-in">
+            <div :key="activeReviewIndex" class="reviews-section__cards">
+              <article
+                v-for="review in visibleReviews"
+                :key="review.id"
+                class="reviews-section__card"
+              >
+                <span class="reviews-section__quote" aria-hidden="true">“</span>
+                <p class="reviews-section__text">
+                  <AnimatedText :text="review.text" tag="span" />
+                </p>
+                <footer class="reviews-section__author">
+                  <span
+                    class="reviews-section__social"
+                    :class="`reviews-section__social--${review.source}`"
+                    aria-hidden="true"
+                  >
+                    <q-icon v-if="review.source === 'instagram'" name="photo_camera" />
+                    <span v-else>G</span>
+                  </span>
+                  <span class="reviews-section__author-copy">
+                    <strong>
+                      <AnimatedText :text="`${review.author}, ${review.location}`" tag="span" />
+                    </strong>
+                    <span>
+                      <AnimatedText :text="review.date" tag="span" />
+                    </span>
+                  </span>
+                </footer>
+              </article>
+            </div>
+          </Transition>
+
+          <button
+            class="reviews-section__nav reviews-section__nav--next"
+            type="button"
+            :aria-label="t('home.reviews.next')"
+            @click="setReview(activeReviewIndex + 1)"
+          >
+            <q-icon name="chevron_right" />
+          </button>
+
+          <div class="reviews-section__dots" aria-hidden="true">
+            <button
+              v-for="(_, index) in reviews"
+              :key="index"
+              class="reviews-section__dot"
+              :class="{ 'reviews-section__dot--active': index === activeReviewIndex }"
+              type="button"
+              @click="setReview(index)"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
   </q-page>
 </template>

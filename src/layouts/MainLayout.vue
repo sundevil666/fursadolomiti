@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppFooter from '@/components/AppFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
 </script>
 
@@ -9,5 +10,7 @@ import AppHeader from '@/components/AppHeader.vue'
     <q-page-container>
       <RouterView />
     </q-page-container>
+
+    <AppFooter />
   </q-layout>
 </template>
