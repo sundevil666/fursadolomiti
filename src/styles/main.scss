@@ -185,6 +185,24 @@ a {
     &:active {
       transform: translateY(1px);
     }
+
+    &--active {
+      color: #083f36;
+      font-weight: 600;
+
+      &::after {
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        width: 24px;
+        height: 2px;
+        background: #083f36;
+        transform: translateX(-50%) scaleX(0);
+        transform-origin: center;
+        content: '';
+        animation: activeUnderline 320ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+      }
+    }
   }
 
   &__contacts {
@@ -431,6 +449,23 @@ a {
 
 .q-page-container {
   padding-top: 0 !important;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition:
+    opacity 400ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 400ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 
 .home-page {
@@ -2238,6 +2273,16 @@ a {
   100% {
     opacity: 0;
     transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(0.05);
+  }
+}
+
+@keyframes activeUnderline {
+  from {
+    transform: translateX(-50%) scaleX(0);
+  }
+
+  to {
+    transform: translateX(-50%) scaleX(1);
   }
 }
 

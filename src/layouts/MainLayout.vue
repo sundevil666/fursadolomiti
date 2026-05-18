@@ -8,7 +8,11 @@ import AppHeader from '@/components/AppHeader.vue'
     <AppHeader />
 
     <q-page-container>
-      <RouterView />
+      <RouterView v-slot="{ Component }">
+        <Transition name="page" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </RouterView>
     </q-page-container>
 
     <AppFooter />

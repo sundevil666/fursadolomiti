@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import { locales, type AppLocale } from '@/i18n'
@@ -9,6 +10,7 @@ import AnimatedText from '@/components/AnimatedText.vue'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
 const { locale, t } = useI18n()
+const route = useRoute()
 const menuItems = menuItemsMock as MenuItem[]
 const isMobileMenuOpen = ref(false)
 
@@ -23,6 +25,10 @@ const currentLocale = computed<AppLocale>({
 
 const selectLocale = (value: AppLocale) => {
   currentLocale.value = value
+}
+
+const isActiveRoute = (routeName: string) => {
+  return route.name === routeName
 }
 </script>
 
@@ -49,9 +55,10 @@ const selectLocale = (value: AppLocale) => {
           v-for="item in menuItems"
           :key="item.id"
           no-caps
-          unelevated
+          :ripple="false"
           flat
           class="app-header__nav-link"
+          :class="{ 'app-header__nav-link--active': isActiveRoute(item.routeName) }"
           :to="{ name: item.routeName }"
           :icon-right="item.id === 'webcams' ? 'expand_more' : undefined"
         >
@@ -86,6 +93,7 @@ const selectLocale = (value: AppLocale) => {
           flat
           no-caps
           class="app-header__mobile-link"
+          :class="{ 'app-header__mobile-link--active': isActiveRoute(item.routeName) }"
           :to="{ name: item.routeName }"
           @click="isMobileMenuOpen = false"
         >
