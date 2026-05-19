@@ -69,13 +69,12 @@ onBeforeUnmount(stopHotelAutoplay)
 
 <template>
   <section class="hotels-section" aria-labelledby="hotels-section-title">
-    <div class="hotels-section__header">
-      <h2 id="hotels-section-title" class="hotels-section__title">
-        <AnimatedText :text="t('home.hotels.title')" tag="span" />
-      </h2>
-    </div>
-
-    <article v-for="hotel in displayedHotels" :key="hotel.id" class="hotel-preview">
+    <article
+      id="hotels-section-title"
+      v-for="hotel in displayedHotels"
+      :key="hotel.id"
+      class="hotel-preview"
+    >
       <div class="hotel-preview__media">
         <img
           v-for="(image, index) in hotel.images"
