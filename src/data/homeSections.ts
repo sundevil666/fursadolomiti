@@ -7,12 +7,15 @@ export type HeroSlide = {
 
 export type HotelPreview = {
   id: string
+  category: HotelCategory
   images: string[]
   nameKey: string
   locationKey: string
   descriptionKey: string
   featuresKey: string
 }
+
+export type HotelCategory = 'fiveStar' | 'fourStar' | 'chalet'
 
 export type HowItWorksStep = {
   id: number
@@ -64,6 +67,7 @@ export const heroSlides: HeroSlide[] = [
 export const hotelPreviews: HotelPreview[] = [
   {
     id: 'alpenroyal',
+    category: 'fiveStar',
     images: ['/mockup-assets/image7.png', '/mockup-assets/image1.png', '/mockup-assets/image2.png'],
     nameKey: 'home.hotels.alpenroyal.name',
     locationKey: 'home.hotels.alpenroyal.location',
@@ -72,6 +76,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'edenselva',
+    category: 'fourStar',
     images: ['/mockup-assets/image8.png', '/mockup-assets/image3.png', '/mockup-assets/image4.png'],
     nameKey: 'home.hotels.edenselva.name',
     locationKey: 'home.hotels.edenselva.location',

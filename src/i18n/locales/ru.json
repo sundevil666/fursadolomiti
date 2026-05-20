@@ -41,6 +41,13 @@
       "viewAll": "Смотреть все отели",
       "bookWithBonus": "Бронировать с бонусом",
       "features": "Особенности:",
+      "filters": {
+        "label": "Фильтр отелей",
+        "all": "Все отели",
+        "fiveStar": "5* отели",
+        "fourStar": "4* отели",
+        "chalet": "Шале"
+      },
       "alpenroyal": {
         "name": "Alpenroyal 5★",
         "location": "Сельва",

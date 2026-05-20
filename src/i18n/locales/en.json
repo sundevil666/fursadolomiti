@@ -41,6 +41,13 @@
       "viewAll": "View all hotels",
       "bookWithBonus": "Book with bonus",
       "features": "Features:",
+      "filters": {
+        "label": "Hotel filter",
+        "all": "All hotels",
+        "fiveStar": "5* hotels",
+        "fourStar": "4* hotels",
+        "chalet": "Chalets"
+      },
       "alpenroyal": {
         "name": "Alpenroyal 5★",
         "location": "Selva",
