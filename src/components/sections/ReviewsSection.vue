@@ -10,6 +10,7 @@ const { t, tm } = useI18n()
 const reviewTouchStartX = ref<number | null>(null)
 const activeReviewIndex = ref(0)
 const isReviewAutoplayPaused = ref(false)
+const expandedReviewIds = ref(new Set<number>())
 const reviews = computed(() => tm('home.reviews.items') as Review[])
 const visibleReviews = computed(() => {
   if (reviews.value.length <= 2) return reviews.value
@@ -21,6 +22,7 @@ const visibleReviews = computed(() => {
 })
 const reviewAutoplayDelay = 6000
 let reviewAutoplayTimer: number | undefined
+const reviewPreviewLength = 360
 
 const setReview = (index: number, shouldRestartAutoplay = true) => {
   if (!reviews.value.length) return
@@ -80,6 +82,28 @@ const handleReviewTouchEnd = (event: TouchEvent) => {
   reviewTouchStartX.value = null
 }
 
+const isLongReview = (text: string) => text.length > reviewPreviewLength
+
+const isReviewExpanded = (id: number) => expandedReviewIds.value.has(id)
+
+const getReviewText = (review: Review) => {
+  if (!isLongReview(review.text) || isReviewExpanded(review.id)) return review.text
+
+  return `${review.text.slice(0, reviewPreviewLength).trim()}...`
+}
+
+const toggleReview = (id: number) => {
+  const nextExpandedReviewIds = new Set(expandedReviewIds.value)
+
+  if (nextExpandedReviewIds.has(id)) {
+    nextExpandedReviewIds.delete(id)
+  } else {
+    nextExpandedReviewIds.add(id)
+  }
+
+  expandedReviewIds.value = nextExpandedReviewIds
+}
+
 onMounted(startReviewAutoplay)
 onBeforeUnmount(stopReviewAutoplay)
 </script>
@@ -119,10 +143,18 @@ onBeforeUnmount(stopReviewAutoplay)
             >
               <span class="reviews-section__quote" aria-hidden="true">“</span>
               <p class="reviews-section__text">
-                <AnimatedText :text="review.text" tag="span" />
+                <AnimatedText :text="getReviewText(review)" tag="span" />
               </p>
-              <button class="reviews-section__read-more" type="button">
-                <AnimatedText :text="t('home.reviews.readMore')" tag="span" />
+              <button
+                v-if="isLongReview(review.text)"
+                class="reviews-section__read-more"
+                type="button"
+                @click="toggleReview(review.id)"
+              >
+                <AnimatedText
+                  :text="t(isReviewExpanded(review.id) ? 'home.reviews.readLess' : 'home.reviews.readMore')"
+                  tag="span"
+                />
               </button>
               <footer class="reviews-section__author">
                 <span
