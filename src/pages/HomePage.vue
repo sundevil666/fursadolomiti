@@ -19,6 +19,9 @@ const { t } = useI18n()
       <h2 class="hotels-section__title">
         <AnimatedText :text="t('home.hotels.title')" tag="span" />
       </h2>
+      <p class="hotels-section__subtitle">
+        <AnimatedText :text="t('home.hotels.subtitle')" tag="span" />
+      </p>
     </div>
     <HotelsPreviewSection :limit="2" />
     <HowItWorksSection />

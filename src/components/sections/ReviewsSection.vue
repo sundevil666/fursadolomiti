@@ -121,6 +121,9 @@ onBeforeUnmount(stopReviewAutoplay)
               <p class="reviews-section__text">
                 <AnimatedText :text="review.text" tag="span" />
               </p>
+              <button class="reviews-section__read-more" type="button">
+                <AnimatedText :text="t('home.reviews.readMore')" tag="span" />
+              </button>
               <footer class="reviews-section__author">
                 <span
                   class="reviews-section__social"

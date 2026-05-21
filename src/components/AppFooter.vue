@@ -113,6 +113,10 @@ const currentLocale = computed<AppLocale>(() => locale.value as AppLocale)
       </div>
 
       <div class="app-footer__media">
+        <h2 class="app-footer__gallery-title">
+          <AnimatedText :text="t('footer.gallery')" tag="span" />
+        </h2>
+
         <div class="app-footer__gallery" :aria-label="t('footer.gallery')">
           <img
             v-for="image in footerImages"

@@ -28,6 +28,37 @@ const { t } = useI18n()
         <div class="personal-selection__dots" />
       </div>
 
+      <aside class="personal-selection__video">
+        <p>
+          <AnimatedText :text="t('home.personalSelection.videoTitle')" tag="span" />
+        </p>
+        <ul>
+          <li>
+            <AnimatedText :text="t('home.personalSelection.videoPoint1')" tag="span" />
+          </li>
+          <li>
+            <AnimatedText :text="t('home.personalSelection.videoPoint2')" tag="span" />
+          </li>
+          <li>
+            <AnimatedText :text="t('home.personalSelection.videoPoint3')" tag="span" />
+          </li>
+          <li>
+            <AnimatedText :text="t('home.personalSelection.videoPoint4')" tag="span" />
+          </li>
+          <li>
+            <AnimatedText :text="t('home.personalSelection.videoPoint5')" tag="span" />
+          </li>
+        </ul>
+        <q-btn
+          outline
+          no-caps
+          class="personal-selection__video-button"
+          href="https://wa.me/393341822113"
+        >
+          <AnimatedText :text="t('home.personalSelection.videoCta')" tag="span" />
+        </q-btn>
+      </aside>
+
       <div class="personal-selection__footer">
         <p>
           <AnimatedText :text="t('home.personalSelection.help')" tag="span" />

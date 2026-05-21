@@ -29,7 +29,7 @@
       "text": "We'll advise where to stay, ski, walk and dine, and solve important questions personally and quickly."
     },
     "hero": {
-      "quote": "I've lived with my family in the Dolomites - in Val Gardena - since 2000. I help guests from all over the world find the best place to vacation in one of the world's best ski resorts.",
+      "quote": "I have lived with my family in the Dolomites, in Val Gardena, since 2000. I help guests from all over the world find the best place to stay in one of the world’s finest ski resorts. Choose on your own or message me, and I will reply personally.",
       "watchHotels": "View Hotels",
       "whatsapp": "WhatsApp",
       "photo": "Expert photo"
@@ -38,6 +38,7 @@
     "nextSlide": "Next slide",
     "hotels": {
       "title": "Hotels with personal bonuses",
+      "subtitle": "Direct booking at the hotel price, plus personal benefits from me",
       "viewAll": "View all hotels",
       "bookWithBonus": "Book with bonus",
       "features": "Features:",
@@ -53,19 +54,21 @@
         "location": "Selva",
         "description": "Secluded hotel with high level of service and calm atmosphere in Selva",
         "features": [
-          "Direct slope access",
-          "Spa and wellness",
-          "Fine dining restaurant"
+          "Shuttle to the lift (5 minutes)",
+          "Panoramic spa with pools and saunas",
+          "Fine dining restaurant (Michelin)",
+          "Ideal for a calm stay"
         ]
       },
       "edenselva": {
         "name": "Edenselva 4★",
         "location": "Selva",
-        "description": "Family hotel with cozy atmosphere and excellent location",
+        "description": "Cozy hotel by the slope with direct access to skiing",
         "features": [
-          "Kids club",
-          "Heated pool",
-          "Dinner on the snow"
+          "Quiet intimate atmosphere",
+          "Ski-in / ski-out",
+          "Outdoor jacuzzi and relaxation areas",
+          "Russian-speaking staff"
         ]
       }
     },
@@ -114,37 +117,37 @@
       "imageAlt": "Hotel interior in the Dolomites",
       "eyebrow": "Personal support",
       "panelTitle": "You book directly, while I help you get more",
-      "lead": "I have lived in Val Gardena since 2000 and personally know the hotels, areas, seasons and small details that shape a Dolomites stay.",
+      "lead": "I have lived in the Dolomites, in Val Gardena, for more than 25 years and recommend only hotels I truly know personally.",
       "reasons": [
         {
           "id": 1,
-          "title": "Direct hotel contacts",
-          "text": "I work directly with owners and managers, so I can clarify details and guest opportunities faster."
+          "title": "I am always directly in touch with you",
+          "text": "From the moment of booking until the end of your trip, I personally answer your questions about the resort."
         },
         {
           "id": 2,
-          "title": "A match for your trip",
-          "text": "I help choose the area, service level, stay format and dates without random compromises."
+          "title": "Direct booking without intermediaries",
+          "text": "You go to the hotel’s official website and complete the booking yourself."
         },
         {
           "id": 3,
-          "title": "Bonuses at check-in",
-          "text": "I prepare a personal bonus for FursaDolomiti guests when it is available at the selected hotel."
+          "title": "Confidentiality",
+          "text": "Your data is not used for newsletters and is not published."
         },
         {
           "id": 4,
-          "title": "Inside knowledge of the resort",
-          "text": "I advise where it is best to stay for skiing, walks, restaurants and a calm family holiday."
+          "title": "Personal help on request",
+          "text": "If questions come up or it is hard to choose, message me. I will help you orient yourself."
         },
         {
           "id": 5,
-          "title": "Help before the trip",
-          "text": "I help with transfer, season, location and the details that matter before you arrive."
+          "title": "You receive booking bonuses",
+          "text": "When booking through FursaDolomiti, a bonus will be waiting for you at check-in; I agree the terms personally with each hotel."
         },
         {
           "id": 6,
-          "title": "A person on site",
-          "text": "If you need a clarification or advice during your stay, you can contact someone who lives nearby."
+          "title": "I know the hotels personally",
+          "text": "I live in the Dolomites, in Val Gardena, and suggest only hotels I can genuinely recommend."
         }
       ]
     },
@@ -152,7 +155,14 @@
       "title": "Didn’t find the right option?",
       "note": "In addition to the hotels shown on the website, I work with private chalets and other accommodation options in the Dolomites.",
       "help": "Personal selection is available by individual request.",
-      "cta": "Send a request"
+      "cta": "Send a request",
+      "videoTitle": "Want to see the hotel before booking? I will make a personal video review for your request.",
+      "videoPoint1": "Inside review",
+      "videoPoint2": "Shown personally",
+      "videoPoint3": "No intermediaries",
+      "videoPoint4": "I live nearby",
+      "videoPoint5": "20+ years of experience",
+      "videoCta": "Request a video tour"
     },
     "instructor": {
       "title": "Russian-speaking instructors in the Dolomites",
@@ -178,9 +188,10 @@
     },
     "reviews": {
       "eyebrow": "Guest reviews",
-      "title": "What Fursa Dolomiti guests say",
+      "title": "What guests say",
       "lead": "Every trip is shaped around a real family, season and expectation, which is why guests come back and recommend me to friends.",
       "cta": "Discuss your trip",
+      "readMore": "Read more",
       "previous": "Previous review",
       "next": "Next review",
       "items": [
@@ -194,7 +205,7 @@
         },
         {
           "id": 2,
-          "text": "We travelled with children and were worried about the organization: it was important that everything felt convenient, calm and free from unnecessary complications. In the end the trip was easy and very comfortable. The hotel was a truly successful choice: a convenient location near the lifts, with a quiet atmosphere away from noise and rush.",
+          "text": "We travelled with children and were initially a little worried about the organization: it was important that everything be convenient, calm and free of unnecessary complications. In the end the trip was easy and very comfortable. The hotel was truly a successful choice: a convenient location near the lifts, with a quiet atmosphere away from noise and rush. The rooms were spacious, the service attentive, and everything was thought through for a family stay. We especially appreciated that the local logistics were clear and simple, so we did not have to waste time on extra transfers or details. It felt like everything had been selected exactly for our style of trip: comfort, calm and the chance to relax without thinking about everyday issues. The children felt great, and that was the main thing for us. In the end, the holiday was exactly as we had imagined it: stress-free, enjoyable and with the feeling that everything was in its place.",
           "author": "Irina",
           "location": "Russia",
           "date": "February, 2026",
@@ -210,11 +221,11 @@
     "tagline": "Not a platform. A person.",
     "contacts": "Contacts",
     "menu": "Menu",
-    "gallery": "Dolomites photos",
+    "gallery": "Live from the slopes",
     "partners": "Partner and resort logos",
     "privacy": "Privacy Policy",
     "cookies": "Cookie",
-    "vat": "VAT ID: 02598270214",
+    "vat": "VAT ID: 02598270219",
     "images": {
       "ski": "Ski holiday in the Dolomites",
       "hotel": "Hotel in Val Gardena",

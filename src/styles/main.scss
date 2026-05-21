@@ -1,4 +1,16 @@
 :root {
+  --page-cream: #fff6e1;
+  --page-warm: #fff9ea;
+  --panel-cream: #fff9ec;
+  --panel-soft: #fffcf3;
+  --sand: #efe4c9;
+  --sand-line: #cbbfb5;
+  --green: #175445;
+  --green-deep: #08211f;
+  --green-soft: #a5c0b9;
+  --brown: #5a4634;
+  --container: 1208px;
+
   color-scheme: light;
   font-family:
     Manrope,
@@ -8,8 +20,8 @@
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
-  background: #fff6e1;
-  color: #175445;
+  background: var(--page-cream);
+  color: var(--green);
 }
 
 * {
@@ -19,7 +31,7 @@
 body {
   min-width: 320px;
   margin: 0;
-  background: #fff6e1;
+  background: var(--page-cream);
 }
 
 a {
@@ -45,7 +57,7 @@ a {
     width: 100%;
     min-height: 84px;
     margin: 0 auto;
-    padding: 0 max(24px, calc((100vw - 1220px) / 2));
+    padding: 0 max(20px, calc((100vw - var(--container)) / 2));
     border-radius: 0 0 5px 5px;
     background: rgb(255 252 243 / 50%);
     backdrop-filter: blur(8px);
@@ -470,17 +482,18 @@ a {
 
 .home-page {
   min-height: 100vh;
-  background: #f4f7f2;
+  background: var(--page-cream);
 }
 
 .hotels-page {
   min-height: 100vh;
-  background: #fff9ea;
+  background: var(--page-cream);
 }
 
 .hero-slider {
   position: relative;
-  min-height: 100svh;
+  height: 1000px;
+  min-height: 720px;
   overflow: hidden;
   background: #195f7a;
   color: #fffaf0;
@@ -522,9 +535,9 @@ a {
   &__content {
     position: relative;
     z-index: 1;
-    width: min(1220px, 100%);
+    width: min(var(--container), 100%);
     margin: 0 auto;
-    padding: 136px 24px 300px;
+    padding: 136px 0 300px;
     pointer-events: none;
   }
 
@@ -537,7 +550,7 @@ a {
     max-width: 700px;
     margin: 0;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(44px, 4.4vw, 67px);
+    font-size: clamp(44px, 4.35vw, 67px);
     font-weight: 700;
     line-height: 0.96;
     letter-spacing: 0;
@@ -602,8 +615,8 @@ a {
   &__progress {
     position: absolute;
     z-index: 3;
-    bottom: 118px;
-    left: max(24px, calc((100vw - 1220px) / 2));
+    bottom: 120px;
+    left: max(20px, calc((100vw - var(--container)) / 2));
     display: grid;
     width: 272px;
     grid-template-columns: repeat(3, 1fr);
@@ -674,14 +687,14 @@ a {
 
 .hero-card {
   position: absolute;
-  right: max(24px, calc((100vw - 1220px) / 2));
+  right: max(20px, calc((100vw - var(--container)) / 2));
   bottom: 0;
   z-index: 2;
   display: grid;
   width: min(604px, calc(100% - 48px));
-  min-height: 248px;
+  min-height: 249px;
   grid-template-columns: minmax(0, 1fr) 180px;
-  background: rgb(245 243 235 / 86%);
+  background: rgb(255 249 236 / 80%);
   color: #1d332f;
   backdrop-filter: blur(8px);
   box-shadow: 0 24px 70px rgb(5 38 35 / 16%);
@@ -744,8 +757,8 @@ a {
 }
 
 .hotels-section {
-  background: #fff9ea;
-  color: #175445;
+  background: var(--page-cream);
+  color: var(--green);
 
   &__filters {
     display: flex;
@@ -753,7 +766,7 @@ a {
     justify-content: center;
     gap: 10px;
     padding: 0 24px 44px;
-    background: #fff9ea;
+    background: var(--page-cream);
   }
 
   &__filter {
@@ -808,7 +821,7 @@ a {
 
     &--active {
       border-color: #145d4f;
-      color: #fff9ea;
+      color: var(--page-cream);
       box-shadow: 0 16px 34px rgb(8 33 31 / 14%);
 
       &::before {
@@ -824,9 +837,10 @@ a {
   }
 
   &__header {
-    color: #08211F;
-    padding: 45px 24px 44px;
+    color: var(--green-deep);
+    padding: 80px 24px 89px;
     text-align: center;
+    background: var(--page-cream);
   }
 
   &__title {
@@ -838,10 +852,19 @@ a {
     letter-spacing: 0;
   }
 
+  &__subtitle {
+    max-width: 520px;
+    margin: 20px auto 0;
+    color: rgb(8 33 31 / 72%);
+    font-size: clamp(16px, 1.15vw, 20px);
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
   &__footer {
-    background: #145d4f;
+    background: var(--green);
     color: #fffaf0;
-    padding: 24px 24px 48px;
+    padding: 54px 24px 89px;
     text-align: center;
   }
 
@@ -849,8 +872,8 @@ a {
     min-height: 50px;
     border-radius: 999px;
     padding: 0 34px;
-    background: #fff6e1;
-    color: #145d4f;
+    background: var(--page-cream);
+    color: var(--green);
     font-size: 15px;
     font-weight: 700;
   }
@@ -882,8 +905,8 @@ a {
   display: grid;
   min-height: 501px;
   grid-template-columns: minmax(0, 1fr) minmax(430px, 1fr);
-  background: #efe4c9;
-  color: #08211f;
+  background: var(--page-cream);
+  color: var(--green-deep);
 
   &:first-of-type {
     min-height: 523px;
@@ -937,8 +960,8 @@ a {
     padding: 0;
     border: 0;
     border-radius: 50%;
-    background: rgb(255 249 236 / 82%);
-    color: #08211f;
+    background: rgb(255 249 236 / 80%);
+    color: var(--green-deep);
     cursor: pointer;
     transform: translateY(-50%);
     transition:
@@ -948,7 +971,7 @@ a {
 
     &:hover,
     &:focus-visible {
-      background: #fff9ea;
+      background: var(--page-warm);
       box-shadow: 0 12px 28px rgb(5 38 35 / 20%);
       transform: translateY(-50%) scale(1.08);
     }
@@ -987,7 +1010,7 @@ a {
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      background: #efe4c9;
+      background: var(--sand);
       transform: scaleX(0);
       transform-origin: left center;
       content: '';
@@ -1018,12 +1041,12 @@ a {
     font-size: clamp(38px, 4.5vw, 64px);
     font-weight: 700;
     line-height: 0.98;
-    color: #08211f;
+    color: var(--green-deep);
   }
 
   &__location {
     margin: 0 0 17px;
-    color: #175445;
+    color: var(--green);
     font-size: 15px;
     font-weight: 700;
     line-height: 1;
@@ -1033,7 +1056,7 @@ a {
   &__description {
     max-width: 544px;
     margin: 25px 0 0;
-    color: #08211f;
+    color: var(--green-deep);
     font-size: 17px;
     font-weight: 500;
     line-height: 1.45;
@@ -1048,7 +1071,7 @@ a {
   }
 
   &__features-label {
-    color: #175445;
+    color: var(--green);
     font-size: 15px;
     font-weight: 700;
   }
@@ -1057,7 +1080,7 @@ a {
     display: grid;
     margin: 0;
     padding: 0;
-    color: #08211f;
+    color: var(--green-deep);
     font-size: 15px;
     line-height: 1.35;
     list-style: none;
@@ -1065,7 +1088,7 @@ a {
     li {
       min-height: 46px;
       padding: 12px 0;
-      border-bottom: 1px solid #cbbfb5;
+      border-bottom: 1px solid var(--sand-line);
     }
   }
 
@@ -1074,8 +1097,8 @@ a {
     margin-top: 38px;
     border-radius: 999px;
     padding: 0 32px;
-    background: #175445;
-    color: #fff9ea;
+    background: var(--green);
+    color: var(--page-warm);
     font-size: 15px;
     font-weight: 700;
   }
@@ -1083,8 +1106,8 @@ a {
 
 .how-it-works {
   overflow: hidden;
-  background: #efe4c9;
-  color: #08211f;
+  background: var(--sand);
+  color: var(--green-deep);
 
   &__inner {
     display: grid;
@@ -1239,12 +1262,12 @@ a {
 }
 
 .why-me {
-  background: #fff9ea;
-  color: #08211f;
+  background: var(--page-cream);
+  color: var(--green-deep);
 
   &__header {
-    padding: 34px 24px 36px;
-    background: #fff9ea;
+    padding: 78px 24px 89px;
+    background: var(--page-cream);
     text-align: center;
   }
 
@@ -1479,6 +1502,50 @@ a {
     mask-image: radial-gradient(ellipse at 50% 50%, #000 0 52%, transparent 76%);
   }
 
+  &__video {
+    position: absolute;
+    right: clamp(72px, 10vw, 190px);
+    bottom: 118px;
+    z-index: 4;
+    display: grid;
+    width: min(300px, 25vw);
+    color: var(--page-warm);
+    gap: 22px;
+
+    p {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    ul {
+      display: grid;
+      margin: 0;
+      padding: 0;
+      color: rgb(255 249 234 / 78%);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.35;
+      list-style: none;
+      gap: 5px;
+    }
+  }
+
+  &__video-button {
+    justify-self: start;
+    min-height: 48px;
+    border-radius: 999px;
+    padding: 0 28px;
+    color: var(--page-warm);
+    font-size: 15px;
+    font-weight: 700;
+
+    &::before {
+      border-color: rgb(255 249 234 / 72%);
+    }
+  }
+
   &__footer {
     position: absolute;
     right: 0;
@@ -1610,7 +1677,7 @@ a {
 }
 
 .reviews-section {
-  overflow: hidden;
+  overflow: visible;
   background: #efe4c9;
   color: #08211f;
 
@@ -1634,6 +1701,7 @@ a {
 
   &__stage {
     position: relative;
+    overflow: visible;
   }
 
   &__cards {
@@ -1674,6 +1742,30 @@ a {
     font-size: clamp(16px, 1.15vw, 20px);
     font-weight: 600;
     line-height: 1.33;
+  }
+
+  &__read-more {
+    align-self: flex-start;
+    margin-top: 22px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #175445;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition:
+      color 220ms ease,
+      transform 220ms ease;
+
+    &:hover,
+    &:focus-visible {
+      color: #08211f;
+      transform: translateY(-1px);
+    }
   }
 
   &__author {
@@ -1798,11 +1890,11 @@ a {
   }
 
   &__nav--prev {
-    left: -37px;
+    left: -22px;
   }
 
   &__nav--next {
-    right: -37px;
+    right: -22px;
   }
 
   &__dots {
@@ -2042,6 +2134,16 @@ a {
     display: grid;
     align-self: center;
     gap: 18px;
+  }
+
+  &__gallery-title {
+    margin: 0;
+    color: #fff9ea;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(26px, 2.4vw, 42px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: 0;
   }
 
   &__gallery {
@@ -2371,6 +2473,56 @@ a {
   }
 }
 
+@keyframes sectionReveal {
+  from {
+    clip-path: inset(0 0 10% 0);
+    filter: blur(10px);
+    opacity: 0.72;
+    transform: translateY(54px) scale(0.992);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes mediaFloatIn {
+  from {
+    filter: saturate(0.88) contrast(0.94);
+    transform: scale(1.045);
+  }
+
+  to {
+    filter: saturate(1) contrast(1);
+    transform: scale(1);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .hotel-preview,
+  .how-it-works__inner,
+  .why-me__body,
+  .personal-selection__content,
+  .instructor-section__content,
+  .reviews-section__stage {
+    animation: sectionReveal both;
+    animation-range: entry 8% cover 34%;
+    animation-timeline: view();
+  }
+
+  .hotel-preview__image--active,
+  .why-me__image,
+  .personal-selection__phone,
+  .instructor-section::before {
+    animation: mediaFloatIn both;
+    animation-range: entry 0% cover 42%;
+    animation-timeline: view();
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -2429,19 +2581,19 @@ a {
   .app-header {
     &__toolbar {
       height: auto;
-      min-height: 72px;
-      padding: 8px 18px;
+      min-height: 84px;
+      padding: 12px 20px;
       gap: 14px;
     }
 
     &__logo {
-      width: 46px;
-      height: 46px;
-      font-size: 25px;
+      width: 48px;
+      height: 48px;
+      font-size: 26px;
     }
 
     &__name {
-      font-size: 16px;
+      font-size: 17px;
     }
 
     &__nav,
@@ -2537,10 +2689,11 @@ a {
   }
 
   .hero-slider {
-    min-height: 760px;
+    height: 800px;
+    min-height: 800px;
 
     &__content {
-      padding: 122px 18px 360px;
+      padding: 138px 20px 360px;
     }
 
     &__title {
@@ -2553,10 +2706,38 @@ a {
     }
 
     &__progress {
-      right: 18px;
-      bottom: 286px;
-      left: 18px;
+      right: 104px;
+      bottom: 293px;
+      left: 104px;
       width: auto;
+    }
+  }
+
+  .hero-card {
+    right: 20px;
+    bottom: 82px;
+    left: 20px;
+    width: auto;
+    min-height: 173px;
+    grid-template-columns: minmax(0, 1fr) 153px;
+
+    &__quote {
+      top: 10px;
+      left: 20px;
+      font-size: 54px;
+    }
+
+    &__body {
+      padding: 52px 18px 20px 20px;
+
+      p {
+        font-size: 12px;
+        line-height: 1.25;
+      }
+    }
+
+    &__actions {
+      display: none;
     }
   }
 
@@ -2566,28 +2747,30 @@ a {
     }
 
     &__header {
-      padding: 32px 18px;
+      padding: 78px 20px 77px;
     }
 
     &__title {
-      font-size: 36px;
+      font-size: 42px;
+      line-height: 1;
     }
 
     &__footer {
-      padding: 24px 18px;
+      padding: 54px 20px 86px;
     }
   }
 
   .hotel-preview {
     min-height: 0;
     grid-template-columns: 1fr;
+    background: var(--sand);
 
     &:first-of-type {
       min-height: 0;
     }
 
     &__media {
-      min-height: 360px;
+      min-height: 523px;
     }
 
     &__name {
@@ -2595,7 +2778,8 @@ a {
     }
 
     &__content {
-      padding: 42px 18px 46px;
+      min-height: 523px;
+      padding: 54px 20px 58px;
     }
 
     &__progress {
@@ -2636,7 +2820,7 @@ a {
 
   .why-me {
     &__header {
-      padding: 32px 18px;
+      padding: 76px 20px 82px;
     }
 
     &__title {
@@ -2705,7 +2889,7 @@ a {
 
     &__visual {
       min-height: 540px;
-      padding: 30px 18px 150px;
+      padding: 30px 18px 190px;
     }
 
     &__dots {
@@ -2733,6 +2917,28 @@ a {
       min-height: 60px;
       min-width: 220px;
       font-size: 22px;
+    }
+
+    &__video {
+      right: 32px;
+      bottom: 36px;
+      width: min(260px, calc(100% - 64px));
+      gap: 14px;
+
+      p {
+        font-size: 15px;
+      }
+
+      ul {
+        font-size: 12px;
+        gap: 3px;
+      }
+    }
+
+    &__video-button {
+      min-height: 42px;
+      padding: 0 22px;
+      font-size: 13px;
     }
   }
 
@@ -2886,14 +3092,19 @@ a {
 @media (max-width: 640px) {
   .app-header {
     &__toolbar {
-      min-height: 66px;
-      padding-right: 14px;
-      padding-left: 14px;
+      min-height: 84px;
+      padding-right: 20px;
+      padding-left: 20px;
       gap: 10px;
     }
 
     &__brand-text {
-      display: none;
+      display: grid;
+    }
+
+    &__place {
+      justify-self: start;
+      font-size: 10px;
     }
   }
 
@@ -2904,7 +3115,8 @@ a {
   }
 
   .hero-slider {
-    min-height: 720px;
+    height: 800px;
+    min-height: 800px;
 
     &__image {
       object-position: 50% center;
@@ -2917,11 +3129,11 @@ a {
     }
 
     &__content {
-      padding: 104px 16px 360px;
+      padding: 142px 20px 360px;
     }
 
     &__title {
-      font-size: 39px;
+      font-size: 40px;
       line-height: 1;
     }
 
@@ -2932,10 +3144,18 @@ a {
     }
 
     &__progress {
-      bottom: 290px;
-      left: 16px;
-      right: 16px;
+      bottom: 293px;
+      left: 104px;
+      right: 104px;
     }
+  }
+
+  .hero-card {
+    right: 20px;
+    bottom: 82px;
+    left: 20px;
+    min-height: 173px;
+    grid-template-columns: minmax(0, 1fr) 153px;
   }
 
   .hotels-section {
@@ -2961,15 +3181,15 @@ a {
     }
 
     &__header {
-      padding: 24px 16px;
+      padding: 78px 20px 77px;
     }
 
     &__title {
-      font-size: 30px;
+      font-size: 40px;
     }
 
     &__footer {
-      padding: 20px 16px;
+      padding: 54px 20px 86px;
     }
 
     &__view-all {
@@ -2981,11 +3201,11 @@ a {
 
   .hotel-preview {
     &__media {
-      min-height: 270px;
+      min-height: 523px;
     }
 
     &__name {
-      font-size: 34px;
+      font-size: 38px;
     }
 
     &__description {
@@ -2993,7 +3213,8 @@ a {
     }
 
     &__content {
-      padding: 34px 16px 38px;
+      min-height: 523px;
+      padding: 54px 20px 58px;
     }
 
     &__location,
@@ -3032,13 +3253,17 @@ a {
   }
 
   .how-it-works {
+    &__inner {
+      min-height: 1756px;
+    }
+
     &__intro,
     &__steps {
-      padding: 40px 16px;
+      padding: 76px 20px;
     }
 
     &__title {
-      font-size: 32px;
+      font-size: 40px;
     }
 
     &__note {
@@ -3065,11 +3290,11 @@ a {
 
   .why-me {
     &__header {
-      padding: 26px 16px;
+      padding: 76px 20px 82px;
     }
 
     &__title {
-      font-size: 34px;
+      font-size: 40px;
     }
 
     &__body {
@@ -3145,7 +3370,7 @@ a {
 
     &__visual {
       min-height: 390px;
-      padding: 20px 16px 112px;
+      padding: 20px 16px 168px;
     }
 
     &__phone {
@@ -3175,6 +3400,12 @@ a {
       min-height: 54px;
       min-width: 0;
       font-size: 18px;
+    }
+
+    &__video {
+      right: 20px;
+      bottom: 28px;
+      width: calc(100% - 40px);
     }
   }
 

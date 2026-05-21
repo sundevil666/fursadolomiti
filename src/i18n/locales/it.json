@@ -29,7 +29,7 @@
       "text": "Consigliamo dove alloggiare, sciare, passeggiare e cenare, e risolviamo questioni importanti personalmente e rapidamente."
     },
     "hero": {
-      "quote": "Vivo con la mia famiglia nelle Dolomiti - in Val Gardena - dal 2000. Aiuto ospiti da tutto il mondo a trovare il miglior luogo per vacanze in uno dei migliori stazioni sciistici del mondo.",
+      "quote": "Vivo con la mia famiglia nelle Dolomiti, in Val Gardena, dal 2000. Aiuto ospiti da tutto il mondo a trovare il posto migliore per una vacanza in una delle migliori località sciistiche al mondo. Scegli in autonomia oppure scrivimi: risponderò personalmente.",
       "watchHotels": "Vedi Hotel",
       "whatsapp": "WhatsApp",
       "photo": "Foto dell'esperta"
@@ -38,6 +38,7 @@
     "nextSlide": "Slide successiva",
     "hotels": {
       "title": "Hotel con bonus personali",
+      "subtitle": "Prenotazione diretta al prezzo dell'hotel, con vantaggi personali da parte mia",
       "viewAll": "Vedi tutti gli hotel",
       "bookWithBonus": "Prenota con bonus",
       "features": "Caratteristiche:",
@@ -53,19 +54,21 @@
         "location": "Selva",
         "description": "Hotel riservato con alto livello di servizio e atmosfera tranquilla a Selva",
         "features": [
-          "Accesso diretto alle piste",
-          "Spa e wellness",
-          "Ristorante di alta cucina"
+          "Navetta per l’impianto (5 minuti)",
+          "Spa panoramica con piscine e saune",
+          "Ristorante di alta cucina (Michelin)",
+          "Ideale per un soggiorno tranquillo"
         ]
       },
       "edenselva": {
         "name": "Edenselva 4★",
         "location": "Selva",
-        "description": "Hotel familiare con atmosfera accogliente e ottima posizione",
+        "description": "Hotel accogliente vicino alla pista con accesso diretto allo sci",
         "features": [
-          "Club per bambini",
-          "Piscina riscaldata",
-          "Cena sulla neve"
+          "Atmosfera tranquilla e raccolta",
+          "Ski-in / ski-out",
+          "Jacuzzi esterna e zone relax",
+          "Personale russofono"
         ]
       }
     },
@@ -114,37 +117,37 @@
       "imageAlt": "Interno di un hotel nelle Dolomiti",
       "eyebrow": "Supporto personale",
       "panelTitle": "Prenoti direttamente, mentre io ti aiuto a ottenere di piu",
-      "lead": "Vivo in Val Gardena dal 2000 e conosco personalmente hotel, zone, stagioni e dettagli che fanno la differenza nelle Dolomiti.",
+      "lead": "Vivo nelle Dolomiti, in Val Gardena, da oltre 25 anni e consiglio solo hotel che conosco davvero personalmente.",
       "reasons": [
         {
           "id": 1,
-          "title": "Contatti diretti con gli hotel",
-          "text": "Lavoro direttamente con proprietari e manager, quindi posso chiarire piu rapidamente dettagli e opportunita per gli ospiti."
+          "title": "Sono sempre in contatto diretto con te",
+          "text": "Dal momento della prenotazione fino alla fine del viaggio rispondo personalmente alle domande sulla località."
         },
         {
           "id": 2,
-          "title": "Scelta su misura per il viaggio",
-          "text": "Ti aiuto a scegliere zona, livello di servizio, formato del soggiorno e date senza compromessi casuali."
+          "title": "Prenotazione diretta senza intermediari",
+          "text": "Vai sul sito ufficiale dell’hotel e completi la prenotazione in autonomia."
         },
         {
           "id": 3,
-          "title": "Bonus al check-in",
-          "text": "Preparo un bonus personale per gli ospiti FursaDolomiti quando e disponibile nell'hotel scelto."
+          "title": "Riservatezza",
+          "text": "I tuoi dati non vengono usati per newsletter e non vengono pubblicati."
         },
         {
           "id": 4,
-          "title": "Conoscenza diretta della localita",
-          "text": "Consiglio dove soggiornare per sci, passeggiate, ristoranti e una vacanza familiare tranquilla."
+          "title": "Aiuto personale su richiesta",
+          "text": "Se hai domande o è difficile scegliere, scrivimi. Ti aiuterò a orientarti."
         },
         {
           "id": 5,
-          "title": "Aiuto prima del viaggio",
-          "text": "Aiuto con transfer, stagione, posizione e dettagli importanti prima dell'arrivo."
+          "title": "Ricevi bonus con la prenotazione",
+          "text": "Prenotando tramite FursaDolomiti, un bonus ti aspetterà al check-in; concordo le condizioni personalmente con ogni hotel."
         },
         {
           "id": 6,
-          "title": "Una persona sul posto",
-          "text": "Se durante il soggiorno serve un chiarimento o un consiglio, puoi contattare chi vive vicino."
+          "title": "Conosco gli hotel personalmente",
+          "text": "Vivo nelle Dolomiti, in Val Gardena, e propongo solo hotel che posso davvero consigliare."
         }
       ]
     },
@@ -152,7 +155,14 @@
       "title": "Non hai trovato l'opzione giusta?",
       "note": "Oltre agli hotel presentati sul sito, lavoro con chalet privati e altre soluzioni di soggiorno nelle Dolomiti.",
       "help": "La selezione personalizzata e disponibile su richiesta individuale.",
-      "cta": "Invia richiesta"
+      "cta": "Invia richiesta",
+      "videoTitle": "Vuoi vedere l’hotel prima di prenotare? Realizzerò una video-recensione personale su richiesta.",
+      "videoPoint1": "Vista dall’interno",
+      "videoPoint2": "Mostrato personalmente",
+      "videoPoint3": "Senza intermediari",
+      "videoPoint4": "Vivo nelle vicinanze",
+      "videoPoint5": "Oltre 20 anni di esperienza",
+      "videoCta": "Richiedi video tour"
     },
     "instructor": {
       "title": "Maestri di sci russofoni nelle Dolomiti",
@@ -178,9 +188,10 @@
     },
     "reviews": {
       "eyebrow": "Recensioni degli ospiti",
-      "title": "Cosa dicono gli ospiti di Fursa Dolomiti",
+      "title": "Cosa dicono gli ospiti",
       "lead": "Ogni viaggio viene costruito intorno a una famiglia reale, alla stagione e alle aspettative: per questo gli ospiti tornano e mi consigliano agli amici.",
       "cta": "Parliamo del viaggio",
+      "readMore": "Leggi di più",
       "previous": "Recensione precedente",
       "next": "Recensione successiva",
       "items": [
@@ -194,7 +205,7 @@
         },
         {
           "id": 2,
-          "text": "Abbiamo viaggiato con bambini e avevamo qualche timore sull'organizzazione: per noi era importante che tutto fosse comodo, tranquillo e senza complicazioni inutili. Alla fine il viaggio e stato facile e molto confortevole. L'hotel si e rivelato davvero adatto: posizione comoda vicino agli impianti e atmosfera tranquilla, senza rumore e confusione.",
+          "text": "Abbiamo viaggiato con bambini e all’inizio eravamo un po’ preoccupati per l’organizzazione: per noi era importante che tutto fosse comodo, tranquillo e senza complicazioni inutili. Alla fine il viaggio è stato facile e molto confortevole. L’hotel si è rivelato una scelta davvero riuscita: posizione comoda vicino agli impianti e atmosfera tranquilla, senza rumore e confusione. Le camere erano spaziose, il servizio attento e tutto pensato per una vacanza con bambini. Abbiamo apprezzato molto anche la logistica sul posto, chiara e semplice: non abbiamo dovuto perdere tempo con spostamenti inutili o dettagli complicati. Sembrava che tutto fosse stato scelto proprio per il nostro tipo di viaggio: comfort, tranquillità e possibilità di rilassarsi senza pensare alle questioni pratiche. I bambini si sono trovati benissimo, e per noi era la cosa più importante. Alla fine la vacanza è stata esattamente come l’avevamo immaginata: senza stress, piacevole e con la sensazione che tutto fosse al posto giusto.",
           "author": "Irina",
           "location": "Russia",
           "date": "Febbraio, 2026",
@@ -210,11 +221,11 @@
     "tagline": "Non una piattaforma. Una persona.",
     "contacts": "Contatti",
     "menu": "Menu",
-    "gallery": "Foto delle Dolomiti",
+    "gallery": "Diretta dalle piste",
     "partners": "Loghi partner e localita",
     "privacy": "Informativa sulla privacy",
     "cookies": "Cookie",
-    "vat": "P. IVA: 02598270214",
+    "vat": "P. IVA: 02598270219",
     "images": {
       "ski": "Vacanza sugli sci nelle Dolomiti",
       "hotel": "Hotel in Val Gardena",
