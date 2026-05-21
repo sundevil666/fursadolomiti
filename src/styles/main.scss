@@ -1890,11 +1890,11 @@ a {
   }
 
   &__nav--prev {
-    left: -22px;
+    left: clamp(14px, 2vw, 24px);
   }
 
   &__nav--next {
-    right: -22px;
+    right: clamp(14px, 2vw, 24px);
   }
 
   &__dots {
@@ -3037,6 +3037,7 @@ a {
       right: auto;
       grid-row: 2;
       justify-self: end;
+      margin-top: 0;
       transform: none;
     }
 
@@ -3564,7 +3565,7 @@ a {
     &__nav--next {
       grid-row: 2;
       justify-self: end;
-      margin-top: -76px;
+      margin-top: 0;
     }
 
     &__dots {
