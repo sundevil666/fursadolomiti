@@ -36,16 +36,7 @@ const isActiveRoute = (routeName: string) => {
   <q-header class="app-header">
     <q-toolbar class="app-header__toolbar">
       <RouterLink class="app-header__brand" :to="{ name: 'home' }" :aria-label="t('app.name')">
-        <span class="app-header__logo" aria-hidden="true">
-          <span class="app-header__logo-mark">fd</span>
-        </span>
-        <span class="app-header__brand-text">
-          <span class="app-header__name">
-            <span class="app-header__name-main">fursa</span>
-            <span class="app-header__name-muted">dolomiti</span>
-          </span>
-          <span class="app-header__place">val gardena</span>
-        </span>
+        <img src="@/assets/img/logo.svg" alt="logo">
       </RouterLink>
 
       <q-space />
