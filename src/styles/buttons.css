@@ -1,0 +1,96 @@
+.q-btn.fd-btn {
+  --fd-btn-bg: transparent;
+  --fd-btn-border: transparent;
+  --fd-btn-color: var(--green, #175445);
+  --fd-btn-bg-hover: var(--fd-btn-bg);
+  --fd-btn-border-hover: var(--fd-btn-border);
+  --fd-btn-color-hover: var(--fd-btn-color);
+
+  min-width: 0;
+  min-height: 50px;
+  padding: 0 32px;
+  border: 1px solid var(--fd-btn-border);
+  border-radius: 999px;
+  background: var(--fd-btn-bg);
+  color: var(--fd-btn-color);
+  font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: none;
+  transition:
+    background-color 240ms ease,
+    border-color 240ms ease,
+    color 240ms ease,
+    transform 240ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.q-btn.fd-btn::before,
+.q-btn.fd-btn::after {
+  display: none;
+}
+
+.q-btn.fd-btn .q-focus-helper {
+  display: none;
+}
+
+.q-btn.fd-btn .q-btn__content {
+  min-height: inherit;
+  color: inherit;
+  line-height: 1;
+}
+
+.q-btn.fd-btn:hover,
+.q-btn.fd-btn:focus-visible {
+  background: var(--fd-btn-bg-hover);
+  border-color: var(--fd-btn-border-hover);
+  color: var(--fd-btn-color-hover);
+  transform: translateY(-1px);
+}
+
+.q-btn.fd-btn:active {
+  transform: translateY(0);
+}
+
+.q-btn.fd-btn--filled {
+  --fd-btn-bg: var(--green, #175445);
+  --fd-btn-border: var(--green, #175445);
+  --fd-btn-color: var(--page-warm, #fff9ea);
+  --fd-btn-bg-hover: #3a6e61;
+  --fd-btn-border-hover: #3a6e61;
+  --fd-btn-color-hover: var(--page-warm, #fff9ea);
+}
+
+.q-btn.fd-btn--outline {
+  --fd-btn-bg: transparent;
+  --fd-btn-border: var(--green, #175445);
+  --fd-btn-color: var(--green, #175445);
+  --fd-btn-bg-hover: rgb(23 84 69 / 10%);
+  --fd-btn-border-hover: var(--green, #175445);
+  --fd-btn-color-hover: var(--green, #175445);
+}
+
+.q-btn.fd-btn--sm {
+  min-height: 47px;
+  padding: 0 28px;
+  font-size: 15px;
+}
+
+.q-btn.fd-btn.disabled,
+.q-btn.fd-btn[aria-disabled='true'] {
+  pointer-events: none;
+  opacity: 1;
+}
+
+.q-btn.fd-btn--filled.disabled,
+.q-btn.fd-btn--filled[aria-disabled='true'] {
+  --fd-btn-bg: #3a6e61;
+  --fd-btn-border: #3a6e61;
+}
+
+.q-btn.fd-btn--outline.disabled,
+.q-btn.fd-btn--outline[aria-disabled='true'] {
+  --fd-btn-bg: rgb(23 84 69 / 10%);
+}

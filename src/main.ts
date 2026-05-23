@@ -1,6 +1,7 @@
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/src/css/index.sass'
 import '@/styles/main.scss'
+import '@/styles/buttons.css'
 
 import { Quasar } from 'quasar'
 import { createApp } from 'vue'

@@ -15,7 +15,7 @@ const { t } = useI18n()
 <template>
   <q-page class="home-page">
     <HeroSliderSection />
-    <div class="hotels-section__header">
+    <div class="hotels-section__header w-1336">
       <h2 class="hotels-section__title">
         <AnimatedText :text="t('home.hotels.title')" tag="span" />
       </h2>

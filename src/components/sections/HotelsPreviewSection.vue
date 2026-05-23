@@ -84,7 +84,11 @@ onBeforeUnmount(stopHotelAutoplay)
 
 <template>
   <section class="hotels-section">
-    <div v-if="!hasLimit" class="hotels-section__filters" :aria-label="t('home.hotels.filters.label')">
+    <div
+      v-if="!hasLimit"
+      class="hotels-section__filters"
+      :aria-label="t('home.hotels.filters.label')"
+    >
       <button
         v-for="filter in hotelFilters"
         :key="filter"
@@ -143,12 +147,12 @@ onBeforeUnmount(stopHotelAutoplay)
         </div>
 
         <div class="hotel-preview__content">
-          <p class="hotel-preview__location">
-            <AnimatedText :text="t(hotel.locationKey)" tag="span" />
-          </p>
           <h3 class="hotel-preview__name">
             <AnimatedText :text="t(hotel.nameKey)" tag="span" />
           </h3>
+          <p class="hotel-preview__location">
+            <AnimatedText :text="t(hotel.locationKey)" tag="span" />
+          </p>
           <p class="hotel-preview__description">
             <AnimatedText :text="t(hotel.descriptionKey)" tag="span" />
           </p>
