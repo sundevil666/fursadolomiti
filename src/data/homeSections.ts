@@ -68,7 +68,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'alpenroyal',
     category: 'fiveStar',
-    images: ['/mockup-assets/image7.png', '/mockup-assets/image1.png', '/mockup-assets/image2.png'],
+    images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png',],
     nameKey: 'home.hotels.alpenroyal.name',
     locationKey: 'home.hotels.alpenroyal.location',
     descriptionKey: 'home.hotels.alpenroyal.description',
@@ -77,7 +77,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'edenselva',
     category: 'fourStar',
-    images: ['/mockup-assets/image8.png', '/mockup-assets/image3.png', '/mockup-assets/image4.png'],
+    images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
     nameKey: 'home.hotels.edenselva.name',
     locationKey: 'home.hotels.edenselva.location',
     descriptionKey: 'home.hotels.edenselva.description',

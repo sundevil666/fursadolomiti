@@ -168,15 +168,20 @@ onBeforeUnmount(stopHotelAutoplay)
             </ul>
           </div>
 
-          <q-btn unelevated no-caps class="hotel-preview__button" href="https://wa.me/393341822113">
+          <q-btn
+            unelevated
+            no-caps
+            class="fd-btn fd-btn--outline"
+            href="https://wa.me/393341822113"
+          >
             <AnimatedText :text="t('home.hotels.bookWithBonus')" tag="span" />
           </q-btn>
         </div>
       </article>
     </TransitionGroup>
 
-    <div v-if="hasLimit" class="hotels-section__footer">
-      <q-btn unelevated no-caps class="hotels-section__view-all" :to="{ name: 'hotels' }">
+    <div v-if="hasLimit" class="hotels-section__footer w-1336">
+      <q-btn unelevated no-caps class="fd-btn fd-btn--filled" :to="{ name: 'hotels' }">
         <AnimatedText :text="t('home.hotels.viewAll')" tag="span" />
       </q-btn>
     </div>
