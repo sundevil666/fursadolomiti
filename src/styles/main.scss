@@ -1118,11 +1118,24 @@ a {
   font-family: 'Manrope', sans-serif;
 
   &__inner {
+    position: relative;
     display: grid;
     width: min(1208px, 100%);
     min-height: 799px;
     margin: 0 auto;
     grid-template-columns: repeat(2, minmax(0, 604px));
+
+    &::before {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      z-index: 1;
+      width: 1px;
+      background: #cbbfb5;
+      content: '';
+      transform: translateX(-0.5px);
+    }
   }
 
   &__intro {
