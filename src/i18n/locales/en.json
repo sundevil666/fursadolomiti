@@ -78,6 +78,8 @@
       "help": "If you need help choosing a hotel or chalet, message me and I will help you find the right option.",
       "whatsapp": "Write on WhatsApp",
       "hotels": "View hotels",
+      "copyPromo": "Copy promo code",
+      "promoCopied": "Promo code copied",
       "disclaimer": "The size and format of the bonus depend on the hotel and booking period.",
       "steps": [
         {

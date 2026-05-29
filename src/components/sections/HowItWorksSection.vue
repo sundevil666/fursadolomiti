@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import AnimatedText from '@/components/AnimatedText.vue'
@@ -7,7 +7,27 @@ import type { HowItWorksStep } from '@/data/homeSections'
 
 const { t, tm } = useI18n()
 
+const promoCode = 'FURSADOLOMITI'
+const isPromoCopied = ref(false)
 const howItWorksSteps = computed(() => tm('home.howItWorks.steps') as HowItWorksStep[])
+
+const stepTitleMain = (step: HowItWorksStep) =>
+  step.id === 4 ? step.title.replace(/FursaDolomiti/i, '').trim() : step.title
+
+const stepTitlePromo = (step: HowItWorksStep) =>
+  step.id === 4 && /FursaDolomiti/i.test(step.title) ? promoCode : ''
+
+const copyPromoCode = async () => {
+  try {
+    await navigator.clipboard.writeText(promoCode)
+    isPromoCopied.value = true
+    window.setTimeout(() => {
+      isPromoCopied.value = false
+    }, 1800)
+  } catch {
+    isPromoCopied.value = false
+  }
+}
 </script>
 
 <template>
@@ -32,13 +52,18 @@ const howItWorksSteps = computed(() => tm('home.howItWorks.steps') as HowItWorks
             <q-btn
               unelevated
               no-caps
-              class="how-it-works__primary"
+              class="fd-btn fd-btn--filled"
               href="https://wa.me/393341822113"
             >
               <AnimatedText :text="t('home.howItWorks.whatsapp')" tag="span" />
             </q-btn>
-            <q-btn outline no-caps class="how-it-works__secondary" :to="{ name: 'hotels' }">
-              <AnimatedText :text="t('home.howItWorks.hotels')" tag="span" />
+            <q-btn flat no-caps class="fd-btn fd-btn--outline" @click="copyPromoCode">
+              <AnimatedText
+                :text="
+                  isPromoCopied ? t('home.howItWorks.promoCopied') : t('home.howItWorks.copyPromo')
+                "
+                tag="span"
+              />
             </q-btn>
           </div>
         </div>
@@ -53,7 +78,10 @@ const howItWorksSteps = computed(() => tm('home.howItWorks.steps') as HowItWorks
             <span class="how-it-works__step-line" aria-hidden="true" />
           </div>
           <h3 class="how-it-works__step-title">
-            <AnimatedText :text="step.title" tag="span" />
+            <AnimatedText :text="stepTitleMain(step)" tag="span" />
+            <span v-if="stepTitlePromo(step)" class="how-it-works__step-promo">
+              <AnimatedText :text="stepTitlePromo(step)" tag="span" />
+            </span>
           </h3>
           <p class="how-it-works__step-text">
             <AnimatedText :text="step.text" tag="span" />
