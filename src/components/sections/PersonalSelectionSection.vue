@@ -23,7 +23,7 @@ const { t } = useI18n()
 
       <div class="personal-selection__visual" aria-hidden="true">
         <div class="personal-selection__phone">
-          <img src="/mockup-assets/image6.png" alt="" loading="lazy" />
+          <img src="/mockup-assets/image5.png" alt="" loading="lazy" />
         </div>
         <div class="personal-selection__dots" />
       </div>
