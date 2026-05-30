@@ -1301,7 +1301,7 @@ a {
     }
 
     .animated-text {
-      transform: translateY(-3px);
+      transform: translateY(-6px);
     }
   }
 
@@ -1359,18 +1359,20 @@ a {
   color: var(--green-deep);
 
   &__header {
-    padding: 78px 24px 89px;
+    max-width: var(--container);
+    margin: 0 auto;
+    padding-top: 100px;
+    padding-bottom: 40px;
     background: var(--page-cream);
-    text-align: center;
   }
 
   &__title {
-    max-width: 680px;
-    margin: 0 auto;
+    max-width: 460px;
+    margin: 0;
     color: #08211f;
-    font-size: clamp(42px, 4.6vw, 64px);
+    font-size: 44px;
     font-weight: 700;
-    line-height: 0.96;
+    line-height: 0.9;
     letter-spacing: 0;
   }
 
@@ -1394,107 +1396,69 @@ a {
     position: absolute;
     inset: 0;
     z-index: -1;
-    background:
-      linear-gradient(90deg, rgb(29 21 1 / 22%) 0%, rgb(29 21 1 / 6%) 46%, rgb(29 21 1 / 14%) 100%),
-      linear-gradient(180deg, rgb(0 0 0 / 8%) 0%, rgb(0 0 0 / 0%) 38%, rgb(0 0 0 / 20%) 100%);
+    background: rgb(29 21 1 / 20%);
   }
 
   &__panel {
-    display: flex;
-    flex-direction: column;
-    width: min(604px, calc(100% - 48px));
-    min-height: 100%;
+    width: 604px;
+    height: 100%;
     margin-left: 50%;
-    padding: 40px clamp(40px, 5vw, 72px) 52px;
-    background: rgb(255 249 236 / 82%);
+    padding: 40px 64px 40px 40px;
+    background: rgb(255 249 236 / 80%);
     color: #08211f;
-    backdrop-filter: blur(5px);
-  }
-
-  &__mark {
-    display: inline-grid;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: #175445;
-    color: #fff9ea;
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1;
-  }
-
-  &__eyebrow {
-    margin: 28px 0 0;
-    color: #175445;
-    font-size: 14px;
-    font-weight: 800;
-    line-height: 1;
-    text-transform: uppercase;
-  }
-
-  &__panel-title {
-    max-width: 450px;
-    margin: 18px 0 0;
-    font-size: clamp(32px, 3vw, 46px);
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: 0;
-  }
-
-  &__lead {
-    max-width: 450px;
-    margin: 24px 0 0;
-    color: #173f38;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.38;
   }
 
   &__list {
     display: grid;
-    margin: auto 0 0;
-    padding: 38px 0 0;
+    margin: 0;
+    padding: 0;
     list-style: none;
-    gap: 18px;
+    gap: 32px;
   }
 
   &__item {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
-    gap: 18px;
+    gap: 20px;
   }
 
   &__item-number {
     display: inline-grid;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    border: 1px solid rgb(23 84 69 / 32%);
+    width: 48px;
+    height: 48px;
+    border: 0;
     border-radius: 50%;
-    color: #175445;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1;
+    background: #175445;
+    color: #fff9ea;
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  .animated-text {
+    transform: translateY(-6px);
   }
 
   &__item-copy {
     display: grid;
-    gap: 7px;
+    gap: 12px;
+    padding-top: 2px;
 
     strong {
       color: #08211f;
-      font-size: 15px;
-      font-weight: 800;
-      line-height: 1.15;
+      font-family: Manrope, sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 0.96;
     }
 
     > span {
       color: #173f38;
-      font-size: 13px;
-      font-weight: 500;
+      font-family: Manrope, sans-serif;
+      font-size: 17px;
+      font-weight: 400;
       line-height: 1.35;
     }
   }
@@ -2909,12 +2873,14 @@ a {
 
   .why-me {
     &__header {
-      padding: 76px 20px 82px;
+      height: auto;
+      padding: 64px 20px 44px;
     }
 
     &__title {
       max-width: 560px;
       font-size: 42px;
+      line-height: 0.92;
     }
 
     &__body {
@@ -2929,14 +2895,14 @@ a {
 
     &__panel {
       width: 100%;
+      height: auto;
       min-height: 0;
       margin: 0;
       padding: 34px;
     }
 
     &__list {
-      margin-top: 0;
-      padding-top: 38px;
+      gap: 26px;
     }
   }
 
@@ -3406,11 +3372,13 @@ a {
 
   .why-me {
     &__header {
-      padding: 76px 20px 82px;
+      padding: 54px 16px 34px;
     }
 
     &__title {
-      font-size: 40px;
+      max-width: 360px;
+      font-size: 39px;
+      line-height: 0.94;
     }
 
     &__body {
@@ -3425,23 +3393,14 @@ a {
       padding: 28px 22px 30px;
     }
 
-    &__mark {
+    &__item-number {
       width: 42px;
       height: 42px;
       font-size: 24px;
     }
 
-    &__panel-title {
-      font-size: 30px;
-    }
-
-    &__lead {
-      font-size: 14px;
-    }
-
     &__list {
-      gap: 22px;
-      padding-top: 30px;
+      gap: 24px;
     }
 
     &__item {
@@ -3450,11 +3409,12 @@ a {
 
     &__item-copy {
       strong {
-        font-size: 15px;
+        font-size: 20px;
+        line-height: 1.05;
       }
 
       > span {
-        font-size: 13px;
+        font-size: 14px;
       }
     }
   }

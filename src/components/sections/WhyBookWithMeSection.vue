@@ -28,17 +28,6 @@ const whyMeReasons = computed(() => tm('home.whyMe.reasons') as WhyMeReason[])
       <div class="why-me__shade" />
 
       <article class="why-me__panel">
-        <div class="why-me__mark" aria-hidden="true">1</div>
-        <p class="why-me__eyebrow">
-          <AnimatedText :text="t('home.whyMe.eyebrow')" tag="span" />
-        </p>
-        <h3 class="why-me__panel-title">
-          <AnimatedText :text="t('home.whyMe.panelTitle')" tag="span" />
-        </h3>
-        <p class="why-me__lead">
-          <AnimatedText :text="t('home.whyMe.lead')" tag="span" />
-        </p>
-
         <ul class="why-me__list">
           <li v-for="reason in whyMeReasons" :key="reason.id" class="why-me__item">
             <span class="why-me__item-number">
