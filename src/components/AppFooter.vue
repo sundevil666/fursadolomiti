@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import AnimatedText from '@/components/AnimatedText.vue'
@@ -49,6 +49,20 @@ const footerLogos: FooterLogo[] = [
 ]
 
 const currentLocale = computed<AppLocale>(() => locale.value as AppLocale)
+
+const isScrolledDown = ref(false)
+
+const handleScroll = () => {
+  isScrolledDown.value = window.scrollY > 100
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 
 const scrollToTop = () => {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -126,14 +140,17 @@ const scrollToTop = () => {
             <AnimatedText :text="t('footer.gallery')" tag="span" />
           </h2>
 
-          <button
-            class="app-footer__to-top"
-            type="button"
-            :aria-label="t('footer.backToTop')"
-            @click="scrollToTop"
-          >
-            <q-icon name="arrow_upward" />
-          </button>
+          <Transition name="footer-to-top">
+            <button
+              v-if="isScrolledDown"
+              class="app-footer__to-top"
+              type="button"
+              :aria-label="t('footer.backToTop')"
+              @click="scrollToTop"
+            >
+              <q-icon name="arrow_upward" />
+            </button>
+          </Transition>
         </div>
 
         <div class="app-footer__gallery" :aria-label="t('footer.gallery')">
