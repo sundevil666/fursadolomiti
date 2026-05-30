@@ -13,7 +13,7 @@ const isReviewAutoplayPaused = ref(false)
 const expandedReviewIds = ref(new Set<number>())
 const reviews = computed(() => tm('home.reviews.items') as Review[])
 const visibleReviews = computed(() => {
-  if (reviews.value.length <= 2) return reviews.value
+  if (reviews.value.length <= 1) return reviews.value
 
   return [
     reviews.value[activeReviewIndex.value],
@@ -162,7 +162,7 @@ onBeforeUnmount(stopReviewAutoplay)
                   :class="`reviews-section__social--${review.source}`"
                   aria-hidden="true"
                 >
-                  <q-icon v-if="review.source === 'instagram'" name="photo_camera" />
+                  <span v-if="review.source === 'instagram'" class="reviews-section__instagram-mark" />
                   <span v-else>G</span>
                 </span>
                 <span class="reviews-section__author-copy">
