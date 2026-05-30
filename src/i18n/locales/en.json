@@ -231,6 +231,10 @@
     "cookies": "Cookie",
     "vat": "VAT ID: 02598270219",
     "images": {
+      "seceda": "Secada webcam",
+      "alpeDiSiusi": "Alpe di Siusi webcam",
+      "ciampinoi": "Ciampinoi webcam",
+      "dantercapies": "Dantercapies webcam",
       "ski": "Ski holiday in the Dolomites",
       "hotel": "Hotel in Val Gardena",
       "dolomites": "Dolomites landscape",

@@ -1,38 +1,35 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 import AppFooter from '@/components/AppFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
 
-const { t } = useI18n()
-const isBackToTopVisible = ref(false)
-
-const updateBackToTopVisibility = () => {
-  isBackToTopVisible.value = window.scrollY > 180
-}
-
-const scrollToTop = () => {
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-  window.scrollTo({
-    top: 0,
-    behavior: prefersReducedMotion ? 'auto' : 'smooth',
-  })
-}
+const isFooterVisible = ref(false)
+let footerObserver: IntersectionObserver | null = null
 
 onMounted(() => {
-  updateBackToTopVisibility()
-  window.addEventListener('scroll', updateBackToTopVisibility, { passive: true })
+  const footer = document.querySelector('#app-footer')
+
+  if (!footer) {
+    return
+  }
+
+  footerObserver = new IntersectionObserver(
+    ([entry]) => {
+      isFooterVisible.value = entry.isIntersecting
+    },
+    { threshold: 0.1 },
+  )
+  footerObserver.observe(footer)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', updateBackToTopVisibility)
+  footerObserver?.disconnect()
 })
 </script>
 
 <template>
-  <q-layout view="hHh Lpr fff">
+  <q-layout view="hHh Lpr fff" :class="{ 'main-layout--footer-visible': isFooterVisible }">
     <AppHeader />
 
     <q-page-container>
@@ -44,17 +41,5 @@ onBeforeUnmount(() => {
     </q-page-container>
 
     <AppFooter />
-
-    <Transition name="back-to-top">
-      <q-btn
-        v-if="isBackToTopVisible"
-        class="app-back-to-top"
-        round
-        unelevated
-        icon="keyboard_arrow_up"
-        :aria-label="t('footer.backToTop')"
-        @click="scrollToTop"
-      />
-    </Transition>
   </q-layout>
 </template>

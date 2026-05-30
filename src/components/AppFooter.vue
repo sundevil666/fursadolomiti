@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import AnimatedText from '@/components/AnimatedText.vue'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+import logoWhiteUrl from '@/assets/img/logo_white.svg'
 import type { AppLocale } from '@/i18n'
 import menuItemsMock from '@/mocks/menu.json'
 import type { MenuItem } from '@/types'
@@ -11,56 +12,63 @@ import type { MenuItem } from '@/types'
 type FooterImage = {
   src: string
   altKey: string
+  label: string
 }
 
 type FooterLogo = {
   id: string
-  titleKey: string
-  textKey: string
+  title: string
+  text?: string
+  image?: string
 }
 
 const { locale, t } = useI18n()
-const menuItems = menuItemsMock as MenuItem[]
+const footerMenuIds = ['hotels', 'rental']
+const menuItems = (menuItemsMock as MenuItem[]).filter((item) => footerMenuIds.includes(item.id))
 const footerImages: FooterImage[] = [
-  { src: '/mockup-assets/image1.png', altKey: 'footer.images.ski' },
-  { src: '/mockup-assets/image2.png', altKey: 'footer.images.hotel' },
-  { src: '/mockup-assets/image3.png', altKey: 'footer.images.dolomites' },
-  { src: '/mockup-assets/image4.png', altKey: 'footer.images.chalet' },
+  { src: '/mockup-assets/image1.png', altKey: 'footer.images.seceda', label: 'Secada' },
+  { src: '/mockup-assets/image4.png', altKey: 'footer.images.alpeDiSiusi', label: 'Alpe di Siusi' },
+  { src: '/mockup-assets/image2.png', altKey: 'footer.images.ciampinoi', label: 'Ciampinoi' },
+  { src: '/mockup-assets/image3.png', altKey: 'footer.images.dantercapies', label: 'Dantercapies' },
 ]
 const footerLogos: FooterLogo[] = [
   {
-    id: 'val-gardena',
-    titleKey: 'footer.logos.valGardena.title',
-    textKey: 'footer.logos.valGardena.text',
+    id: 'dolomiti-supersummer',
+    title: 'DOLOMITI',
+    text: 'SUPERSUMMER',
   },
   {
-    id: 'dolomiti-superski',
-    titleKey: 'footer.logos.dolomitiSuperski.title',
-    textKey: 'footer.logos.dolomitiSuperski.text',
+    id: 'active',
+    title: 'ACTIVE',
   },
   {
-    id: 'south-tyrol',
-    titleKey: 'footer.logos.southTyrol.title',
-    textKey: 'footer.logos.southTyrol.text',
+    id: 'dolomites-unesco',
+    title: 'Dolomiti',
+    image: '/mockup-assets/image0.png',
   },
 ]
 
 const currentLocale = computed<AppLocale>(() => locale.value as AppLocale)
+
+const scrollToTop = () => {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  window.scrollTo({
+    top: 0,
+    behavior: prefersReducedMotion ? 'auto' : 'smooth',
+  })
+}
 </script>
 
 <template>
-  <footer class="app-footer">
+  <footer id="app-footer" class="app-footer">
     <div class="app-footer__dot-field" aria-hidden="true" />
 
     <div class="app-footer__inner">
       <div class="app-footer__content">
         <div class="app-footer__top">
           <RouterLink class="app-footer__brand" :to="{ name: 'home' }" :aria-label="t('app.name')">
-            <span class="app-footer__logo" aria-hidden="true">fd</span>
-            <span class="app-footer__brand-copy">
-              <span class="app-footer__name">fursa dolomiti</span>
-              <span class="app-footer__place">val gardena</span>
-            </span>
+            <img class="app-footer__logo" :src="logoWhiteUrl" :alt="t('app.logo')" />
           </RouterLink>
 
           <LanguageSwitcher class="app-footer__language" />
@@ -113,31 +121,48 @@ const currentLocale = computed<AppLocale>(() => locale.value as AppLocale)
       </div>
 
       <div class="app-footer__media">
-        <h2 class="app-footer__gallery-title">
-          <AnimatedText :text="t('footer.gallery')" tag="span" />
-        </h2>
+        <div class="app-footer__media-head">
+          <h2 class="app-footer__gallery-title">
+            <AnimatedText :text="t('footer.gallery')" tag="span" />
+          </h2>
+
+          <button
+            class="app-footer__to-top"
+            type="button"
+            :aria-label="t('footer.backToTop')"
+            @click="scrollToTop"
+          >
+            <q-icon name="arrow_upward" />
+          </button>
+        </div>
 
         <div class="app-footer__gallery" :aria-label="t('footer.gallery')">
-          <img
+          <figure
             v-for="image in footerImages"
             :key="image.src"
-            class="app-footer__image"
-            :src="image.src"
-            :alt="t(image.altKey)"
-            loading="lazy"
-          />
+            class="app-footer__camera"
+          >
+            <img
+              class="app-footer__image"
+              :src="image.src"
+              :alt="t(image.altKey)"
+              loading="lazy"
+            />
+            <figcaption>{{ image.label }}</figcaption>
+          </figure>
         </div>
 
         <div class="app-footer__partners" :aria-label="t('footer.partners')">
-          <div v-for="logo in footerLogos" :key="logo.id" class="app-footer__partner">
-            <span class="app-footer__partner-mark" aria-hidden="true">fd</span>
-            <span class="app-footer__partner-copy">
-              <strong>
-                <AnimatedText :text="t(logo.titleKey)" tag="span" />
-              </strong>
-              <span>
-                <AnimatedText :text="t(logo.textKey)" tag="span" />
-              </span>
+          <div
+            v-for="logo in footerLogos"
+            :key="logo.id"
+            class="app-footer__partner"
+            :class="`app-footer__partner--${logo.id}`"
+          >
+            <img v-if="logo.image" :src="logo.image" :alt="logo.title" loading="lazy" />
+            <span v-else class="app-footer__partner-copy">
+              <strong>{{ logo.title }}</strong>
+              <span v-if="logo.text">{{ logo.text }}</span>
             </span>
           </div>
         </div>
