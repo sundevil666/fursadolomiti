@@ -72,12 +72,6 @@
   --fd-btn-color-hover: var(--green, #175445);
 }
 
-.q-btn.fd-btn--sm {
-  min-height: 47px;
-  padding: 0 28px;
-  font-size: 15px;
-}
-
 .q-btn.fd-btn.disabled,
 .q-btn.fd-btn[aria-disabled='true'] {
   pointer-events: none;
