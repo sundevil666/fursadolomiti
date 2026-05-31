@@ -50,8 +50,8 @@ const selectLocale = (value: AppLocale) => {
       @click="isOpen = !isOpen"
     >
       <span class="language-switcher__glow" aria-hidden="true" />
-      <Transition name="language-code" mode="out-in">
-        <span :key="`${currentLocale}-${spark}`" class="language-switcher__code">
+      <Transition name="language-code">
+        <span :key="currentLocale" class="language-switcher__code">
           {{ currentLocale.toUpperCase() }}
         </span>
       </Transition>

@@ -13,6 +13,8 @@ const { t, tm } = useI18n()
 type HotelFilter = 'all' | HotelCategory
 
 const activeFilter = ref<HotelFilter>('fourStar')
+const previousFilter = ref<HotelFilter>('fourStar')
+const isFilterAnimating = ref(false)
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
 
 const activeHotelSlides = ref<Record<string, number>>(
@@ -20,6 +22,7 @@ const activeHotelSlides = ref<Record<string, number>>(
 )
 const hotelAutoplayDelay = 5200
 let hotelAutoplayTimer: number | undefined
+let filterAnimationTimer: number | undefined
 
 const hasLimit = computed(() => Boolean(props.limit && props.limit > 0))
 
@@ -31,14 +34,34 @@ const displayedHotels = computed(() => {
   return hotelPreviews.filter((hotel) => hotel.category === activeFilter.value)
 })
 
+const getFilterCount = (filter: HotelFilter) => {
+  if (filter === 'all') return hotelPreviews.length
+
+  return hotelPreviews.filter((hotel) => hotel.category === filter).length
+}
+
+const isFilterDisabled = (filter: HotelFilter) => !hasLimit.value && getFilterCount(filter) === 0
+
 const getHotelFeatures = (key: string) => tm(key) as string[]
 
 const getActiveHotelSlide = (hotelId: string) => activeHotelSlides.value[hotelId] ?? 0
 
 const setActiveFilter = (filter: HotelFilter) => {
-  if (hasLimit.value || activeFilter.value === filter) return
+  if (hasLimit.value || activeFilter.value === filter || isFilterDisabled(filter)) return
 
+  previousFilter.value = activeFilter.value
   activeFilter.value = filter
+  isFilterAnimating.value = true
+
+  if (filterAnimationTimer) {
+    window.clearTimeout(filterAnimationTimer)
+  }
+
+  filterAnimationTimer = window.setTimeout(() => {
+    isFilterAnimating.value = false
+    filterAnimationTimer = undefined
+  }, 1040)
+
   restartHotelAutoplay()
 }
 
@@ -79,7 +102,13 @@ const restartHotelAutoplay = () => {
 }
 
 onMounted(startHotelAutoplay)
-onBeforeUnmount(stopHotelAutoplay)
+onBeforeUnmount(() => {
+  stopHotelAutoplay()
+
+  if (filterAnimationTimer) {
+    window.clearTimeout(filterAnimationTimer)
+  }
+})
 </script>
 
 <template>
@@ -87,22 +116,37 @@ onBeforeUnmount(stopHotelAutoplay)
     <div
       v-if="!hasLimit"
       class="hotels-section__filters"
+      :class="[
+        `hotels-section__filters--active-${activeFilter}`,
+        `hotels-section__filters--leave-${previousFilter}`,
+        { 'hotels-section__filters--animating': isFilterAnimating },
+      ]"
       :aria-label="t('home.hotels.filters.label')"
     >
       <button
         v-for="filter in hotelFilters"
         :key="filter"
         class="hotels-section__filter"
-        :class="{ 'hotels-section__filter--active': activeFilter === filter }"
+        :class="{
+          'hotels-section__filter--active': activeFilter === filter,
+          'hotels-section__filter--disabled': isFilterDisabled(filter),
+        }"
         type="button"
+        :disabled="isFilterDisabled(filter)"
         :aria-pressed="activeFilter === filter"
+        :aria-disabled="isFilterDisabled(filter)"
         @click="setActiveFilter(filter)"
       >
         <span>{{ t(`home.hotels.filters.${filter}`) }}</span>
       </button>
     </div>
 
-    <TransitionGroup name="hotel-preview-list" tag="div" class="hotels-section__list">
+    <TransitionGroup
+      name="hotel-preview-list"
+      tag="div"
+      class="hotels-section__list"
+      :class="{ 'hotels-section__list--filtering': isFilterAnimating }"
+    >
       <article v-for="hotel in displayedHotels" :key="hotel.id" class="hotel-preview">
         <div class="hotel-preview__media">
           <img

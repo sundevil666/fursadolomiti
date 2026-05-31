@@ -26,6 +26,11 @@ const currentLocale = computed<AppLocale>({
 const isActiveRoute = (routeName: string) => {
   return route.name === routeName
 }
+
+const navLabelWidth = (item: MenuItem) => {
+  const maxLength = Math.max(...Object.values(item.labels).map((label) => label.length))
+  return `${maxLength + (item.id === 'webcams' ? 3 : 0)}ch`
+}
 </script>
 
 <template>
@@ -46,6 +51,7 @@ const isActiveRoute = (routeName: string) => {
           flat
           class="app-header__nav-link"
           :class="{ 'app-header__nav-link--active': isActiveRoute(item.routeName) }"
+          :style="{ '--nav-label-width': navLabelWidth(item) }"
           :to="{ name: item.routeName }"
           :icon-right="item.id === 'webcams' ? 'expand_more' : undefined"
         >

@@ -59,6 +59,9 @@ a {
   color: #0f5b4c;
 
   &__toolbar {
+    display: grid;
+    grid-template-columns: 204px minmax(0, 1fr) auto 64px;
+    align-items: center;
     width: 100%;
     min-height: 86px;
     margin: 0 auto;
@@ -67,7 +70,7 @@ a {
     background: rgb(255 252 243 / 50%);
     backdrop-filter: blur(8px);
     box-shadow: 0 8px 28px rgb(5 38 35 / 5%);
-    gap: 60px;
+    column-gap: clamp(24px, 3.8vw, 60px);
 
     .q-space {
       display: none;
@@ -78,12 +81,15 @@ a {
   &__nav {
     display: flex;
     align-items: center;
-    gap: 58px;
+    justify-content: center;
+    min-width: 0;
+    gap: clamp(26px, 3.6vw, 58px);
   }
 
   &__nav-link {
     position: relative;
     min-height: 38px;
+    min-width: var(--nav-label-width);
     overflow: visible;
     padding: 0;
     color: #145d4f;
@@ -104,6 +110,8 @@ a {
     }
 
     .q-btn__content {
+      width: 100%;
+      justify-content: center;
       flex-wrap: nowrap;
       transition: transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1);
     }
@@ -151,7 +159,9 @@ a {
   &__contacts {
     display: flex;
     align-items: center;
-    gap: 62px;
+    justify-content: flex-end;
+    min-width: 0;
+    gap: clamp(24px, 3.6vw, 62px);
 
     a {
       color: #145d4f;
@@ -174,7 +184,8 @@ a {
 
   &__language {
     position: relative;
-    flex: 0 0 auto;
+    width: 64px;
+    justify-self: end;
   }
 
   &__brand {
@@ -211,7 +222,8 @@ a {
 
 .language-switcher {
   position: relative;
-  flex: 0 0 auto;
+  width: 64px;
+  flex: 0 0 64px;
 
   &--changing {
     .language-switcher__trigger {
@@ -240,6 +252,7 @@ a {
   position: relative;
   display: inline-flex;
   align-items: center;
+  width: 64px;
   min-width: 64px;
   min-height: 32px;
   overflow: hidden;
@@ -316,7 +329,8 @@ a {
   position: relative;
   z-index: 1;
   display: inline-block;
-  min-width: 20px;
+  width: 22px;
+  min-width: 22px;
   text-align: center;
   transform-origin: center;
   font-family: 'Manrope', sans-serif;
@@ -599,7 +613,7 @@ a {
   &__title {
     max-width: 700px;
     margin: 0;
-    font-size: clamp(44px, 4.35vw, 56px);
+    font-size: clamp(44px, 2.5vw, 56px);
     font-weight: 600;
     line-height: 100%;
   }
@@ -809,22 +823,130 @@ a {
   color: var(--green);
 
   &__filters {
-    display: flex;
-    flex-wrap: wrap;
+    --filter-all-width: 92px;
+    --filter-hotel-width: 220px;
+    --filter-chalet-width: 92px;
+    --filter-gap: 74px;
+    --filter-active-x: calc(var(--filter-all-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap));
+    --filter-active-width: var(--filter-hotel-width);
+    --filter-leave-x: var(--filter-active-x);
+    --filter-leave-width: var(--filter-active-width);
+
+    position: relative;
+    display: grid;
+    width: fit-content;
+    max-width: 100%;
+    grid-template-columns:
+      var(--filter-all-width)
+      var(--filter-hotel-width)
+      var(--filter-hotel-width)
+      var(--filter-chalet-width);
     justify-content: center;
     align-items: center;
-    gap: 74px;
+    gap: var(--filter-gap);
+    margin: 0 auto;
     padding: 164px 24px 42px;
     background: var(--page-cream);
+
+    &::before,
+    &::after {
+      position: absolute;
+      bottom: 42px;
+      left: 24px;
+      height: 58px;
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 72% 18%, rgb(255 246 225 / 20%), transparent 34%),
+        linear-gradient(135deg, #1d604f 0%, #175445 56%, #0f4539 100%);
+      content: '';
+      pointer-events: none;
+    }
+
+    &::before {
+      z-index: 1;
+      width: var(--filter-active-width);
+      box-shadow:
+        0 18px 42px rgb(8 33 31 / 16%),
+        inset 0 1px 0 rgb(255 255 255 / 14%);
+      transform: translate3d(var(--filter-active-x), 0, 0);
+      transition:
+        width 760ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 900ms cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 520ms ease,
+        filter 520ms ease;
+    }
+
+    &::after {
+      z-index: 0;
+      width: var(--filter-leave-width);
+      opacity: 0;
+      transform: translate3d(var(--filter-leave-x), 0, 0);
+    }
+  }
+
+  &__filters--animating {
+    &::before {
+      animation: hotelFilterArriveFlash 1040ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    &::after {
+      animation: hotelFilterDepartFade 820ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  }
+
+  &__filters--active-all {
+    --filter-active-x: 0px;
+    --filter-active-width: var(--filter-all-width);
+  }
+
+  &__filters--active-fiveStar {
+    --filter-active-x: calc(var(--filter-all-width) + var(--filter-gap));
+    --filter-active-width: var(--filter-hotel-width);
+  }
+
+  &__filters--active-fourStar {
+    --filter-active-x: calc(var(--filter-all-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap));
+    --filter-active-width: var(--filter-hotel-width);
+  }
+
+  &__filters--active-chalet {
+    --filter-active-x: calc(
+      var(--filter-all-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap)
+    );
+    --filter-active-width: var(--filter-chalet-width);
+  }
+
+  &__filters--leave-all {
+    --filter-leave-x: 0px;
+    --filter-leave-width: var(--filter-all-width);
+  }
+
+  &__filters--leave-fiveStar {
+    --filter-leave-x: calc(var(--filter-all-width) + var(--filter-gap));
+    --filter-leave-width: var(--filter-hotel-width);
+  }
+
+  &__filters--leave-fourStar {
+    --filter-leave-x: calc(var(--filter-all-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap));
+    --filter-leave-width: var(--filter-hotel-width);
+  }
+
+  &__filters--leave-chalet {
+    --filter-leave-x: calc(
+      var(--filter-all-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap)
+    );
+    --filter-leave-width: var(--filter-chalet-width);
   }
 
   &__filter {
     position: relative;
+    z-index: 2;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    min-width: 0;
     min-height: 58px;
-    min-width: 92px;
     overflow: hidden;
     padding: 0;
     border: 0;
@@ -836,10 +958,10 @@ a {
     font-size: 23px;
     font-weight: 400;
     line-height: 1;
+    isolation: isolate;
     transition:
-      background 240ms ease,
-      color 260ms ease,
-      transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1);
+      color 320ms cubic-bezier(0.19, 1, 0.22, 1),
+      transform 320ms cubic-bezier(0.19, 1, 0.22, 1);
 
     &::before {
       display: none;
@@ -847,19 +969,54 @@ a {
 
     span {
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
 
     &:hover,
     &:focus-visible {
       color: #175445;
+      transform: translateY(-1px);
     }
 
     &--active {
-      min-width: 220px;
-      background: #175445;
       color: var(--page-cream);
-      transform: none;
+      transition-delay: 220ms;
+
+      &:hover,
+      &:focus-visible {
+        color: var(--page-cream);
+        transform: none;
+      }
+    }
+
+    &--disabled {
+      color: rgb(55 55 55 / 32%);
+      cursor: default;
+      pointer-events: none;
+
+      span {
+        position: relative;
+
+        &::after {
+          position: absolute;
+          right: 0;
+          bottom: -7px;
+          left: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgb(55 55 55 / 24%), transparent);
+          content: '';
+        }
+      }
+
+      &:hover,
+      &:focus-visible {
+        color: rgb(55 55 55 / 32%);
+        transform: none;
+      }
+    }
+
+    &:disabled {
+      cursor: default;
     }
   }
 
@@ -867,6 +1024,24 @@ a {
     position: relative;
     overflow: hidden;
     border-top: 1px solid #efe4c9;
+
+    &::before {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      background:
+        linear-gradient(90deg, transparent 0%, rgb(255 246 225 / 18%) 42%, rgb(255 246 225 / 34%) 50%, transparent 64%),
+        linear-gradient(180deg, rgb(255 246 225 / 0%), rgb(255 246 225 / 18%), rgb(255 246 225 / 0%));
+      opacity: 0;
+      transform: translateX(-38%);
+      pointer-events: none;
+    }
+  }
+
+  &__list--filtering {
+    &::before {
+      animation: hotelListLightSweep 1080ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
   }
 
   &__header {
@@ -880,7 +1055,7 @@ a {
   &__title {
     margin: 0;
     padding-bottom: 20px;
-    font-size: clamp(34px, 4.1vw, 44px);
+    font-size: clamp(34px, 2.5vw, 44px);
     font-weight: 600;
     line-height: 1;
 
@@ -906,17 +1081,51 @@ a {
 .hotel-preview-list-move,
 .hotel-preview-list-enter-active,
 .hotel-preview-list-leave-active {
+  transform-origin: 50% 0;
+  will-change: opacity, transform, filter, clip-path;
   transition:
-    opacity 520ms cubic-bezier(0.19, 1, 0.22, 1),
-    transform 640ms cubic-bezier(0.19, 1, 0.22, 1),
-    filter 520ms ease;
+    clip-path 960ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 860ms ease,
+    opacity 680ms ease,
+    transform 960ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.hotel-preview-list-enter-from,
-.hotel-preview-list-leave-to {
+.hotel-preview-list-enter-active {
+  transition-delay: 160ms;
+
+  .hotel-preview__media {
+    animation: hotelCardMediaReveal 1160ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hotel-preview__content {
+    animation: hotelCardContentReveal 1040ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+  }
+}
+
+.hotel-preview-list-leave-active {
+  transition-duration: 760ms;
+
+  .hotel-preview__media {
+    animation: hotelCardMediaDepart 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hotel-preview__content {
+    animation: hotelCardContentDepart 680ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+.hotel-preview-list-enter-from {
+  clip-path: inset(12% 0 0 0);
   opacity: 0;
-  filter: blur(8px);
-  transform: translateY(28px) scale(0.985);
+  filter: blur(18px) saturate(0.88);
+  transform: translate3d(0, 46px, 0) scale(0.976);
+}
+
+.hotel-preview-list-leave-to {
+  clip-path: inset(0 0 12% 0);
+  opacity: 0;
+  filter: blur(12px) saturate(0.86) brightness(0.96);
+  transform: translate3d(0, -26px, 0) scale(0.988);
 }
 
 .hotel-preview-list-leave-active {
@@ -1064,7 +1273,7 @@ a {
   &__name {
     max-width: 630px;
     margin: 0;
-    font-size: clamp(22px, 4.5vw, 32px);
+    font-size: clamp(22px, 2.5vw, 32px);
     font-weight: 600;
     line-height: 1.1;
     color: var(--green-deep);
@@ -2458,22 +2667,21 @@ a {
 
 .language-code-enter-active,
 .language-code-leave-active {
+  position: absolute;
+  left: 10px;
   transition:
-    opacity 260ms ease,
-    filter 260ms ease,
-    transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 180ms ease,
+    transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .language-code-enter-from {
-  filter: blur(8px);
   opacity: 0;
-  transform: translateY(16px) rotateX(-65deg) scale(0.85);
+  transform: translateY(4px);
 }
 
 .language-code-leave-to {
-  filter: blur(7px);
   opacity: 0;
-  transform: translateY(-12px) rotateX(65deg) scale(1.08);
+  transform: translateY(-4px);
 }
 
 .language-menu-enter-active {
@@ -2576,6 +2784,167 @@ a {
   }
 }
 
+@keyframes hotelFilterDepartFade {
+  0% {
+    opacity: 0.58;
+    filter: blur(0) saturate(1);
+    box-shadow:
+      0 16px 36px rgb(8 33 31 / 12%),
+      inset 0 1px 0 rgb(255 255 255 / 16%);
+    transform: translate3d(var(--filter-leave-x), 0, 0) scale(1);
+  }
+
+  42% {
+    opacity: 0.32;
+    filter: blur(5px) saturate(1.04);
+    transform: translate3d(var(--filter-leave-x), 0, 0) scale(0.965);
+  }
+
+  72% {
+    opacity: 0.12;
+    filter: blur(10px) saturate(0.96);
+  }
+
+  100% {
+    opacity: 0;
+    filter: blur(16px) saturate(0.88);
+    box-shadow:
+      0 0 0 rgb(8 33 31 / 0%),
+      inset 0 1px 0 rgb(255 255 255 / 0%);
+    transform: translate3d(var(--filter-leave-x), 0, 0) scale(0.9);
+  }
+}
+
+@keyframes hotelFilterArriveFlash {
+  0% {
+    box-shadow:
+      0 14px 34px rgb(8 33 31 / 12%),
+      inset 0 1px 0 rgb(255 255 255 / 10%);
+    filter: brightness(0.98) saturate(0.98);
+  }
+
+  44% {
+    box-shadow:
+      0 18px 42px rgb(8 33 31 / 16%),
+      0 0 0 rgb(255 246 225 / 0%),
+      inset 0 1px 0 rgb(255 255 255 / 14%);
+    filter: brightness(1) saturate(1);
+  }
+
+  64% {
+    box-shadow:
+      0 25px 58px rgb(8 33 31 / 18%),
+      0 0 22px rgb(255 246 225 / 34%),
+      inset 0 1px 0 rgb(255 255 255 / 24%);
+    filter: brightness(1.1) saturate(1.08);
+  }
+
+  82% {
+    box-shadow:
+      0 20px 48px rgb(8 33 31 / 17%),
+      0 0 12px rgb(255 246 225 / 18%),
+      inset 0 1px 0 rgb(255 255 255 / 18%);
+    filter: brightness(1.04) saturate(1.03);
+  }
+
+  100% {
+    box-shadow:
+      0 18px 42px rgb(8 33 31 / 16%),
+      inset 0 1px 0 rgb(255 255 255 / 14%);
+    filter: brightness(1) saturate(1);
+  }
+}
+
+@keyframes hotelListLightSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-42%);
+  }
+
+  18% {
+    opacity: 0.82;
+  }
+
+  62% {
+    opacity: 0.34;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(42%);
+  }
+}
+
+@keyframes hotelCardMediaReveal {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    filter: blur(10px) saturate(0.85) brightness(0.94);
+    transform: scale(1.035);
+  }
+
+  58% {
+    clip-path: inset(0 0 0 0);
+    filter: blur(0) saturate(1.04) brightness(1.04);
+    transform: scale(1.006);
+  }
+
+  100% {
+    clip-path: inset(0 0 0 0);
+    filter: blur(0) saturate(1) brightness(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes hotelCardContentReveal {
+  0% {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translate3d(28px, 0, 0);
+  }
+
+  56% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  72% {
+    filter: brightness(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hotelCardMediaDepart {
+  0% {
+    filter: blur(0) saturate(1) brightness(1);
+    transform: scale(1);
+  }
+
+  100% {
+    filter: blur(9px) saturate(0.78) brightness(0.84);
+    transform: scale(1.025);
+  }
+}
+
+@keyframes hotelCardContentDepart {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translate3d(-22px, 0, 0);
+  }
+}
+
 @keyframes progressGlint {
   0%,
   18% {
@@ -2635,14 +3004,12 @@ a {
       0 0 0 7px rgb(255 255 255 / 30%),
       0 0 0 13px rgb(20 93 79 / 6%),
       inset 0 1px 0 rgb(255 255 255 / 70%);
-    transform: scale(1.035);
   }
 
   100% {
     box-shadow:
       0 0 0 0 rgb(20 93 79 / 0%),
       inset 0 1px 0 rgb(255 255 255 / 62%);
-    transform: translateY(0) scale(1);
   }
 }
 
@@ -2857,7 +3224,7 @@ a {
   &__title {
     margin: 0;
     color: #111827;
-    font-size: clamp(36px, 7vw, 72px);
+    font-size: clamp(36px, 3vw, 72px);
     line-height: 1.02;
     letter-spacing: 0;
   }
@@ -2981,7 +3348,7 @@ a {
   }
 
   .hero-slider {
-    height: 800px;
+    height: clamp(640px, 166vw, 800px);
     min-height: 800px;
 
     &__content {
@@ -3035,18 +3402,23 @@ a {
 
   .hotels-section {
     &__filters {
-      gap: 42px;
+      --filter-all-width: 76px;
+      --filter-hotel-width: 188px;
+      --filter-chalet-width: 76px;
+      --filter-gap: 42px;
+
       padding: 96px 18px 30px;
+
+      &::before {
+        bottom: 30px;
+        left: 18px;
+        height: 52px;
+      }
     }
 
     &__filter {
       min-height: 52px;
-      min-width: 76px;
       font-size: 20px;
-
-      &--active {
-        min-width: 188px;
-      }
     }
 
     &__header {
@@ -3520,12 +3892,21 @@ a {
 
   .hotels-section {
     &__filters {
+      --filter-all-width: 70px;
+      --filter-hotel-width: 154px;
+      --filter-chalet-width: 70px;
+      --filter-gap: 30px;
+
       justify-content: flex-start;
-      gap: 30px;
       overflow-x: auto;
-      flex-wrap: nowrap;
       padding: 72px 16px 24px;
       scrollbar-width: none;
+
+      &::before {
+        bottom: 24px;
+        left: 16px;
+        height: 46px;
+      }
 
       &::-webkit-scrollbar {
         display: none;
@@ -3534,14 +3915,7 @@ a {
 
     &__filter {
       min-height: 46px;
-      min-width: auto;
-      flex: 0 0 auto;
-      padding: 0;
       font-size: 17px;
-
-      &--active {
-        min-width: 154px;
-      }
     }
 
     &__header {
@@ -4128,9 +4502,10 @@ a {
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1500px) {
   .app-header {
     &__toolbar {
+      grid-template-columns: 204px minmax(0, 1fr) auto 64px 46px;
       min-height: 76px;
       padding: 12px clamp(16px, 3vw, 28px);
       gap: 14px;
@@ -4181,6 +4556,7 @@ a {
 
     &__language {
       display: block;
+      width: 64px;
     }
 
     &__menu-button {
@@ -4252,8 +4628,8 @@ a {
     &__mobile-menu {
       position: relative;
       display: grid;
-      width: min(340px, calc(100vw - 24px));
-      margin: 8px 12px 0 auto;
+      width: min(250px, calc(100vw - 24px));
+      margin: 0 0 0 auto;
       overflow: hidden;
       padding: 12px;
       border: 1px solid rgb(255 255 255 / 50%);
@@ -4317,6 +4693,7 @@ a {
   }
 
   .language-switcher__trigger {
+    width: 64px;
     min-width: 64px;
     min-height: 34px;
     padding: 0 10px;
@@ -4380,14 +4757,14 @@ a {
 
     &__title {
       max-width: 470px;
-      font-size: clamp(34px, 5vw, 48px);
+      font-size: clamp(34px, 3vw, 48px);
       line-height: 0.98;
     }
 
     &__lead {
       max-width: 380px;
       margin-top: 18px;
-      font-size: clamp(12px, 1.6vw, 15px);
+      font-size: clamp(14px, 1.2vw, 15px);
       line-height: 1.3;
     }
 
@@ -4420,7 +4797,7 @@ a {
     grid-template-columns: minmax(0, 1fr) 132px;
 
     &__quote {
-      top: 10px;
+      top: -32px;
       left: 14px;
 
       svg {
@@ -4460,7 +4837,7 @@ a {
     &__title {
       max-width: 540px;
       padding-bottom: 12px;
-      font-size: clamp(30px, 4vw, 42px);
+      font-size: clamp(30px, 2.5vw, 42px);
     }
 
     &__subtitle {
@@ -4491,7 +4868,7 @@ a {
     }
 
     &__name {
-      font-size: clamp(22px, 3vw, 30px);
+      font-size: clamp(22px, 2vw, 30px);
     }
 
     &__location,
@@ -4538,7 +4915,7 @@ a {
     }
 
     &__title {
-      font-size: clamp(32px, 4.7vw, 42px);
+      font-size: clamp(32px, 2.5vw, 42px);
     }
 
     &__note {
@@ -4614,7 +4991,7 @@ a {
     }
 
     &__title {
-      font-size: clamp(32px, 4.5vw, 42px);
+      font-size: clamp(32px, 2.5vw, 42px);
     }
 
     &__body {
@@ -4683,7 +5060,7 @@ a {
     }
 
     &__title {
-      font-size: clamp(32px, 4.2vw, 42px);
+      font-size: clamp(32px, 2.5vw, 42px);
     }
 
     &__note {
@@ -4786,12 +5163,12 @@ a {
     }
 
     &__title {
-      font-size: clamp(32px, 4.2vw, 42px);
+      font-size: clamp(32px, 2.5vw, 42px);
     }
 
     &__lead {
       margin-top: 22px;
-      font-size: clamp(22px, 3.2vw, 31px);
+      font-size: clamp(22px, 2.5vw, 31px);
     }
 
     &__copy p,
@@ -4818,7 +5195,7 @@ a {
     }
 
     &__title {
-      font-size: clamp(30px, 4vw, 40px);
+      font-size: clamp(30px, 2.5vw, 40px);
     }
 
     &__stage {
@@ -4966,7 +5343,7 @@ a {
 
     &__title {
       max-width: 300px;
-      font-size: clamp(25px, 8vw, 36px);
+      font-size: clamp(25px, 4vw, 36px);
     }
 
     &__lead {
@@ -5405,6 +5782,120 @@ a {
 }
 
 @media (min-width: 641px) and (max-width: 1100px) {
+  .app-header {
+    &__toolbar {
+      grid-template-columns: 134px minmax(0, 1fr) auto 44px;
+      min-height: 50px;
+      padding: 6px 10px;
+      gap: 14px;
+    }
+
+    &__brand {
+      flex-basis: 134px;
+      width: 134px;
+      min-width: 134px;
+
+      img {
+        width: 134px !important;
+        min-width: 134px;
+      }
+    }
+
+    &__contacts {
+      display: flex;
+      gap: 18px;
+
+      a {
+        font-size: 10px;
+      }
+    }
+
+    &__contact--email {
+      display: inline;
+    }
+
+    &__menu-button {
+      display: none;
+    }
+
+    &__language {
+      width: 44px;
+    }
+  }
+
+  .language-switcher {
+    width: 44px;
+    flex-basis: 44px;
+  }
+
+  .language-switcher__trigger {
+    width: 44px;
+    min-width: 44px;
+    min-height: 24px;
+    padding: 0 6px;
+    gap: 2px;
+  }
+
+  .language-switcher__code {
+    width: 16px;
+    min-width: 16px;
+    font-size: 9px;
+  }
+
+  .language-code-enter-active,
+  .language-code-leave-active {
+    left: 6px;
+  }
+
+  .language-switcher__icon {
+    font-size: 14px;
+  }
+
+  .hero-slider {
+    height: clamp(998px, 104vw, 1000px);
+
+    &__image {
+      object-position: 50% center;
+    }
+
+    &__content {
+      padding: 108px 24px 0;
+    }
+
+    &__title {
+      max-width: 390px;
+    }
+
+    &__arrow {
+      top: 50%;
+      width: 42px;
+      height: 42px;
+    }
+
+    &__arrow--prev {
+      left: 28px;
+    }
+
+    &__arrow--next {
+      right: 28px;
+    }
+
+    &__progress {
+      top: clamp(640px, 68vw, 650px);
+      bottom: auto;
+      left: 24px;
+      display: grid;
+      width: min(272px, 38vw);
+    }
+  }
+
+  .hero-card {
+    right: 11vw;
+    top: 751px;
+    bottom: auto;
+    width: min(500px, 62vw);
+  }
+
   .hotel-preview {
     &__arrow {
       width: 34px;
@@ -5434,6 +5925,20 @@ a {
       ul {
         color: var(--page-warm);
       }
+    }
+  }
+
+  .why-me {
+    &__image {
+      height: 0;
+    }
+
+    &__panel {
+      padding: 0 24px 56px;
+    }
+
+    &__list {
+      gap: 22px;
     }
   }
 
@@ -5512,6 +6017,46 @@ a {
     &__dot-field {
       width: min(180px, 20vw);
       transform: translateX(-72%);
+    }
+  }
+}
+
+@media (min-width: 641px) and (max-width: 800px) {
+  .hero-slider {
+    &__content {
+      padding: 88px 10px 0;
+    }
+
+    &__title {
+      max-width: 360px;
+    }
+
+    &__lead {
+      max-width: 350px;
+    }
+
+    &__progress {
+      top: 640px;
+      left: 10px;
+    }
+  }
+
+  .hero-card {
+    top: 751px;
+    right: 24px;
+    width: min(500px, calc(100% - 72px));
+  }
+
+  .hotel-preview {
+    grid-template-columns: 1fr;
+
+    &__media {
+      min-height: 520px;
+    }
+
+    &__content {
+      min-height: 0;
+      padding: 26px 24px 34px;
     }
   }
 }
@@ -5621,7 +6166,7 @@ a {
     &__title {
       grid-column: 1 / 3;
       max-width: 720px;
-      font-size: clamp(42px, 5.25vw, 52px);
+      font-size: clamp(42px, 3vw, 52px);
       line-height: 0.98;
     }
 
@@ -5680,7 +6225,7 @@ a {
         margin: 0;
         padding: clamp(46px, 7vw, 80px) 0 28px;
         color: var(--page-warm);
-        font-size: clamp(24px, 3.2vw, 30px);
+        font-size: clamp(24px, 2.5vw, 30px);
         line-height: 1.08;
 
         &::before {
@@ -5767,7 +6312,7 @@ a {
 
     &__title {
       max-width: 430px;
-      font-size: clamp(34px, 9.5vw, 42px);
+      font-size: clamp(34px, 4vw, 42px);
       line-height: 0.98;
     }
 
@@ -5777,7 +6322,7 @@ a {
       padding: 22px 20px;
 
       p {
-        font-size: clamp(16px, 4.4vw, 18px);
+        font-size: clamp(16px, 2vw, 18px);
         line-height: 1.32;
       }
     }
@@ -5790,7 +6335,7 @@ a {
 
       p {
         max-width: 330px;
-        font-size: clamp(16px, 4.4vw, 17px);
+        font-size: clamp(16px, 2vw, 17px);
       }
     }
 
@@ -5805,7 +6350,7 @@ a {
         grid-column: 2 / 3;
         grid-row: 3 / 4;
         padding: 60px 0 28px;
-        font-size: clamp(20px, 5.8vw, 24px);
+        font-size: clamp(20px, 3vw, 24px);
       }
 
       ul {
@@ -5874,7 +6419,377 @@ a {
   }
 }
 
+@media (min-width: 381px) and (max-width: 640px) {
+  .app-header {
+    &__toolbar {
+      grid-template-columns: 118px minmax(0, 1fr) auto 42px;
+      min-height: 50px;
+      padding: 6px 8px;
+      gap: 8px;
+    }
+
+    &__brand {
+      flex: 0 0 118px;
+      width: 118px;
+      min-width: 118px;
+
+      img {
+        width: 118px !important;
+        min-width: 118px;
+      }
+    }
+
+    &__contacts {
+      display: flex;
+      flex: 1 1 auto;
+      justify-content: flex-end;
+      min-width: 0;
+      gap: 10px;
+
+      a {
+        font-size: 8px;
+      }
+    }
+
+    &__contact--email {
+      display: inline;
+    }
+
+    &__menu-button {
+      display: none;
+    }
+
+    &__language {
+      width: 42px;
+    }
+  }
+
+  .language-switcher {
+    width: 42px;
+    flex-basis: 42px;
+  }
+
+  .language-switcher__trigger {
+    width: 42px;
+    min-width: 42px;
+    min-height: 24px;
+    padding: 0 6px;
+    gap: 2px;
+  }
+
+  .language-switcher__code {
+    width: 15px;
+    min-width: 15px;
+    font-size: 9px;
+  }
+
+  .language-code-enter-active,
+  .language-code-leave-active {
+    left: 6px;
+  }
+
+  .language-switcher__icon {
+    font-size: 13px;
+  }
+
+  .hero-slider {
+    height: 800px;
+
+    &__content {
+      padding: 62px 8px 0;
+    }
+
+    &__title {
+      max-width: 315px;
+      font-size: 28px;
+      line-height: 0.98;
+    }
+
+    &__lead {
+      max-width: 300px;
+      margin-top: 12px;
+      font-size: 10px;
+      line-height: 1.28;
+    }
+
+    &__arrow {
+      display: inline-flex;
+      top: 42%;
+      width: 30px;
+      height: 30px;
+    }
+
+    &__arrow--prev {
+      left: 12px;
+    }
+
+    &__arrow--next {
+      right: 12px;
+    }
+
+    &__progress {
+      top: clamp(410px, 107vw, 515px);
+      bottom: auto;
+      left: 8px;
+      display: grid;
+      width: 210px;
+    }
+  }
+
+  .hero-card {
+    top: clamp(415px, 108vw, 520px);
+    right: 8px;
+    bottom: auto;
+    left: 8px;
+    width: auto;
+    min-height: 118px;
+    grid-template-columns: minmax(0, 1fr) 96px;
+
+    &__quote {
+      top: 8px;
+      left: 10px;
+
+      svg {
+        width: 20px;
+      }
+    }
+
+    &__body {
+      padding: 26px 10px 10px;
+
+      p {
+        font-size: 7px;
+        line-height: 1.25;
+      }
+    }
+
+    &__actions {
+      margin-top: 10px;
+      gap: 7px;
+    }
+
+    &__primary,
+    &__secondary {
+      min-height: 24px;
+      padding: 4px 10px;
+      font-size: 7px;
+    }
+  }
+
+  .hotels-section {
+    &__header {
+      min-height: 214px;
+      padding: 48px 16px 42px !important;
+    }
+
+    &__title {
+      font-size: 28px;
+    }
+  }
+
+  .hotel-preview {
+    &__media {
+      min-height: clamp(410px, 108vw, 520px);
+    }
+  }
+
+  .personal-selection {
+    &__copy {
+      padding-top: 44px;
+    }
+
+    &__footer {
+      padding-bottom: 50px;
+    }
+
+    &__phone {
+      width: min(224px, 100%);
+      height: 436px;
+    }
+
+    &__video {
+      p {
+        padding-top: 44px;
+        font-size: 18px;
+      }
+
+      ul {
+        grid-row: 5 / 6;
+        margin-top: 18px;
+        font-size: 11px;
+        gap: 8px;
+      }
+    }
+
+    &__video-button {
+      grid-row: 6 / 7;
+      min-height: 36px;
+      margin: 12px 0 42px;
+      font-size: 12px;
+    }
+  }
+
+  .instructor-section {
+    &__content {
+      padding-top: clamp(230px, 52vw, 250px);
+    }
+  }
+}
+
 @media (max-width: 380px) {
+  .app-header {
+    &__toolbar {
+      grid-template-columns: 112px minmax(0, 1fr) 42px;
+      min-height: 50px;
+      padding: 6px 8px;
+      gap: 8px;
+    }
+
+    &__brand {
+      flex-basis: 112px;
+      width: 112px;
+      min-width: 112px;
+    }
+
+    &__brand img {
+      width: 112px !important;
+      min-width: 112px;
+    }
+
+    &__contacts {
+      display: flex;
+      justify-content: flex-end;
+      min-width: 0;
+      gap: 0;
+
+      a {
+        font-size: 8px;
+      }
+    }
+
+    &__contact--email {
+      display: none;
+    }
+
+    &__menu-button {
+      display: none;
+    }
+
+    &__language {
+      width: 42px;
+    }
+  }
+
+  .language-switcher {
+    width: 42px;
+    flex-basis: 42px;
+  }
+
+  .language-switcher__trigger {
+    width: 42px;
+    min-width: 42px;
+    min-height: 24px;
+    padding: 0 6px;
+    gap: 2px;
+  }
+
+  .language-switcher__code {
+    width: 15px;
+    min-width: 15px;
+    font-size: 9px;
+  }
+
+  .language-code-enter-active,
+  .language-code-leave-active {
+    left: 6px;
+  }
+
+  .language-switcher__icon {
+    font-size: 13px;
+  }
+
+  .hero-slider {
+    height: 610px;
+
+    &__content {
+      padding: 58px 8px 0;
+    }
+
+    &__title {
+      max-width: 312px;
+      font-size: 28px;
+      line-height: 0.98;
+    }
+
+    &__lead {
+      max-width: 300px;
+      margin-top: 12px;
+      font-size: 10px;
+      line-height: 1.28;
+    }
+
+    &__progress {
+      top: 372px;
+      bottom: auto;
+      left: 8px;
+      display: grid;
+      width: 198px;
+    }
+  }
+
+  .hero-card {
+    top: 377px;
+    right: 8px;
+    bottom: auto;
+    left: 8px;
+    width: auto;
+    min-height: 112px;
+    grid-template-columns: minmax(0, 1fr) 92px;
+
+    &__quote {
+      top: 8px;
+      left: 10px;
+
+      svg {
+        width: 20px;
+      }
+    }
+
+    &__body {
+      padding: 26px 10px 10px;
+
+      p {
+        font-size: 7px;
+        line-height: 1.25;
+      }
+    }
+
+    &__actions {
+      margin-top: 9px;
+      gap: 6px;
+    }
+
+    &__primary,
+    &__secondary {
+      min-height: 24px;
+      padding: 4px 9px;
+      font-size: 7px;
+    }
+  }
+
+  .hotels-section {
+    &__header {
+      min-height: 204px;
+      padding: 44px 16px 38px !important;
+    }
+  }
+
+  .hotel-preview {
+    &__media {
+      min-height: 390px;
+    }
+  }
+
   .personal-selection {
     &__content {
       grid-template-columns: 20px minmax(0, 1fr) 76px;
