@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import { locales, type AppLocale } from '@/i18n'
+import { type AppLocale } from '@/i18n'
 import menuItemsMock from '@/mocks/menu.json'
 import type { MenuItem } from '@/types'
 import AnimatedText from '@/components/AnimatedText.vue'
@@ -22,10 +22,6 @@ const currentLocale = computed<AppLocale>({
     document.documentElement.lang = value
   },
 })
-
-const selectLocale = (value: AppLocale) => {
-  currentLocale.value = value
-}
 
 const isActiveRoute = (routeName: string) => {
   return route.name === routeName
@@ -58,55 +54,43 @@ const isActiveRoute = (routeName: string) => {
       </nav>
 
       <div class="app-header__contacts">
-        <a href="mailto:info@fursadolomiti.com">info@fursadolomiti.com</a>
-        <a href="tel:+393341822113">+39 334 1822 113</a>
+        <a class="app-header__contact app-header__contact--email" href="mailto:info@fursadolomiti.com">info@fursadolomiti.com</a>
+        <a class="app-header__contact app-header__contact--phone" href="tel:+393341822113">+39 334 1822 113</a>
       </div>
 
       <LanguageSwitcher class="app-header__language" />
 
       <q-btn
         class="app-header__menu-button"
+        :class="{ 'app-header__menu-button--open': isMobileMenuOpen }"
         flat
         round
         dense
-        icon="menu"
+        :icon="isMobileMenuOpen ? 'close' : 'menu'"
         :aria-label="isMobileMenuOpen ? t('app.closeMenu') : t('app.openMenu')"
+        :aria-expanded="isMobileMenuOpen"
+        aria-controls="app-header-mobile-menu"
         @click="isMobileMenuOpen = !isMobileMenuOpen"
       />
     </q-toolbar>
 
-    <q-slide-transition>
-      <div v-if="isMobileMenuOpen" class="app-header__mobile-menu">
+    <Transition name="header-menu">
+      <div v-if="isMobileMenuOpen" id="app-header-mobile-menu" class="app-header__mobile-menu">
         <q-btn
-          v-for="item in menuItems"
+          v-for="(item, index) in menuItems"
           :key="item.id"
           v-close-popup
           flat
           no-caps
           class="app-header__mobile-link"
           :class="{ 'app-header__mobile-link--active': isActiveRoute(item.routeName) }"
+          :style="{ '--item-index': index }"
           :to="{ name: item.routeName }"
           @click="isMobileMenuOpen = false"
         >
           <AnimatedText :text="item.labels[currentLocale]" tag="span" />
         </q-btn>
-        <div class="app-header__mobile-contacts">
-          <a href="mailto:info@fursadolomiti.com">info@fursadolomiti.com</a>
-          <a href="tel:+393341822113">+39 334 1822 113</a>
-        </div>
-        <div class="app-header__mobile-languages" :aria-label="t('app.language')">
-          <button
-            v-for="value in locales"
-            :key="value"
-            class="app-header__mobile-language"
-            :class="{ 'app-header__mobile-language--active': currentLocale === value }"
-            type="button"
-            @click="selectLocale(value)"
-          >
-            <AnimatedText :text="value.toUpperCase()" tag="span" />
-          </button>
-        </div>
       </div>
-    </q-slide-transition>
+    </Transition>
   </q-header>
 </template>

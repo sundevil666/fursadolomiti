@@ -76,9 +76,9 @@ const scrollToTop = () => {
 
 <template>
   <footer id="app-footer" class="app-footer">
-    <div class="app-footer__dot-field" aria-hidden="true" />
-
     <div class="app-footer__inner">
+      <div class="app-footer__dot-field" aria-hidden="true" />
+
       <div class="app-footer__content">
         <div class="app-footer__top">
           <RouterLink class="app-footer__brand" :to="{ name: 'home' }" :aria-label="t('app.name')">
@@ -154,17 +154,8 @@ const scrollToTop = () => {
         </div>
 
         <div class="app-footer__gallery" :aria-label="t('footer.gallery')">
-          <figure
-            v-for="image in footerImages"
-            :key="image.src"
-            class="app-footer__camera"
-          >
-            <img
-              class="app-footer__image"
-              :src="image.src"
-              :alt="t(image.altKey)"
-              loading="lazy"
-            />
+          <figure v-for="image in footerImages" :key="image.src" class="app-footer__camera">
+            <img class="app-footer__image" :src="image.src" :alt="t(image.altKey)" loading="lazy" />
             <figcaption>{{ image.label }}</figcaption>
           </figure>
         </div>

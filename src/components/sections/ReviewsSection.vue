@@ -193,6 +193,7 @@ onBeforeUnmount(stopReviewAutoplay)
             :key="index"
             class="reviews-section__dot"
             :class="{ 'reviews-section__dot--active': index === activeReviewIndex }"
+            :style="{ '--review-slide-duration': `${reviewAutoplayDelay}ms` }"
             type="button"
             @click="setReview(index)"
           />

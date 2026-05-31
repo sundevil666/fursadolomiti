@@ -12,7 +12,7 @@ const props = defineProps<{
 const { t, tm } = useI18n()
 type HotelFilter = 'all' | HotelCategory
 
-const activeFilter = ref<HotelFilter>('all')
+const activeFilter = ref<HotelFilter>('fourStar')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
 
 const activeHotelSlides = ref<Record<string, number>>(

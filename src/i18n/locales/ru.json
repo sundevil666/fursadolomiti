@@ -44,9 +44,9 @@
       "features": "Особенности:",
       "filters": {
         "label": "Фильтр отелей",
-        "all": "Все отели",
-        "fiveStar": "5* отели",
-        "fourStar": "4* отели",
+        "all": "Все",
+        "fiveStar": "Отели 5★",
+        "fourStar": "Отели 4★",
         "chalet": "Шале"
       },
       "alpenroyal": {
