@@ -54,24 +54,6 @@
     }
   },
   {
-    "id": "helicopters",
-    "title": {
-      "ru": "Вертолеты",
-      "en": "Helicopters",
-      "it": "Elicotteri"
-    },
-    "lead": {
-      "ru": "Будущий раздел для трансферов, экскурсий и авиационных услуг.",
-      "en": "A future section for transfers, excursions and aviation services.",
-      "it": "Una futura sezione per transfer, escursioni e servizi aerei."
-    },
-    "body": {
-      "ru": "Здесь можно будет разместить маршруты, преимущества, стоимость и форму обращения. Пока страница показывает тестовый текст из моков.",
-      "en": "Routes, benefits, pricing and a request form can be added here. For now, the page displays mock-based test content.",
-      "it": "Qui si potranno aggiungere rotte, vantaggi, prezzi e modulo di richiesta. Per ora la pagina mostra contenuto di test dai mock."
-    }
-  },
-  {
     "id": "webcams",
     "title": {
       "ru": "Веб-камеры",

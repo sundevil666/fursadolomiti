@@ -22,11 +22,11 @@
     },
     "slide2": {
       "title": "Vacanza in montagna senza stress",
-      "text": "Troveremo l'area, l'hotel, il trasferimento e la stagione adatti al tuo viaggio, cosi tutti i dettagli saranno pronti prima della partenza."
+      "text": "Ti aiuterò a trovare l'area, l'hotel, il trasferimento e la stagione adatti al tuo viaggio, cosi tutti i dettagli saranno pronti prima della partenza."
     },
     "slide3": {
       "title": "Dolomiti con un esperto locale",
-      "text": "Consigliamo dove alloggiare, sciare, passeggiare e cenare, e risolviamo questioni importanti personalmente e rapidamente."
+      "text": "Ti consiglierò dove alloggiare, sciare, passeggiare e cenare, e risolverò le questioni importanti personalmente e rapidamente."
     },
     "hero": {
       "quote": "Vivo con la mia famiglia nelle Dolomiti, in Val Gardena, dal 2000. Aiuto ospiti da tutto il mondo a trovare il posto migliore per una vacanza in una delle migliori località sciistiche al mondo. Scegli in autonomia oppure scrivimi: risponderò personalmente.",
@@ -49,6 +49,17 @@
         "fourStar": "Hotel 4*",
         "chalet": "Chalet"
       },
+      "oswald": {
+        "name": "Oswald 4★",
+        "location": "Selva",
+        "description": "Hotel moderno con viste panoramiche e accesso comodo agli impianti",
+        "features": [
+          "Navetta per l’impianto",
+          "Piscina sul tetto con vista sulle montagne",
+          "Area spa per relax e recupero",
+          "Adatto a vacanze tranquille e attive"
+        ]
+      },
       "alpenroyal": {
         "name": "Alpenroyal 5★",
         "location": "Selva",
@@ -69,6 +80,65 @@
           "Ski-in / ski-out",
           "Jacuzzi esterna e zone relax",
           "Personale russofono"
+        ]
+      },
+      "posta": {
+        "name": "Posta 4★",
+        "location": "Santa Cristina",
+        "description": "Hotel per famiglie vicino all'impianto con programma attivo per bambini e adulti",
+        "features": [
+          "Programmi e attivita con guida",
+          "A pochi passi dall'impianto",
+          "Spa e piscina per tutta la famiglia",
+          "Ottimo per una vacanza con bambini"
+        ]
+      },
+      "continental": {
+        "name": "Continental 4★",
+        "location": "Selva",
+        "description": "Hotel ski-in / ski-out direttamente sulle piste del Sellaronda, con spa panoramica e accesso comodo a tutti gli itinerari della regione",
+        "features": [
+          "Cucina varia e cene gastronomiche",
+          "Sky Pool con vista sulle Dolomiti",
+          "Grande area spa con zona separata per adulti",
+          "Atmosfera familiare con attenzione ai dettagli"
+        ]
+      },
+      "lunaMondschein": {
+        "name": "Luna Mondschein 4★",
+        "location": "Ortisei",
+        "description": "Hotel confortevole con ampia infrastruttura spa e accesso comodo alle attivita all'aperto",
+        "features": [
+          "Transfer comodo verso gli impianti",
+          "Ampio centro spa con piscine e saune",
+          "Piscina esterna e giardino nella stagione calda",
+          "Adatto a vacanze attive tutto l'anno"
+        ]
+      },
+      "dolomitesChalet": {
+        "name": "Chalet nelle Dolomiti",
+        "location": "Selezione su richiesta individuale",
+        "description": "Seleziono chalet su richiesta individuale, per chi apprezza privacy e spazio privato.",
+        "featuresLabel": "Perche scegliere uno chalet:",
+        "features": [
+          "Privacy completa",
+          "Per famiglia o gruppo di amici",
+          "Spa privata e viste panoramiche",
+          "Interni e architettura premium"
+        ],
+        "stats": [
+          {
+            "icon": "groups",
+            "value": "fino a 8"
+          },
+          {
+            "icon": "bed",
+            "value": "3"
+          },
+          {
+            "icon": "shower",
+            "value": "2"
+          }
         ]
       }
     },

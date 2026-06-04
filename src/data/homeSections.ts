@@ -13,6 +13,8 @@ export type HotelPreview = {
   locationKey: string
   descriptionKey: string
   featuresKey: string
+  featuresLabelKey?: string
+  statsKey?: string
 }
 
 export type HotelCategory = 'fiveStar' | 'fourStar' | 'chalet'
@@ -66,13 +68,13 @@ export const heroSlides: HeroSlide[] = [
 
 export const hotelPreviews: HotelPreview[] = [
   {
-    id: 'alpenroyal',
-    category: 'fiveStar',
-    images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png',],
-    nameKey: 'home.hotels.alpenroyal.name',
-    locationKey: 'home.hotels.alpenroyal.location',
-    descriptionKey: 'home.hotels.alpenroyal.description',
-    featuresKey: 'home.hotels.alpenroyal.features',
+    id: 'oswald',
+    category: 'fourStar',
+    images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
+    nameKey: 'home.hotels.oswald.name',
+    locationKey: 'home.hotels.oswald.location',
+    descriptionKey: 'home.hotels.oswald.description',
+    featuresKey: 'home.hotels.oswald.features',
   },
   {
     id: 'edenselva',
@@ -82,5 +84,52 @@ export const hotelPreviews: HotelPreview[] = [
     locationKey: 'home.hotels.edenselva.location',
     descriptionKey: 'home.hotels.edenselva.description',
     featuresKey: 'home.hotels.edenselva.features',
+  },
+  {
+    id: 'alpenroyal',
+    category: 'fiveStar',
+    images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
+    nameKey: 'home.hotels.alpenroyal.name',
+    locationKey: 'home.hotels.alpenroyal.location',
+    descriptionKey: 'home.hotels.alpenroyal.description',
+    featuresKey: 'home.hotels.alpenroyal.features',
+  },
+  {
+    id: 'posta',
+    category: 'fourStar',
+    images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    nameKey: 'home.hotels.posta.name',
+    locationKey: 'home.hotels.posta.location',
+    descriptionKey: 'home.hotels.posta.description',
+    featuresKey: 'home.hotels.posta.features',
+  },
+  {
+    id: 'continental',
+    category: 'fourStar',
+    images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
+    nameKey: 'home.hotels.continental.name',
+    locationKey: 'home.hotels.continental.location',
+    descriptionKey: 'home.hotels.continental.description',
+    featuresKey: 'home.hotels.continental.features',
+  },
+  {
+    id: 'luna-mondschein',
+    category: 'fourStar',
+    images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    nameKey: 'home.hotels.lunaMondschein.name',
+    locationKey: 'home.hotels.lunaMondschein.location',
+    descriptionKey: 'home.hotels.lunaMondschein.description',
+    featuresKey: 'home.hotels.lunaMondschein.features',
+  },
+  {
+    id: 'dolomites-chalet',
+    category: 'chalet',
+    images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    nameKey: 'home.hotels.dolomitesChalet.name',
+    locationKey: 'home.hotels.dolomitesChalet.location',
+    descriptionKey: 'home.hotels.dolomitesChalet.description',
+    featuresKey: 'home.hotels.dolomitesChalet.features',
+    featuresLabelKey: 'home.hotels.dolomitesChalet.featuresLabel',
+    statsKey: 'home.hotels.dolomitesChalet.stats',
   },
 ]

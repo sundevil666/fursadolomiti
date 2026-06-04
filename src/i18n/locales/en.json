@@ -22,11 +22,11 @@
     },
     "slide2": {
       "title": "Mountain vacation without hassle",
-      "text": "We'll match the area, hotel, transfer and season to your trip so all details come together before departure."
+      "text": "I will match the area, hotel, transfer and season to your trip so all details come together before departure."
     },
     "slide3": {
       "title": "Dolomites with a local expert",
-      "text": "We'll advise where to stay, ski, walk and dine, and solve important questions personally and quickly."
+      "text": "I will advise where to stay, ski, walk and dine, and solve important questions personally and quickly."
     },
     "hero": {
       "quote": "I have lived with my family in the Dolomites, in Val Gardena, since 2000. I help guests from all over the world find the best place to stay in one of the world’s finest ski resorts. Choose on your own or message me, and I will reply personally.",
@@ -49,6 +49,17 @@
         "fourStar": "4* hotels",
         "chalet": "Chalets"
       },
+      "oswald": {
+        "name": "Oswald 4★",
+        "location": "Selva",
+        "description": "Modern hotel with panoramic views and convenient access to the lifts",
+        "features": [
+          "Shuttle to the lift",
+          "Rooftop pool with mountain views",
+          "Spa area for rest and recovery",
+          "Suitable for both calm and active holidays"
+        ]
+      },
       "alpenroyal": {
         "name": "Alpenroyal 5★",
         "location": "Selva",
@@ -69,6 +80,65 @@
           "Ski-in / ski-out",
           "Outdoor jacuzzi and relaxation areas",
           "Russian-speaking staff"
+        ]
+      },
+      "posta": {
+        "name": "Posta 4★",
+        "location": "Santa Cristina",
+        "description": "Family hotel near the lift with an active program for children and adults",
+        "features": [
+          "Guided programs and activities",
+          "Within walking distance of the lift",
+          "Spa and pool for the whole family",
+          "Excellent choice for holidays with children"
+        ]
+      },
+      "continental": {
+        "name": "Continental 4★",
+        "location": "Selva",
+        "description": "Ski-in / ski-out hotel directly on the Sellaronda slopes, with a panoramic spa area and convenient access to all routes in the region",
+        "features": [
+          "Varied cuisine and gourmet dinners",
+          "Sky Pool with views of the Dolomites",
+          "Large spa area with a separate adults-only zone",
+          "Family-hotel atmosphere with attention to detail"
+        ]
+      },
+      "lunaMondschein": {
+        "name": "Luna Mondschein 4★",
+        "location": "Ortisei",
+        "description": "Comfortable hotel with extensive spa facilities and convenient access to active holidays",
+        "features": [
+          "Convenient transfer to the lifts",
+          "Spacious spa center with pools and saunas",
+          "Outdoor pool and garden in the warm season",
+          "Suitable for active holidays year-round"
+        ]
+      },
+      "dolomitesChalet": {
+        "name": "Chalet in the Dolomites",
+        "location": "Selected by individual request",
+        "description": "I select chalets for individual requests, for those who value privacy and their own space.",
+        "featuresLabel": "Why guests choose chalets:",
+        "features": [
+          "Complete privacy",
+          "For a family or group of friends",
+          "Private spa and panoramic views",
+          "Premium interior and architecture"
+        ],
+        "stats": [
+          {
+            "icon": "groups",
+            "value": "up to 8"
+          },
+          {
+            "icon": "bed",
+            "value": "3"
+          },
+          {
+            "icon": "shower",
+            "value": "2"
+          }
         ]
       }
     },

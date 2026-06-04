@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 import MainLayout from '@/layouts/MainLayout.vue'
-import HelicoptersPage from '@/pages/HelicoptersPage.vue'
 import HomePage from '@/pages/HomePage.vue'
 import HotelsPage from '@/pages/HotelsPage.vue'
 import RentalPage from '@/pages/RentalPage.vue'
@@ -26,11 +25,6 @@ export const routes: RouteRecordRaw[] = [
         path: 'rental',
         name: 'rental',
         component: RentalPage,
-      },
-      {
-        path: 'helicopters',
-        name: 'helicopters',
-        component: HelicoptersPage,
       },
       {
         path: 'webcams',

@@ -18,15 +18,6 @@
     }
   },
   {
-    "id": "helicopters",
-    "routeName": "helicopters",
-    "labels": {
-      "ru": "Вертолеты",
-      "en": "Helicopters",
-      "it": "Elicotteri"
-    }
-  },
-  {
     "id": "webcams",
     "routeName": "webcams",
     "labels": {

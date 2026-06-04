@@ -11,6 +11,10 @@ const props = defineProps<{
 
 const { t, tm } = useI18n()
 type HotelFilter = 'all' | HotelCategory
+type HotelStat = {
+  icon: string
+  value: string
+}
 
 const activeFilter = ref<HotelFilter>('fourStar')
 const previousFilter = ref<HotelFilter>('fourStar')
@@ -43,6 +47,7 @@ const getFilterCount = (filter: HotelFilter) => {
 const isFilterDisabled = (filter: HotelFilter) => !hasLimit.value && getFilterCount(filter) === 0
 
 const getHotelFeatures = (key: string) => tm(key) as string[]
+const getHotelStats = (key?: string) => (key ? (tm(key) as HotelStat[]) : [])
 
 const getActiveHotelSlide = (hotelId: string) => activeHotelSlides.value[hotelId] ?? 0
 
@@ -203,7 +208,10 @@ onBeforeUnmount(() => {
 
           <div class="hotel-preview__features">
             <span class="hotel-preview__features-label">
-              <AnimatedText :text="t('home.hotels.features')" tag="span" />
+              <AnimatedText
+                :text="t(hotel.featuresLabelKey ?? 'home.hotels.features')"
+                tag="span"
+              />
             </span>
             <ul class="hotel-preview__features-list">
               <li v-for="feature in getHotelFeatures(hotel.featuresKey)" :key="feature">
@@ -211,6 +219,13 @@ onBeforeUnmount(() => {
               </li>
             </ul>
           </div>
+
+          <ul v-if="hotel.statsKey" class="hotel-preview__stats" :aria-label="t(hotel.nameKey)">
+            <li v-for="stat in getHotelStats(hotel.statsKey)" :key="`${stat.icon}-${stat.value}`">
+              <q-icon :name="stat.icon" />
+              <span>{{ stat.value }}</span>
+            </li>
+          </ul>
 
           <q-btn
             unelevated
