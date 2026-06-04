@@ -6,15 +6,6 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
   },
-  "form": {
-    "title": "Request",
-    "name": "Name",
-    "phone": "Phone",
-    "message": "Message",
-    "send": "Send",
-    "success": "Request is ready to be sent.",
-    "error": "Could not send the request."
-  },
   "home": {
     "slide1": {
       "title": "Hotels in Val Gardena: Personal Dolomites Selection",
@@ -159,7 +150,6 @@
       "note": "Booking through FursaDolomiti is more than a convenient way to find the right hotel for your stay. It gives you access to bonuses that are not available with a direct booking.",
       "help": "If you need help choosing a hotel or chalet, message me and I will help you find the right option.",
       "whatsapp": "Write on WhatsApp",
-      "hotels": "View hotels",
       "copyPromo": "Copy promo code",
       "promoCopied": "Promo code copied",
       "disclaimer": "The size and format of the bonus depend on the hotel and booking period.",
@@ -199,9 +189,6 @@
     "whyMe": {
       "title": "Why guests book through me",
       "imageAlt": "Hotel interior in the Dolomites",
-      "eyebrow": "Personal support",
-      "panelTitle": "You book directly, while I help you get more",
-      "lead": "I have lived in the Dolomites, in Val Gardena, for more than 25 years and recommend only hotels I truly know personally.",
       "reasons": [
         {
           "id": 1,
@@ -271,18 +258,17 @@
       "cta": "Write on WhatsApp"
     },
     "reviews": {
-      "eyebrow": "Guest reviews",
       "title": "What guests say",
-      "lead": "Every trip is shaped around a real family, season and expectation, which is why guests come back and recommend me to friends.",
-      "cta": "Discuss your trip",
       "readMore": "Read more",
-      "readLess": "Collapse",
+      "openReview": "Open full review",
+      "fullReview": "Full review",
+      "close": "Close review",
       "previous": "Previous review",
       "next": "Next review",
       "items": [
         {
           "id": 1,
-          "text": "At first we chose one option ourselves, but after Tatiana’s advice we stopped at another one, and it turned out to be the best decision. The location, service and atmosphere fully matched our expectations.",
+          "text": "At first we chose one option ourselves, but after Tatiana’s advice we stopped at another one, and it turned out to be the best decision. We did not want the trip to become a long chain of comparing hotels, transfers and small conditions, because we had very little time to prepare. Tatiana calmly walked us through our expectations, explained the difference between several areas and suggested an option that had not been obvious to us at the beginning.\n\nIn the end, the location, service and atmosphere fully matched our expectations. The lifts were easy to reach, there were good restaurants nearby, and the hotel itself was quiet, neat and very comfortable. We especially appreciated the practical tips in advance: where to rent equipment, when to leave for the slopes and what to book before arrival. The trip felt well organized, but never over-planned.",
           "author": "Alexey",
           "location": "Germany",
           "date": "May, 2026",
@@ -316,25 +302,7 @@
       "seceda": "Secada webcam",
       "alpeDiSiusi": "Alpe di Siusi webcam",
       "ciampinoi": "Ciampinoi webcam",
-      "dantercapies": "Dantercapies webcam",
-      "ski": "Ski holiday in the Dolomites",
-      "hotel": "Hotel in Val Gardena",
-      "dolomites": "Dolomites landscape",
-      "chalet": "Mountain chalet"
-    },
-    "logos": {
-      "valGardena": {
-        "title": "Val Gardena",
-        "text": "Dolomites"
-      },
-      "dolomitiSuperski": {
-        "title": "Dolomiti",
-        "text": "Superski"
-      },
-      "southTyrol": {
-        "title": "South Tyrol",
-        "text": "Alto Adige"
-      }
+      "dantercapies": "Dantercapies webcam"
     }
   }
 }

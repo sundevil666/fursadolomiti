@@ -6,15 +6,6 @@
     "openMenu": "Apri menu",
     "closeMenu": "Chiudi menu"
   },
-  "form": {
-    "title": "Richiesta",
-    "name": "Nome",
-    "phone": "Telefono",
-    "message": "Messaggio",
-    "send": "Invia",
-    "success": "La richiesta e pronta per l'invio.",
-    "error": "Impossibile inviare la richiesta."
-  },
   "home": {
     "slide1": {
       "title": "Hotel in Val Gardena: Selezione Personale Dolomiti",
@@ -159,7 +150,6 @@
       "note": "Prenotare tramite FursaDolomiti non e solo un modo comodo per trovare l'hotel giusto per il soggiorno. Ti da accesso a bonus non disponibili con una prenotazione diretta.",
       "help": "Se hai bisogno di aiuto per scegliere un hotel o uno chalet, scrivimi e ti aiutero a trovare l'opzione giusta.",
       "whatsapp": "Scrivi su WhatsApp",
-      "hotels": "Vedi hotel",
       "copyPromo": "Copia codice promo",
       "promoCopied": "Codice promo copiato",
       "disclaimer": "La dimensione e il formato del bonus dipendono dall'hotel e dal periodo di prenotazione.",
@@ -199,9 +189,6 @@
     "whyMe": {
       "title": "Perche si prenota tramite me",
       "imageAlt": "Interno di un hotel nelle Dolomiti",
-      "eyebrow": "Supporto personale",
-      "panelTitle": "Prenoti direttamente, mentre io ti aiuto a ottenere di piu",
-      "lead": "Vivo nelle Dolomiti, in Val Gardena, da oltre 25 anni e consiglio solo hotel che conosco davvero personalmente.",
       "reasons": [
         {
           "id": 1,
@@ -271,18 +258,17 @@
       "cta": "Scrivi su WhatsApp"
     },
     "reviews": {
-      "eyebrow": "Recensioni degli ospiti",
       "title": "Cosa dicono gli ospiti",
-      "lead": "Ogni viaggio viene costruito intorno a una famiglia reale, alla stagione e alle aspettative: per questo gli ospiti tornano e mi consigliano agli amici.",
-      "cta": "Parliamo del viaggio",
       "readMore": "Leggi di più",
-      "readLess": "Comprimi",
+      "openReview": "Apri la recensione completa",
+      "fullReview": "Recensione completa",
+      "close": "Chiudi la recensione",
       "previous": "Recensione precedente",
       "next": "Recensione successiva",
       "items": [
         {
           "id": 1,
-          "text": "All'inizio avevamo scelto una soluzione da soli, ma dopo il consiglio di Tatiana ci siamo fermati su un'altra, e alla fine e stata la decisione migliore. Posizione, servizio e atmosfera hanno corrisposto pienamente alle aspettative.",
+          "text": "All'inizio avevamo scelto una soluzione da soli, ma dopo il consiglio di Tatiana ci siamo fermati su un'altra, e alla fine e stata la decisione migliore. Per noi era importante che il viaggio non diventasse una lunga serie di confronti tra hotel, transfer e piccoli dettagli, perché avevamo poco tempo per prepararci. Tatiana ha analizzato con calma le nostre aspettative, ci ha spiegato le differenze tra varie zone e ha proposto una soluzione che all'inizio non avevamo considerato.\n\nAlla fine posizione, servizio e atmosfera hanno corrisposto pienamente alle aspettative. Gli impianti erano facili da raggiungere, vicino c'erano buoni ristoranti e l'hotel era tranquillo, curato e molto confortevole. Abbiamo apprezzato soprattutto i consigli pratici ricevuti prima della partenza: dove noleggiare l'attrezzatura, quando andare sulle piste e cosa prenotare in anticipo. Il viaggio e stato organizzato bene, ma senza la sensazione di avere ogni minuto programmato.",
           "author": "Alexey",
           "location": "Germania",
           "date": "Maggio, 2026",
@@ -316,25 +302,7 @@
       "seceda": "Webcam Secada",
       "alpeDiSiusi": "Webcam Alpe di Siusi",
       "ciampinoi": "Webcam Ciampinoi",
-      "dantercapies": "Webcam Dantercapies",
-      "ski": "Vacanza sugli sci nelle Dolomiti",
-      "hotel": "Hotel in Val Gardena",
-      "dolomites": "Paesaggio delle Dolomiti",
-      "chalet": "Chalet in montagna"
-    },
-    "logos": {
-      "valGardena": {
-        "title": "Val Gardena",
-        "text": "Dolomites"
-      },
-      "dolomitiSuperski": {
-        "title": "Dolomiti",
-        "text": "Superski"
-      },
-      "southTyrol": {
-        "title": "South Tyrol",
-        "text": "Alto Adige"
-      }
+      "dantercapies": "Webcam Dantercapies"
     }
   }
 }

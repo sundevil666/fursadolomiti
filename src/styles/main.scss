@@ -473,76 +473,6 @@ a {
   transform: translateY(-20px);
 }
 
-.app-back-to-top {
-  position: fixed;
-  right: max(24px, calc((100vw - 1340px) / 2));
-  bottom: 28px;
-  z-index: 70;
-  width: 48px;
-  height: 48px;
-  background: rgb(246 244 235 / 90%);
-  color: #145d4f;
-  box-shadow: 0 12px 30px rgb(5 38 35 / 18%);
-  transition:
-    box-shadow 320ms ease,
-    background 320ms ease,
-    transform 320ms cubic-bezier(0.2, 0.9, 0.2, 1);
-
-  &::before {
-    border-radius: inherit;
-    background: radial-gradient(
-      circle at 35% 20%,
-      rgb(255 255 255 / 92%),
-      rgb(255 255 255 / 0) 42%
-    );
-    opacity: 0;
-    transition: opacity 320ms ease;
-    content: '';
-  }
-
-  .q-icon {
-    font-size: 28px;
-    transition: transform 320ms cubic-bezier(0.2, 0.9, 0.2, 1);
-  }
-
-  &:hover,
-  &:focus-visible {
-    background: #fffaf0;
-    box-shadow:
-      0 14px 36px rgb(5 38 35 / 24%),
-      0 0 0 8px rgb(255 250 240 / 18%);
-    transform: scale(1.1);
-
-    &::before {
-      opacity: 1;
-    }
-
-    .q-icon {
-      transform: translateY(-2px);
-    }
-  }
-
-  &:focus-visible {
-    outline: 2px solid #efe4c9;
-    outline-offset: 3px;
-  }
-}
-
-.back-to-top-enter-active,
-.back-to-top-leave-active {
-  transition:
-    opacity 260ms ease,
-    filter 260ms ease,
-    transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.back-to-top-enter-from,
-.back-to-top-leave-to {
-  filter: blur(8px);
-  opacity: 0;
-  transform: translate3d(18px, 18px, 0) scale(0.78);
-}
-
 .home-page {
   min-height: 100vh;
   background: var(--page-cream);
@@ -2052,7 +1982,19 @@ a {
     display: flex;
     flex-direction: column;
     min-height: 400px;
+    max-height: 400px;
+    overflow: hidden;
     padding: 18px 40px 29px;
+    cursor: pointer;
+    transition:
+      background 220ms ease,
+      transform 220ms ease;
+
+    &:hover,
+    &:focus-visible {
+      background: rgb(255 249 236 / 58%);
+      outline: 0;
+    }
 
     & + & {
       border-left: 1px solid rgb(203 191 181 / 72%);
@@ -2069,23 +2011,27 @@ a {
   }
 
   &__text {
+    display: -webkit-box;
+    overflow: hidden;
     max-width: 500px;
+    min-height: 0;
     margin: 18px 0 0;
     color: #08211f;
     font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
     font-size: 16px;
     font-weight: 500;
     line-height: 1.42;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 8;
   }
 
   &__read-more {
     align-self: flex-start;
-    margin-top: 0;
+    margin-top: 10px;
     padding: 0;
     border: 0;
     background: transparent;
     color: #175445;
-    cursor: pointer;
     font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
     font-size: 16px;
     font-weight: 800;
@@ -2289,6 +2235,138 @@ a {
         animation: hotelProgressFill var(--review-slide-duration) linear forwards;
       }
     }
+  }
+}
+
+body.is-review-modal-open {
+  overflow: hidden;
+}
+
+.reviews-modal {
+  position: fixed;
+  z-index: 80;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  inset: 0;
+  padding: 28px;
+  background: rgb(92 80 52 / 38%);
+  color: #08211f;
+}
+
+.reviews-modal__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(604px, 100%);
+  max-height: min(84vh, 844px);
+  overflow: hidden;
+  padding: 10px 40px 36px;
+  border-radius: 8px;
+  background: #fff7e4;
+  box-shadow: 0 20px 70px rgb(8 33 31 / 18%);
+}
+
+.reviews-modal__close {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  z-index: 2;
+  display: inline-grid;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #6d5b4d;
+  cursor: pointer;
+  transition:
+    color 200ms ease,
+    background 200ms ease;
+
+  .q-icon {
+    font-size: 23px;
+  }
+
+  &:hover,
+  &:focus-visible {
+    background: rgb(23 84 69 / 8%);
+    color: #08211f;
+    outline: 0;
+  }
+}
+
+.reviews-modal__quote {
+  display: block;
+  margin-left: -2px;
+  color: #175445;
+  font-family: 'Playfair Display', serif;
+  font-size: 74px;
+  font-weight: 700;
+  line-height: 0.74;
+}
+
+.reviews-modal__content {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 18px;
+  scrollbar-color: #efe4c9 transparent;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: #efe4c9;
+  }
+}
+
+.reviews-modal__text {
+  margin: 0;
+  white-space: pre-line;
+  color: #08211f;
+  font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.33;
+}
+
+.reviews-modal__author {
+  display: flex;
+  align-items: center;
+  margin-top: 26px;
+  padding-top: 0;
+  gap: 14px;
+}
+
+.review-modal-enter-active,
+.review-modal-leave-active {
+  transition: opacity 220ms ease;
+
+  .reviews-modal__panel {
+    transition:
+      opacity 220ms ease,
+      transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+.review-modal-enter-from,
+.review-modal-leave-to {
+  opacity: 0;
+
+  .reviews-modal__panel {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
   }
 }
 
@@ -3322,16 +3400,6 @@ a {
       font-weight: 600;
     }
 
-    &__mobile-contacts {
-      display: grid;
-      margin-top: 8px;
-      padding-top: 12px;
-      border-top: 1px solid rgb(20 93 79 / 20%);
-      color: #145d4f;
-      font-weight: 700;
-      gap: 6px;
-    }
-
     &__mobile-languages {
       display: inline-grid;
       width: fit-content;
@@ -3784,6 +3852,7 @@ a {
 
     &__card {
       min-height: 320px;
+      max-height: 320px;
       padding: 28px 34px 36px;
 
       & + & {
@@ -3822,6 +3891,7 @@ a {
     &__text {
       max-width: 620px;
       font-size: 18px;
+      -webkit-line-clamp: 6;
     }
 
     &__dots {
@@ -4294,7 +4364,8 @@ a {
     }
 
     &__card {
-      min-height: 0;
+      min-height: 330px;
+      max-height: 330px;
       margin-left: 0;
       padding: 20px 22px 30px;
 
@@ -4310,6 +4381,7 @@ a {
     &__text {
       font-size: 16px;
       line-height: 1.45;
+      -webkit-line-clamp: 7;
     }
 
     &__author {
@@ -4756,10 +4828,6 @@ a {
 }
 
 @media (max-width: 720px) {
-  .app-header__mobile-contacts {
-    display: none;
-  }
-
   .app-header__contacts {
     display: none;
   }
@@ -5755,7 +5823,8 @@ a {
     }
 
     &__card {
-      min-height: 0;
+      min-height: 244px;
+      max-height: 244px;
       padding: 16px 18px 24px;
 
       &:nth-child(n + 2) {
@@ -5769,6 +5838,12 @@ a {
 
     &__text {
       margin-top: 8px;
+      font-size: 10px;
+      -webkit-line-clamp: 8;
+    }
+
+    &__read-more {
+      margin-top: 6px;
       font-size: 10px;
     }
 

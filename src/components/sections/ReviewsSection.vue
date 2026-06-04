@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import AnimatedText from '@/components/AnimatedText.vue'
@@ -10,7 +10,8 @@ const { t, tm } = useI18n()
 const reviewTouchStartX = ref<number | null>(null)
 const activeReviewIndex = ref(0)
 const isReviewAutoplayPaused = ref(false)
-const expandedReviewIds = ref(new Set<number>())
+const selectedReview = ref<Review | null>(null)
+const previouslyFocusedElement = ref<HTMLElement | null>(null)
 const reviews = computed(() => tm('home.reviews.items') as Review[])
 const visibleReviews = computed(() => {
   if (reviews.value.length <= 1) return reviews.value
@@ -22,7 +23,7 @@ const visibleReviews = computed(() => {
 })
 const reviewAutoplayDelay = 6000
 let reviewAutoplayTimer: number | undefined
-const reviewPreviewLength = 360
+const reviewPreviewLength = 260
 
 const setReview = (index: number, shouldRestartAutoplay = true) => {
   if (!reviews.value.length) return
@@ -84,28 +85,59 @@ const handleReviewTouchEnd = (event: TouchEvent) => {
 
 const isLongReview = (text: string) => text.length > reviewPreviewLength
 
-const isReviewExpanded = (id: number) => expandedReviewIds.value.has(id)
-
 const getReviewText = (review: Review) => {
-  if (!isLongReview(review.text) || isReviewExpanded(review.id)) return review.text
+  if (!isLongReview(review.text)) return review.text
 
   return `${review.text.slice(0, reviewPreviewLength).trim()}...`
 }
 
-const toggleReview = (id: number) => {
-  const nextExpandedReviewIds = new Set(expandedReviewIds.value)
+const openReviewModal = (review: Review) => {
+  previouslyFocusedElement.value = document.activeElement instanceof HTMLElement ? document.activeElement : null
+  selectedReview.value = review
+  pauseReviewAutoplay()
 
-  if (nextExpandedReviewIds.has(id)) {
-    nextExpandedReviewIds.delete(id)
-  } else {
-    nextExpandedReviewIds.add(id)
-  }
-
-  expandedReviewIds.value = nextExpandedReviewIds
+  void nextTick(() => {
+    document.querySelector<HTMLElement>('.reviews-modal__close')?.focus()
+  })
 }
 
-onMounted(startReviewAutoplay)
-onBeforeUnmount(stopReviewAutoplay)
+const closeReviewModal = () => {
+  selectedReview.value = null
+  resumeReviewAutoplay()
+
+  void nextTick(() => {
+    previouslyFocusedElement.value?.focus()
+    previouslyFocusedElement.value = null
+  })
+}
+
+const handleReviewKeydown = (event: KeyboardEvent, review: Review) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault()
+    openReviewModal(review)
+  }
+}
+
+const handleEscape = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && selectedReview.value) {
+    closeReviewModal()
+  }
+}
+
+watch(selectedReview, (review) => {
+  document.body.classList.toggle('is-review-modal-open', Boolean(review))
+})
+
+onMounted(() => {
+  startReviewAutoplay()
+  window.addEventListener('keydown', handleEscape)
+})
+
+onBeforeUnmount(() => {
+  stopReviewAutoplay()
+  window.removeEventListener('keydown', handleEscape)
+  document.body.classList.remove('is-review-modal-open')
+})
 </script>
 
 <template>
@@ -140,22 +172,19 @@ onBeforeUnmount(stopReviewAutoplay)
               v-for="review in visibleReviews"
               :key="review.id"
               class="reviews-section__card"
+              role="button"
+              tabindex="0"
+              :aria-label="`${t('home.reviews.openReview')}: ${review.author}, ${review.location}`"
+              @click="openReviewModal(review)"
+              @keydown="handleReviewKeydown($event, review)"
             >
               <span class="reviews-section__quote" aria-hidden="true">“</span>
               <p class="reviews-section__text">
                 <AnimatedText :text="getReviewText(review)" tag="span" />
               </p>
-              <button
-                v-if="isLongReview(review.text)"
-                class="reviews-section__read-more"
-                type="button"
-                @click="toggleReview(review.id)"
-              >
-                <AnimatedText
-                  :text="t(isReviewExpanded(review.id) ? 'home.reviews.readLess' : 'home.reviews.readMore')"
-                  tag="span"
-                />
-              </button>
+              <span v-if="isLongReview(review.text)" class="reviews-section__read-more">
+                <AnimatedText :text="t('home.reviews.readMore')" tag="span" />
+              </span>
               <footer class="reviews-section__author">
                 <span
                   class="reviews-section__social"
@@ -200,5 +229,55 @@ onBeforeUnmount(stopReviewAutoplay)
         </div>
       </div>
     </div>
+
+    <Teleport to="body">
+      <Transition name="review-modal">
+        <div
+          v-if="selectedReview"
+          class="reviews-modal"
+          role="dialog"
+          aria-modal="true"
+          :aria-label="`${t('home.reviews.fullReview')}: ${selectedReview.author}`"
+          @click.self="closeReviewModal"
+        >
+          <article class="reviews-modal__panel">
+            <button
+              class="reviews-modal__close"
+              type="button"
+              :aria-label="t('home.reviews.close')"
+              @click="closeReviewModal"
+            >
+              <q-icon name="close" />
+            </button>
+
+            <span class="reviews-modal__quote" aria-hidden="true">“</span>
+
+            <div class="reviews-modal__content">
+              <p class="reviews-modal__text">
+                {{ selectedReview.text }}
+              </p>
+            </div>
+
+            <footer class="reviews-modal__author">
+              <span
+                class="reviews-section__social"
+                :class="`reviews-section__social--${selectedReview.source}`"
+                aria-hidden="true"
+              >
+                <span
+                  v-if="selectedReview.source === 'instagram'"
+                  class="reviews-section__instagram-mark"
+                />
+                <span v-else>G</span>
+              </span>
+              <span class="reviews-section__author-copy">
+                <strong>{{ selectedReview.author }}, {{ selectedReview.location }}</strong>
+                <span>{{ selectedReview.date }}</span>
+              </span>
+            </footer>
+          </article>
+        </div>
+      </Transition>
+    </Teleport>
   </section>
 </template>
