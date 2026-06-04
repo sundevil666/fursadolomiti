@@ -50,19 +50,37 @@ export const heroSlides: HeroSlide[] = [
     id: 1,
     titleKey: 'home.slide1.title',
     textKey: 'home.slide1.text',
-    image: '/mockup-assets/image9.png',
+    image: '/main-slider/slide1.jpg',
   },
   {
     id: 2,
     titleKey: 'home.slide2.title',
     textKey: 'home.slide2.text',
-    image: '/mockup-assets/image11.png',
+    image: '/main-slider/slide2.jpg',
   },
   {
     id: 3,
     titleKey: 'home.slide3.title',
     textKey: 'home.slide3.text',
-    image: '/mockup-assets/image6.png',
+    image: '/main-slider/slide3.jpg',
+  },
+  {
+    id: 4,
+    titleKey: 'home.slide4.title',
+    textKey: 'home.slide4.text',
+    image: '/main-slider/slide4.jpg',
+  },
+  {
+    id: 5,
+    titleKey: 'home.slide5.title',
+    textKey: 'home.slide5.text',
+    image: '/main-slider/slide5.jpg',
+  },
+  {
+    id: 6,
+    titleKey: 'home.slide6.title',
+    textKey: 'home.slide6.text',
+    image: '/main-slider/slide6.jpg',
   },
 ]
 

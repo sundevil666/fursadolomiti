@@ -680,8 +680,9 @@ a {
     bottom: 120px;
     left: max(20px, calc((100vw - var(--container)) / 2));
     display: grid;
-    width: 272px;
-    grid-template-columns: repeat(3, 1fr);
+    width: min(420px, calc(100vw - 40px));
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
     gap: 4px;
   }
 
