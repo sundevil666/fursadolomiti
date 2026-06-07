@@ -160,6 +160,7 @@ const submitBookingRequest = async () => {
         lastName: lastName.value.trim(),
         email: email.value.trim(),
         hotel: hotelName,
+        hotelImage: hotel?.images[0] ? new URL(hotel.images[0], window.location.origin).href : '',
         locale: locale.value,
         localDateTime: new Intl.DateTimeFormat(locale.value, {
           dateStyle: 'full',
