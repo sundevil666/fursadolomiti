@@ -2409,17 +2409,11 @@ body.is-booking-modal-open {
   color: #a43b31;
 }
 
-.booking-modal__required--success {
-  color: #175445;
-  font-weight: 700;
-}
-
 .booking-modal__actions {
   display: block;
 }
 
-.booking-modal__primary,
-.booking-modal__secondary {
+.booking-modal__primary {
   min-height: 50px;
   padding: 10px 20px;
   border: 1px solid #175445;
@@ -2449,17 +2443,6 @@ body.is-booking-modal-open {
     cursor: default;
     opacity: 0.7;
     transform: none;
-  }
-}
-
-.booking-modal__secondary {
-  background: transparent;
-  color: #175445;
-
-  &:hover,
-  &:focus-visible {
-    background: #175445;
-    color: #fff6e1;
   }
 }
 

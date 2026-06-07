@@ -25,7 +25,7 @@ const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
 const formError = ref('')
-const formStatus = ref<'idle' | 'sending' | 'success'>('idle')
+const formStatus = ref<'idle' | 'sending'>('idle')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -423,31 +423,22 @@ onBeforeUnmount(() => {
 
               <p
                 class="booking-modal__required"
-                :class="{
-                  'booking-modal__required--error': formError,
-                  'booking-modal__required--success': formStatus === 'success',
-                }"
+                :class="{ 'booking-modal__required--error': formError }"
                 aria-live="polite"
               >
-                {{
-                  formStatus === 'success'
-                    ? t('home.hotels.bookingModal.success')
-                    : formError || t('home.hotels.bookingModal.required')
-                }}
+                {{ formError || t('home.hotels.bookingModal.required') }}
               </p>
 
               <div class="booking-modal__actions">
                 <button
                   class="booking-modal__primary"
                   type="submit"
-                  :disabled="formStatus === 'sending' || formStatus === 'success'"
+                  :disabled="formStatus === 'sending'"
                 >
                   {{
                     formStatus === 'sending'
                       ? t('home.hotels.bookingModal.sending')
-                      : formStatus === 'success'
-                        ? t('home.hotels.bookingModal.sent')
-                        : t('home.hotels.bookingModal.continue')
+                      : t('home.hotels.bookingModal.continue')
                   }}
                 </button>
               </div>

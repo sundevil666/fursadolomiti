@@ -1,13 +1,5 @@
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-const describeEnv = (name, value) => ({
-  name,
-  present: Boolean(value),
-  length: value?.length ?? 0,
-  preview: value ? `${value.slice(0, 4)}...${value.slice(-3)}` : null,
-  hasWhitespace: value ? value !== value.trim() : false,
-})
-
 const getHeader = (request, name) => {
   const value = request.headers?.[name] ?? request.headers?.[name.toLowerCase()]
   return Array.isArray(value) ? value[0] : value
@@ -42,24 +34,10 @@ export default async function handler(request, response) {
     .map((recipient) => recipient.trim())
     .filter(Boolean)
 
-  const environment = [
-    describeEnv('EMAILJS_SERVICE_ID', serviceId),
-    describeEnv('EMAILJS_TEMPLATE_ID', templateId),
-    describeEnv('EMAILJS_PUBLIC_KEY', publicKey),
-    describeEnv('EMAILJS_PRIVATE_KEY', privateKey),
-    describeEnv('EMAIL_RECIPIENTS', recipientsValue),
-  ]
-
-  if (request.method === 'GET') {
-    return response.status(200).json({ environment })
-  }
-
   if (request.method !== 'POST') {
-    response.setHeader('Allow', 'GET, POST')
+    response.setHeader('Allow', 'POST')
     return response.status(405).json({ error: 'Method not allowed' })
   }
-
-  console.info('EmailJS environment:', environment)
 
   const {
     firstName,

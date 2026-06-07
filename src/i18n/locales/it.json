@@ -56,17 +56,12 @@
         "emailPlaceholder": "your{'@'}email.com",
         "required": "Tutti i campi sono obbligatori",
         "sending": "Invio...",
-        "sent": "Inviato",
-        "success": "I dati sono stati inviati correttamente",
-        "hotelLabel": "Hotel",
         "errors": {
           "required": "Compila tutti i campi",
           "email": "Inserisci un indirizzo email valido",
-          "config": "Il servizio email non è configurato",
           "send": "Impossibile inviare i dati. Riprova"
         },
         "continue": "Continua con il bonus",
-        "copyPromo": "Copia il codice promo",
         "agreement": "Facendo clic su “Continua con il bonus”, accetti la",
         "privacyPolicy": "Informativa sulla privacy",
         "close": "Chiudi finestra"

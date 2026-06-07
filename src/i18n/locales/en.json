@@ -56,17 +56,12 @@
         "emailPlaceholder": "your{'@'}email.com",
         "required": "All fields are required",
         "sending": "Sending...",
-        "sent": "Sent",
-        "success": "Your details have been sent successfully",
-        "hotelLabel": "Hotel",
         "errors": {
           "required": "Please complete all fields",
           "email": "Enter a valid email address",
-          "config": "The email service is not configured",
           "send": "Could not send your details. Please try again"
         },
         "continue": "Continue with bonus",
-        "copyPromo": "Copy promo code",
         "agreement": "By clicking “Continue with bonus”, you agree to the",
         "privacyPolicy": "Privacy Policy",
         "close": "Close dialog"
