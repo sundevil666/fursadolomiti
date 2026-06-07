@@ -9,7 +9,7 @@ const props = defineProps<{
   limit?: number
 }>()
 
-const { t, tm } = useI18n()
+const { locale, t, tm } = useI18n()
 type HotelFilter = 'all' | HotelCategory
 type HotelStat = {
   icon: string
@@ -149,6 +149,7 @@ const submitBookingRequest = async () => {
 
   try {
     const hotelName = hotel ? t(hotel.nameKey) : bookingHotelId.value
+    const submittedAt = new Date()
 
     const response = await fetch('/api/send-email', {
       method: 'POST',
@@ -158,6 +159,13 @@ const submitBookingRequest = async () => {
         lastName: lastName.value.trim(),
         email: email.value.trim(),
         hotel: hotelName,
+        locale: locale.value,
+        localDateTime: new Intl.DateTimeFormat(locale.value, {
+          dateStyle: 'full',
+          timeStyle: 'long',
+        }).format(submittedAt),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        submittedAt: submittedAt.toISOString(),
       }),
     })
 
