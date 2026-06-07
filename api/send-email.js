@@ -28,8 +28,9 @@ export default async function handler(request, response) {
   const serviceId = process.env.EMAILJS_SERVICE_ID
   const templateId = process.env.EMAILJS_TEMPLATE_ID
   const publicKey = process.env.EMAILJS_PUBLIC_KEY
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY
 
-  if (!serviceId || !templateId || !publicKey || recipients.length === 0) {
+  if (!serviceId || !templateId || !publicKey || !privateKey || recipients.length === 0) {
     return response.status(500).json({ error: 'Email service is not configured' })
   }
 
@@ -43,6 +44,7 @@ export default async function handler(request, response) {
         service_id: serviceId,
         template_id: templateId,
         user_id: publicKey,
+        accessToken: privateKey,
         template_params: {
           to_email: recipients.join(','),
           first_name: normalizedFirstName,
