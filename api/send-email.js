@@ -31,16 +31,6 @@ const escapeHtml = (value) =>
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;')
 
-const getPromoCodes = () => ({
-  oswald: process.env.HOTEL_PROMO_OSWALD,
-  edenselva: process.env.HOTEL_PROMO_EDENSELVA,
-  alpenroyal: process.env.HOTEL_PROMO_ALPENROYAL,
-  posta: process.env.HOTEL_PROMO_POSTA,
-  continental: process.env.HOTEL_PROMO_CONTINENTAL,
-  'luna-mondschein': process.env.HOTEL_PROMO_LUNA_MONDSCHEIN,
-  'dolomites-chalet': process.env.HOTEL_PROMO_DOLOMITES_CHALET,
-})
-
 export default async function handler(request, response) {
   const serviceId = process.env.EMAILJS_SERVICE_ID
   const templateId = process.env.EMAILJS_TEMPLATE_ID
@@ -77,6 +67,7 @@ export default async function handler(request, response) {
     email,
     hotelId,
     hotel,
+    promoCode,
     hotelImage,
     locale,
     localDateTime,
@@ -88,6 +79,7 @@ export default async function handler(request, response) {
   const normalizedEmail = String(email || '').trim()
   const normalizedHotelId = String(hotelId || '').trim()
   const normalizedHotel = String(hotel || '').trim()
+  const normalizedPromoCode = String(promoCode || '').trim()
   const normalizedHotelImage = String(hotelImage || '').trim()
   const normalizedLocale = String(locale || '').trim() || 'Not available'
   const normalizedLocalDateTime = String(localDateTime || '').trim() || 'Not available'
@@ -99,7 +91,8 @@ export default async function handler(request, response) {
     !normalizedLastName ||
     !normalizedEmail ||
     !normalizedHotelId ||
-    !normalizedHotel
+    !normalizedHotel ||
+    !normalizedPromoCode
   ) {
     return response.status(400).json({ error: 'All fields are required' })
   }
@@ -110,12 +103,6 @@ export default async function handler(request, response) {
 
   if (!serviceId || !templateId || !publicKey || !privateKey || recipients.length === 0) {
     return response.status(500).json({ error: 'Email service is not configured' })
-  }
-
-  const promoCode = getPromoCodes()[normalizedHotelId]
-
-  if (!promoCode) {
-    return response.status(500).json({ error: 'Hotel promo code is not configured' })
   }
 
   const fullName = `${normalizedFirstName} ${normalizedLastName}`
@@ -131,7 +118,7 @@ export default async function handler(request, response) {
     lastName: escapeHtml(normalizedLastName),
     email: escapeHtml(normalizedEmail),
     hotel: escapeHtml(normalizedHotel),
-    promoCode: escapeHtml(promoCode),
+    promoCode: escapeHtml(normalizedPromoCode),
     hotelImage: escapeHtml(normalizedHotelImage),
     locale: escapeHtml(normalizedLocale),
     localDateTime: escapeHtml(normalizedLocalDateTime),
@@ -207,7 +194,7 @@ export default async function handler(request, response) {
     `Full name: ${fullName}`,
     `Email: ${normalizedEmail}`,
     `Selected hotel: ${normalizedHotel}`,
-    `Promo code: ${promoCode}`,
+    `Promo code: ${normalizedPromoCode}`,
     '',
     `Website language: ${normalizedLocale}`,
     `User local date and time: ${normalizedLocalDateTime}`,
@@ -240,7 +227,7 @@ export default async function handler(request, response) {
           full_name: fullName,
           user_email: normalizedEmail,
           hotel: normalizedHotel,
-          promo_code: promoCode,
+          promo_code: normalizedPromoCode,
           website_language: normalizedLocale,
           local_date_time: normalizedLocalDateTime,
           user_timezone: normalizedTimezone,
@@ -264,7 +251,7 @@ export default async function handler(request, response) {
       return response.status(502).json({ error: 'Email delivery failed' })
     }
 
-    return response.status(200).json({ ok: true, promoCode })
+    return response.status(200).json({ ok: true, promoCode: normalizedPromoCode })
   } catch (error) {
     console.error('Email request failed:', error)
     return response.status(502).json({ error: 'Email delivery failed' })

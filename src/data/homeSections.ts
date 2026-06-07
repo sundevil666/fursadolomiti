@@ -9,6 +9,7 @@ export type HotelPreview = {
   id: string
   category: HotelCategory
   images: string[]
+  promoCode: string
   nameKey: string
   locationKey: string
   descriptionKey: string
@@ -89,6 +90,7 @@ export const hotelPreviews: HotelPreview[] = [
     id: 'oswald',
     category: 'fourStar',
     images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
+    promoCode: 'REPLACE_OSWALD',
     nameKey: 'home.hotels.oswald.name',
     locationKey: 'home.hotels.oswald.location',
     descriptionKey: 'home.hotels.oswald.description',
@@ -98,6 +100,7 @@ export const hotelPreviews: HotelPreview[] = [
     id: 'edenselva',
     category: 'fourStar',
     images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    promoCode: 'REPLACE_EDENSELVA',
     nameKey: 'home.hotels.edenselva.name',
     locationKey: 'home.hotels.edenselva.location',
     descriptionKey: 'home.hotels.edenselva.description',
@@ -107,6 +110,7 @@ export const hotelPreviews: HotelPreview[] = [
     id: 'alpenroyal',
     category: 'fiveStar',
     images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
+    promoCode: 'REPLACE_ALPENROYAL',
     nameKey: 'home.hotels.alpenroyal.name',
     locationKey: 'home.hotels.alpenroyal.location',
     descriptionKey: 'home.hotels.alpenroyal.description',
@@ -116,6 +120,7 @@ export const hotelPreviews: HotelPreview[] = [
     id: 'posta',
     category: 'fourStar',
     images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    promoCode: 'REPLACE_POSTA',
     nameKey: 'home.hotels.posta.name',
     locationKey: 'home.hotels.posta.location',
     descriptionKey: 'home.hotels.posta.description',
@@ -125,6 +130,7 @@ export const hotelPreviews: HotelPreview[] = [
     id: 'continental',
     category: 'fourStar',
     images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
+    promoCode: 'REPLACE_CONTINENTAL',
     nameKey: 'home.hotels.continental.name',
     locationKey: 'home.hotels.continental.location',
     descriptionKey: 'home.hotels.continental.description',
@@ -134,6 +140,7 @@ export const hotelPreviews: HotelPreview[] = [
     id: 'luna-mondschein',
     category: 'fourStar',
     images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    promoCode: 'REPLACE_LUNA_MONDSCHEIN',
     nameKey: 'home.hotels.lunaMondschein.name',
     locationKey: 'home.hotels.lunaMondschein.location',
     descriptionKey: 'home.hotels.lunaMondschein.description',
@@ -143,6 +150,7 @@ export const hotelPreviews: HotelPreview[] = [
     id: 'dolomites-chalet',
     category: 'chalet',
     images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    promoCode: 'REPLACE_DOLOMITES_CHALET',
     nameKey: 'home.hotels.dolomitesChalet.name',
     locationKey: 'home.hotels.dolomitesChalet.location',
     descriptionKey: 'home.hotels.dolomitesChalet.description',
