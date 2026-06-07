@@ -109,41 +109,55 @@ export default async function handler(request, response) {
   }
   const row = (label, value, highlighted = false) => `
     <tr>
-      <td style="width:36%;padding:12px 16px;border-bottom:1px solid #e4dac3;color:#6b6255;font-size:13px;">${label}</td>
-      <td style="padding:12px 16px;border-bottom:1px solid #e4dac3;color:#08211f;font-size:14px;font-weight:${highlighted ? '700' : '500'};">${value}</td>
+      <td width="38%" valign="top" style="padding:13px 16px;border-bottom:1px solid #e8dfcc;color:#756b5c;font-size:12px;line-height:18px;text-transform:uppercase;letter-spacing:.4px;">${label}</td>
+      <td valign="top" style="padding:13px 16px;border-bottom:1px solid #e8dfcc;color:#08211f;font-size:14px;line-height:20px;font-weight:${highlighted ? '700' : '500'};">${value}</td>
     </tr>`
   const htmlMessage = `
-    <div style="margin:0;padding:28px 12px;background:#f3ecdc;font-family:Arial,sans-serif;color:#08211f;">
-      <table role="presentation" style="width:100%;max-width:680px;margin:0 auto;border-collapse:collapse;background:#fff9ec;border-radius:12px;overflow:hidden;">
+    <div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
+      <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${safe.fullName} — ${safe.hotel} — ${safe.localDateTime}</div>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:680px;margin:0 auto;border-collapse:separate;background-color:#fffaf0;border:1px solid #e5dbc6;border-radius:16px;box-shadow:0 14px 40px rgba(48,38,16,.12);overflow:hidden;">
         <tr>
-          <td style="padding:24px 28px;background:#175445;color:#fff9ec;">
-            <div style="font-size:12px;letter-spacing:1.5px;text-transform:uppercase;opacity:.8;">FursaDolomiti</div>
-            <div style="margin-top:6px;font-size:24px;font-weight:700;">Новая заявка на бронирование</div>
-            <div style="margin-top:7px;font-size:14px;opacity:.9;">${safe.fullName} заинтересован(а) в ${safe.hotel}</div>
+          <td style="padding:28px 32px 30px;background-color:#175445;color:#fffaf0;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td style="color:#d7e3d9;font-size:11px;line-height:16px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">FursaDolomiti · Booking Desk</td>
+                <td align="right" style="color:#d7e3d9;font-size:11px;line-height:16px;">${safe.locale.toUpperCase()}</td>
+              </tr>
+            </table>
+            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">Новая заявка на бронирование</div>
+            <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;"><strong style="color:#ffffff;">${safe.fullName}</strong> заинтересован(а) в <strong style="color:#ffffff;">${safe.hotel}</strong></div>
+            <div style="margin-top:18px;display:inline-block;padding:8px 12px;background-color:#fffaf0;border-radius:999px;color:#175445;font-size:12px;line-height:16px;font-weight:700;">Промокод: ${safe.promoCode}</div>
           </td>
         </tr>
         ${
           safe.hotelImage
-            ? `<tr><td><img src="${safe.hotelImage}" alt="${safe.hotel}" style="display:block;width:100%;height:240px;object-fit:cover;"></td></tr>`
+            ? `<tr><td style="background-color:#e8dfcc;"><img src="${safe.hotelImage}" width="680" alt="${safe.hotel}" style="display:block;width:100%;max-width:680px;height:auto;max-height:300px;object-fit:cover;border:0;"></td></tr>`
             : ''
         }
         <tr>
-          <td style="padding:24px 28px 10px;">
-            <div style="margin-bottom:12px;font-size:17px;font-weight:700;color:#175445;">Главная информация</div>
-            <table role="presentation" style="width:100%;border-collapse:collapse;border:1px solid #e4dac3;border-radius:8px;overflow:hidden;">
+          <td style="padding:28px 32px 8px;">
+            <div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">Главная информация</div>
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">
               ${row('Имя', safe.firstName)}
               ${row('Фамилия', safe.lastName)}
-              ${row('Email', `<a href="mailto:${safe.email}" style="color:#175445;">${safe.email}</a>`, true)}
+              ${row('Email', `<span style="color:#08211f;text-decoration:none;">${safe.email}</span>`, true)}
               ${row('Отель', safe.hotel, true)}
               ${row('Промокод', safe.promoCode, true)}
               ${row('Дата заявки', safe.localDateTime, true)}
             </table>
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;">
+              <tr>
+                <td bgcolor="#175445" style="border-radius:999px;">
+                  <a href="mailto:${safe.email}?subject=${encodeURIComponent(`FursaDolomiti — ${normalizedHotel}`)}" style="display:inline-block;padding:12px 20px;color:#ffffff;text-decoration:none;font-size:14px;line-height:18px;font-weight:700;">Ответить клиенту</a>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
         <tr>
-          <td style="padding:16px 28px 10px;">
-            <div style="margin-bottom:12px;font-size:17px;font-weight:700;color:#175445;">Контекст заявки</div>
-            <table role="presentation" style="width:100%;border-collapse:collapse;border:1px solid #e4dac3;border-radius:8px;overflow:hidden;">
+          <td style="padding:18px 32px 8px;">
+            <div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">Контекст заявки</div>
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">
               ${row('Язык сайта', safe.locale)}
               ${row('Часовой пояс пользователя', safe.timezone)}
               ${row('Время UTC', safe.submittedAt)}
@@ -151,15 +165,16 @@ export default async function handler(request, response) {
           </td>
         </tr>
         <tr>
-          <td style="padding:16px 28px 28px;">
-            <div style="margin-bottom:12px;font-size:17px;font-weight:700;color:#175445;">Примерное местоположение</div>
-            <table role="presentation" style="width:100%;border-collapse:collapse;border:1px solid #e4dac3;border-radius:8px;overflow:hidden;">
+          <td style="padding:18px 32px 32px;">
+            <div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">Примерное местоположение</div>
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">
               ${row('Страна', safe.country)}
               ${row('Регион', safe.region)}
               ${row('Город', safe.city)}
               ${row('Часовой пояс локации', safe.locationTimezone)}
             </table>
-            <div style="margin-top:12px;color:#84796a;font-size:11px;line-height:1.45;">География определяется приблизительно инфраструктурой Vercel и может отличаться от фактического местоположения пользователя.</div>
+            <div style="margin-top:14px;padding:12px 14px;background-color:#f4edde;border-left:3px solid #c6a86a;color:#796e5f;font-size:11px;line-height:17px;">География определяется приблизительно инфраструктурой Vercel и может отличаться от фактического местоположения пользователя.</div>
+            <div style="margin-top:24px;padding-top:18px;border-top:1px solid #e8dfcc;color:#998d7b;font-size:11px;line-height:17px;text-align:center;">Служебное уведомление · fursadolomiti.com</div>
           </td>
         </tr>
       </table>
@@ -199,6 +214,7 @@ export default async function handler(request, response) {
           to_email: recipients.join(','),
           subject,
           title: subject,
+          sender_name: 'FursaDolomiti',
           time: normalizedLocalDateTime,
           html_message: htmlMessage,
           hotel_image: normalizedHotelImage,
@@ -216,8 +232,7 @@ export default async function handler(request, response) {
           region,
           city,
           location_timezone: locationTimezone,
-          from_name: fullName,
-          from_email: normalizedEmail,
+          from_name: 'FursaDolomiti',
           name: fullName,
           email: normalizedEmail,
           reply_to: normalizedEmail,
