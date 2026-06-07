@@ -198,6 +198,8 @@ export default async function handler(request, response) {
         template_params: {
           to_email: recipients.join(','),
           subject,
+          title: subject,
+          time: normalizedLocalDateTime,
           html_message: htmlMessage,
           hotel_image: normalizedHotelImage,
           first_name: normalizedFirstName,
