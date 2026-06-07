@@ -2414,6 +2414,10 @@ body.is-booking-modal-open {
 }
 
 .booking-modal__primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   min-height: 50px;
   padding: 10px 20px;
   border: 1px solid #175445;
@@ -2431,6 +2435,61 @@ body.is-booking-modal-open {
   &:focus-visible {
     transform: translateY(-2px);
     outline: 0;
+  }
+}
+
+.booking-modal__button-loader,
+.booking-modal__loader {
+  display: inline-block;
+  border: 2px solid currentcolor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: bookingModalSpin 700ms linear infinite;
+}
+
+.booking-modal__button-loader {
+  width: 18px;
+  height: 18px;
+}
+
+.booking-modal__redirect {
+  display: flex;
+  min-height: 601px;
+  grid-column: 1 / -1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  text-align: center;
+}
+
+.booking-modal__loader {
+  width: 54px;
+  height: 54px;
+  border-width: 3px;
+  color: #175445;
+}
+
+.booking-modal__redirect-title {
+  margin: 26px 0 10px;
+  color: #08211f;
+  font-family: 'Playfair Display', serif;
+  font-size: 34px;
+  line-height: 1.1;
+}
+
+.booking-modal__redirect-text {
+  max-width: 510px;
+  margin: 0;
+  color: #6c5948;
+  font-family: Manrope, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+@keyframes bookingModalSpin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

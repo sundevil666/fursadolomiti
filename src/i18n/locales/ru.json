@@ -55,7 +55,9 @@
         "email": "Email",
         "emailPlaceholder": "your{'@'}email.com",
         "required": "Все поля обязательны к заполнению",
-        "sending": "Отправляем...",
+        "sending": "Подготавливаем переход...",
+        "redirectTitle": "Всё готово",
+        "redirectText": "Сейчас перенаправим вас на сайт отеля для подтверждения бронирования.",
         "errors": {
           "required": "Заполните все поля",
           "email": "Введите корректный email",

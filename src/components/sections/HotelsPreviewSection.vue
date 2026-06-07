@@ -25,7 +25,7 @@ const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
 const formError = ref('')
-const formStatus = ref<'idle' | 'sending'>('idle')
+const formStatus = ref<'idle' | 'sending' | 'redirecting'>('idle')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -124,6 +124,8 @@ const openBookingModal = (hotelId: string) => {
 }
 
 const closeBookingModal = () => {
+  if (formStatus.value !== 'idle') return
+
   bookingHotelId.value = null
 }
 
@@ -146,7 +148,6 @@ const submitBookingRequest = async () => {
 
   const hotel = hotelPreviews.find((item) => item.id === bookingHotelId.value)
   const hotelName = hotel ? t(hotel.nameKey) : bookingHotelId.value
-  const searchWindow = window.open('', '_blank')
   formStatus.value = 'sending'
 
   try {
@@ -177,21 +178,19 @@ const submitBookingRequest = async () => {
 
     const { promoCode } = (await response.json()) as { promoCode: string }
 
-    formStatus.value = 'idle'
-    closeBookingModal()
-
-    if (searchWindow && hotel) {
+    if (hotel) {
       const bookingUrl = new URL(hotel.bookingUrl)
       bookingUrl.searchParams.set(hotel.bookingParams.firstName, firstName.value.trim())
       bookingUrl.searchParams.set(hotel.bookingParams.lastName, lastName.value.trim())
       bookingUrl.searchParams.set(hotel.bookingParams.email, email.value.trim())
       bookingUrl.searchParams.set(hotel.bookingParams.promoCode, promoCode)
-      searchWindow.location.href = bookingUrl.href
-    } else {
-      searchWindow?.close()
+
+      formStatus.value = 'redirecting'
+      window.setTimeout(() => {
+        window.location.assign(bookingUrl.href)
+      }, 1400)
     }
   } catch (error) {
-    searchWindow?.close()
     console.error('Booking request failed', error)
     formStatus.value = 'idle'
     formError.value = t('home.hotels.bookingModal.errors.send')
@@ -361,6 +360,7 @@ onBeforeUnmount(() => {
         >
           <section class="booking-modal__panel">
             <button
+              v-if="formStatus === 'idle'"
               class="booking-modal__close"
               type="button"
               :aria-label="t('home.hotels.bookingModal.close')"
@@ -369,7 +369,7 @@ onBeforeUnmount(() => {
               <span aria-hidden="true"></span>
             </button>
 
-            <div class="booking-modal__intro">
+            <div v-if="formStatus !== 'redirecting'" class="booking-modal__intro">
               <div>
                 <h2
                   :id="`booking-modal-title-${bookingHotelId}`"
@@ -387,7 +387,22 @@ onBeforeUnmount(() => {
               </p>
             </div>
 
-            <form class="booking-modal__form" novalidate @submit.prevent="submitBookingRequest">
+            <div v-if="formStatus === 'redirecting'" class="booking-modal__redirect">
+              <span class="booking-modal__loader" aria-hidden="true"></span>
+              <h2 class="booking-modal__redirect-title">
+                {{ t('home.hotels.bookingModal.redirectTitle') }}
+              </h2>
+              <p class="booking-modal__redirect-text">
+                {{ t('home.hotels.bookingModal.redirectText') }}
+              </p>
+            </div>
+
+            <form
+              v-else
+              class="booking-modal__form"
+              novalidate
+              @submit.prevent="submitBookingRequest"
+            >
               <label class="booking-modal__field">
                 <span>{{ t('home.hotels.bookingModal.firstName') }}</span>
                 <input
@@ -435,11 +450,14 @@ onBeforeUnmount(() => {
                   type="submit"
                   :disabled="formStatus === 'sending'"
                 >
-                  {{
-                    formStatus === 'sending'
-                      ? t('home.hotels.bookingModal.sending')
-                      : t('home.hotels.bookingModal.continue')
-                  }}
+                  <span v-if="formStatus === 'sending'" class="booking-modal__button-loader"></span>
+                  <span>
+                    {{
+                      formStatus === 'sending'
+                        ? t('home.hotels.bookingModal.sending')
+                        : t('home.hotels.bookingModal.continue')
+                    }}
+                  </span>
                 </button>
               </div>
 
