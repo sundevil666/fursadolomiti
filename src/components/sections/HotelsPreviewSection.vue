@@ -145,10 +145,11 @@ const submitBookingRequest = async () => {
   }
 
   const hotel = hotelPreviews.find((item) => item.id === bookingHotelId.value)
+  const hotelName = hotel ? t(hotel.nameKey) : bookingHotelId.value
+  const searchWindow = window.open('', '_blank')
   formStatus.value = 'sending'
 
   try {
-    const hotelName = hotel ? t(hotel.nameKey) : bookingHotelId.value
     const submittedAt = new Date()
 
     const response = await fetch('/api/send-email', {
@@ -171,8 +172,16 @@ const submitBookingRequest = async () => {
 
     if (!response.ok) throw new Error(await response.text())
 
-    formStatus.value = 'success'
+    formStatus.value = 'idle'
+    closeBookingModal()
+
+    if (searchWindow) {
+      searchWindow.location.href = `https://www.google.com/search?q=${encodeURIComponent(
+        `${hotelName} official hotel`,
+      )}`
+    }
   } catch (error) {
+    searchWindow?.close()
     console.error('Booking request failed', error)
     formStatus.value = 'idle'
     formError.value = t('home.hotels.bookingModal.errors.send')

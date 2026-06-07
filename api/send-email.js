@@ -81,7 +81,8 @@ export default async function handler(request, response) {
   const region = getHeader(request, 'x-vercel-ip-country-region') || 'Not available'
   const city = decodeHeader(getHeader(request, 'x-vercel-ip-city'))
   const locationTimezone = getHeader(request, 'x-vercel-ip-timezone') || 'Not available'
-  const subject = `FursaDolomiti: booking request — ${normalizedHotel}`
+  const subjectDate = normalizedSubmittedAt.slice(0, 10)
+  const subject = `${fullName} — ${normalizedHotel} — ${subjectDate} — FursaDolomiti`
   const message = [
     'New booking request from fursadolomiti.com',
     '',
