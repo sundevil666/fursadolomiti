@@ -180,16 +180,15 @@ const submitBookingRequest = async () => {
     formStatus.value = 'idle'
     closeBookingModal()
 
-    if (searchWindow) {
-      const searchParams = new URLSearchParams({
-        q: `${hotelName} official hotel`,
-        firstName: firstName.value.trim(),
-        lastName: lastName.value.trim(),
-        email: email.value.trim(),
-        hotel: hotelName ?? '',
-        promoCode,
-      })
-      searchWindow.location.href = `https://www.google.com/search?${searchParams.toString()}`
+    if (searchWindow && hotel) {
+      const bookingUrl = new URL(hotel.bookingUrl)
+      bookingUrl.searchParams.set(hotel.bookingParams.firstName, firstName.value.trim())
+      bookingUrl.searchParams.set(hotel.bookingParams.lastName, lastName.value.trim())
+      bookingUrl.searchParams.set(hotel.bookingParams.email, email.value.trim())
+      bookingUrl.searchParams.set(hotel.bookingParams.promoCode, promoCode)
+      searchWindow.location.href = bookingUrl.href
+    } else {
+      searchWindow?.close()
     }
   } catch (error) {
     searchWindow?.close()

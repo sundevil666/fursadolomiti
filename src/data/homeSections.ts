@@ -10,6 +10,13 @@ export type HotelPreview = {
   category: HotelCategory
   images: string[]
   promoCode: string
+  bookingUrl: string
+  bookingParams: {
+    firstName: string
+    lastName: string
+    email: string
+    promoCode: string
+  }
   nameKey: string
   locationKey: string
   descriptionKey: string
@@ -91,6 +98,13 @@ export const hotelPreviews: HotelPreview[] = [
     category: 'fourStar',
     images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
     promoCode: 'REPLACE_OSWALD',
+    bookingUrl: 'https://example.com/oswald/booking',
+    bookingParams: {
+      firstName: 'firstName',
+      lastName: 'lastName',
+      email: 'email',
+      promoCode: 'promoCode',
+    },
     nameKey: 'home.hotels.oswald.name',
     locationKey: 'home.hotels.oswald.location',
     descriptionKey: 'home.hotels.oswald.description',
@@ -101,6 +115,13 @@ export const hotelPreviews: HotelPreview[] = [
     category: 'fourStar',
     images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
     promoCode: 'REPLACE_EDENSELVA',
+    bookingUrl: 'https://example.com/edenselva/booking',
+    bookingParams: {
+      firstName: 'first_name',
+      lastName: 'last_name',
+      email: 'guest_email',
+      promoCode: 'promo_code',
+    },
     nameKey: 'home.hotels.edenselva.name',
     locationKey: 'home.hotels.edenselva.location',
     descriptionKey: 'home.hotels.edenselva.description',
@@ -111,6 +132,13 @@ export const hotelPreviews: HotelPreview[] = [
     category: 'fiveStar',
     images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
     promoCode: 'REPLACE_ALPENROYAL',
+    bookingUrl: 'https://example.com/alpenroyal/booking',
+    bookingParams: {
+      firstName: 'name',
+      lastName: 'surname',
+      email: 'email',
+      promoCode: 'coupon',
+    },
     nameKey: 'home.hotels.alpenroyal.name',
     locationKey: 'home.hotels.alpenroyal.location',
     descriptionKey: 'home.hotels.alpenroyal.description',
@@ -121,6 +149,13 @@ export const hotelPreviews: HotelPreview[] = [
     category: 'fourStar',
     images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
     promoCode: 'REPLACE_POSTA',
+    bookingUrl: 'https://example.com/posta/booking',
+    bookingParams: {
+      firstName: 'guestName',
+      lastName: 'guestSurname',
+      email: 'guestEmail',
+      promoCode: 'promotionCode',
+    },
     nameKey: 'home.hotels.posta.name',
     locationKey: 'home.hotels.posta.location',
     descriptionKey: 'home.hotels.posta.description',
@@ -131,6 +166,13 @@ export const hotelPreviews: HotelPreview[] = [
     category: 'fourStar',
     images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
     promoCode: 'REPLACE_CONTINENTAL',
+    bookingUrl: 'https://example.com/continental/booking',
+    bookingParams: {
+      firstName: 'firstName',
+      lastName: 'lastName',
+      email: 'emailAddress',
+      promoCode: 'promo',
+    },
     nameKey: 'home.hotels.continental.name',
     locationKey: 'home.hotels.continental.location',
     descriptionKey: 'home.hotels.continental.description',
@@ -141,6 +183,13 @@ export const hotelPreviews: HotelPreview[] = [
     category: 'fourStar',
     images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
     promoCode: 'REPLACE_LUNA_MONDSCHEIN',
+    bookingUrl: 'https://example.com/luna-mondschein/booking',
+    bookingParams: {
+      firstName: 'firstname',
+      lastName: 'lastname',
+      email: 'email',
+      promoCode: 'voucher',
+    },
     nameKey: 'home.hotels.lunaMondschein.name',
     locationKey: 'home.hotels.lunaMondschein.location',
     descriptionKey: 'home.hotels.lunaMondschein.description',
@@ -151,6 +200,13 @@ export const hotelPreviews: HotelPreview[] = [
     category: 'chalet',
     images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
     promoCode: 'REPLACE_DOLOMITES_CHALET',
+    bookingUrl: 'https://example.com/dolomites-chalet/booking',
+    bookingParams: {
+      firstName: 'contact_first_name',
+      lastName: 'contact_last_name',
+      email: 'contact_email',
+      promoCode: 'referral_code',
+    },
     nameKey: 'home.hotels.dolomitesChalet.name',
     locationKey: 'home.hotels.dolomitesChalet.location',
     descriptionKey: 'home.hotels.dolomitesChalet.description',
