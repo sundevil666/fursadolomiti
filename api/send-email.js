@@ -9,10 +9,34 @@ const describeEnv = (name, value) => ({
 })
 
 export default async function handler(request, response) {
+  const serviceId = process.env.EMAILJS_SERVICE_ID
+  const templateId = process.env.EMAILJS_TEMPLATE_ID
+  const publicKey = process.env.EMAILJS_PUBLIC_KEY
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY
+  const recipientsValue = process.env.EMAIL_RECIPIENTS || 'sundevildi@gmail.com'
+  const recipients = recipientsValue
+    .split(',')
+    .map((recipient) => recipient.trim())
+    .filter(Boolean)
+
+  const environment = [
+    describeEnv('EMAILJS_SERVICE_ID', serviceId),
+    describeEnv('EMAILJS_TEMPLATE_ID', templateId),
+    describeEnv('EMAILJS_PUBLIC_KEY', publicKey),
+    describeEnv('EMAILJS_PRIVATE_KEY', privateKey),
+    describeEnv('EMAIL_RECIPIENTS', recipientsValue),
+  ]
+
+  if (request.method === 'GET') {
+    return response.status(200).json({ environment })
+  }
+
   if (request.method !== 'POST') {
-    response.setHeader('Allow', 'POST')
+    response.setHeader('Allow', 'GET, POST')
     return response.status(405).json({ error: 'Method not allowed' })
   }
+
+  console.info('EmailJS environment:', environment)
 
   const { firstName, lastName, email, hotel } = request.body || {}
   const normalizedFirstName = String(firstName || '').trim()
@@ -27,24 +51,6 @@ export default async function handler(request, response) {
   if (!emailPattern.test(normalizedEmail)) {
     return response.status(400).json({ error: 'Invalid email' })
   }
-
-  const serviceId = process.env.EMAILJS_SERVICE_ID
-  const templateId = process.env.EMAILJS_TEMPLATE_ID
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY
-  const recipientsValue = process.env.EMAIL_RECIPIENTS || 'sundevildi@gmail.com'
-  const recipients = recipientsValue
-    .split(',')
-    .map((recipient) => recipient.trim())
-    .filter(Boolean)
-
-  console.info('EmailJS environment:', [
-    describeEnv('EMAILJS_SERVICE_ID', serviceId),
-    describeEnv('EMAILJS_TEMPLATE_ID', templateId),
-    describeEnv('EMAILJS_PUBLIC_KEY', publicKey),
-    describeEnv('EMAILJS_PRIVATE_KEY', privateKey),
-    describeEnv('EMAIL_RECIPIENTS', recipientsValue),
-  ])
 
   if (!serviceId || !templateId || !publicKey || !privateKey || recipients.length === 0) {
     return response.status(500).json({ error: 'Email service is not configured' })
