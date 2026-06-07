@@ -145,40 +145,19 @@ const submitBookingRequest = async () => {
   }
 
   const hotel = hotelPreviews.find((item) => item.id === bookingHotelId.value)
-  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
-  const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
-  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-
-  if (!serviceId || !templateId || !publicKey) {
-    formError.value = t('home.hotels.bookingModal.errors.config')
-    return
-  }
-
   formStatus.value = 'sending'
 
   try {
     const hotelName = hotel ? t(hotel.nameKey) : bookingHotelId.value
-    const fullName = `${firstName.value.trim()} ${lastName.value.trim()}`
 
-    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+    const response = await fetch('/api/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        service_id: serviceId,
-        template_id: templateId,
-        user_id: publicKey,
-        template_params: {
-          first_name: firstName.value.trim(),
-          last_name: lastName.value.trim(),
-          user_email: email.value.trim(),
-          hotel: hotelName,
-          from_name: fullName,
-          from_email: email.value.trim(),
-          name: fullName,
-          email: email.value.trim(),
-          reply_to: email.value.trim(),
-          message: `${t('home.hotels.bookingModal.hotelLabel')}: ${hotelName}`,
-        },
+        firstName: firstName.value.trim(),
+        lastName: lastName.value.trim(),
+        email: email.value.trim(),
+        hotel: hotelName,
       }),
     })
 
@@ -186,7 +165,7 @@ const submitBookingRequest = async () => {
 
     formStatus.value = 'success'
   } catch (error) {
-    console.error('EmailJS request failed', error)
+    console.error('Booking request failed', error)
     formStatus.value = 'idle'
     formError.value = t('home.hotels.bookingModal.errors.send')
   }
