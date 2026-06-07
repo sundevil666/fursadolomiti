@@ -31,6 +31,16 @@ const escapeHtml = (value) =>
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;')
 
+const getPromoCodes = () => ({
+  oswald: process.env.HOTEL_PROMO_OSWALD,
+  edenselva: process.env.HOTEL_PROMO_EDENSELVA,
+  alpenroyal: process.env.HOTEL_PROMO_ALPENROYAL,
+  posta: process.env.HOTEL_PROMO_POSTA,
+  continental: process.env.HOTEL_PROMO_CONTINENTAL,
+  'luna-mondschein': process.env.HOTEL_PROMO_LUNA_MONDSCHEIN,
+  'dolomites-chalet': process.env.HOTEL_PROMO_DOLOMITES_CHALET,
+})
+
 export default async function handler(request, response) {
   const serviceId = process.env.EMAILJS_SERVICE_ID
   const templateId = process.env.EMAILJS_TEMPLATE_ID
@@ -65,6 +75,7 @@ export default async function handler(request, response) {
     firstName,
     lastName,
     email,
+    hotelId,
     hotel,
     hotelImage,
     locale,
@@ -75,6 +86,7 @@ export default async function handler(request, response) {
   const normalizedFirstName = String(firstName || '').trim()
   const normalizedLastName = String(lastName || '').trim()
   const normalizedEmail = String(email || '').trim()
+  const normalizedHotelId = String(hotelId || '').trim()
   const normalizedHotel = String(hotel || '').trim()
   const normalizedHotelImage = String(hotelImage || '').trim()
   const normalizedLocale = String(locale || '').trim() || 'Not available'
@@ -82,7 +94,13 @@ export default async function handler(request, response) {
   const normalizedTimezone = String(timezone || '').trim() || 'Not available'
   const normalizedSubmittedAt = String(submittedAt || '').trim() || new Date().toISOString()
 
-  if (!normalizedFirstName || !normalizedLastName || !normalizedEmail || !normalizedHotel) {
+  if (
+    !normalizedFirstName ||
+    !normalizedLastName ||
+    !normalizedEmail ||
+    !normalizedHotelId ||
+    !normalizedHotel
+  ) {
     return response.status(400).json({ error: 'All fields are required' })
   }
 
@@ -92,6 +110,12 @@ export default async function handler(request, response) {
 
   if (!serviceId || !templateId || !publicKey || !privateKey || recipients.length === 0) {
     return response.status(500).json({ error: 'Email service is not configured' })
+  }
+
+  const promoCode = getPromoCodes()[normalizedHotelId]
+
+  if (!promoCode) {
+    return response.status(500).json({ error: 'Hotel promo code is not configured' })
   }
 
   const fullName = `${normalizedFirstName} ${normalizedLastName}`
@@ -107,6 +131,7 @@ export default async function handler(request, response) {
     lastName: escapeHtml(normalizedLastName),
     email: escapeHtml(normalizedEmail),
     hotel: escapeHtml(normalizedHotel),
+    promoCode: escapeHtml(promoCode),
     hotelImage: escapeHtml(normalizedHotelImage),
     locale: escapeHtml(normalizedLocale),
     localDateTime: escapeHtml(normalizedLocalDateTime),
@@ -145,6 +170,7 @@ export default async function handler(request, response) {
               ${row('Фамилия', safe.lastName)}
               ${row('Email', `<a href="mailto:${safe.email}" style="color:#175445;">${safe.email}</a>`, true)}
               ${row('Отель', safe.hotel, true)}
+              ${row('Промокод', safe.promoCode, true)}
               ${row('Дата заявки', safe.localDateTime, true)}
             </table>
           </td>
@@ -181,6 +207,7 @@ export default async function handler(request, response) {
     `Full name: ${fullName}`,
     `Email: ${normalizedEmail}`,
     `Selected hotel: ${normalizedHotel}`,
+    `Promo code: ${promoCode}`,
     '',
     `Website language: ${normalizedLocale}`,
     `User local date and time: ${normalizedLocalDateTime}`,
@@ -213,6 +240,7 @@ export default async function handler(request, response) {
           full_name: fullName,
           user_email: normalizedEmail,
           hotel: normalizedHotel,
+          promo_code: promoCode,
           website_language: normalizedLocale,
           local_date_time: normalizedLocalDateTime,
           user_timezone: normalizedTimezone,
@@ -236,7 +264,7 @@ export default async function handler(request, response) {
       return response.status(502).json({ error: 'Email delivery failed' })
     }
 
-    return response.status(200).json({ ok: true })
+    return response.status(200).json({ ok: true, promoCode })
   } catch (error) {
     console.error('Email request failed:', error)
     return response.status(502).json({ error: 'Email delivery failed' })

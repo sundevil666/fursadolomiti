@@ -2415,9 +2415,7 @@ body.is-booking-modal-open {
 }
 
 .booking-modal__actions {
-  display: grid;
-  grid-template-columns: 1fr 1.12fr;
-  gap: 12px;
+  display: block;
 }
 
 .booking-modal__primary,
@@ -2443,6 +2441,7 @@ body.is-booking-modal-open {
 }
 
 .booking-modal__primary {
+  width: 100%;
   background: #175445;
   color: #fff6e1;
 

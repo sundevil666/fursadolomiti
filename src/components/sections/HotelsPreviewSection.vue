@@ -159,6 +159,7 @@ const submitBookingRequest = async () => {
         firstName: firstName.value.trim(),
         lastName: lastName.value.trim(),
         email: email.value.trim(),
+        hotelId: hotel?.id,
         hotel: hotelName,
         hotelImage: hotel?.images[0] ? new URL(hotel.images[0], window.location.origin).href : '',
         locale: locale.value,
@@ -173,13 +174,21 @@ const submitBookingRequest = async () => {
 
     if (!response.ok) throw new Error(await response.text())
 
+    const { promoCode } = (await response.json()) as { promoCode: string }
+
     formStatus.value = 'idle'
     closeBookingModal()
 
     if (searchWindow) {
-      searchWindow.location.href = `https://www.google.com/search?q=${encodeURIComponent(
-        `${hotelName} official hotel`,
-      )}`
+      const searchParams = new URLSearchParams({
+        q: `${hotelName} official hotel`,
+        firstName: firstName.value.trim(),
+        lastName: lastName.value.trim(),
+        email: email.value.trim(),
+        hotel: hotelName ?? '',
+        promoCode,
+      })
+      searchWindow.location.href = `https://www.google.com/search?${searchParams.toString()}`
     }
   } catch (error) {
     searchWindow?.close()
@@ -440,9 +449,6 @@ onBeforeUnmount(() => {
                         ? t('home.hotels.bookingModal.sent')
                         : t('home.hotels.bookingModal.continue')
                   }}
-                </button>
-                <button class="booking-modal__secondary" type="button">
-                  {{ t('home.hotels.bookingModal.copyPromo') }}
                 </button>
               </div>
 
