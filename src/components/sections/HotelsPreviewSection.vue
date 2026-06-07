@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import AnimatedText from '@/components/AnimatedText.vue'
@@ -19,7 +19,15 @@ type HotelStat = {
 const activeFilter = ref<HotelFilter>('fourStar')
 const previousFilter = ref<HotelFilter>('fourStar')
 const isFilterAnimating = ref(false)
+const bookingHotelId = ref<string | null>(null)
+const bookingModal = ref<HTMLElement | null>(null)
+const firstName = ref('')
+const lastName = ref('')
+const email = ref('')
+const formError = ref('')
+const formStatus = ref<'idle' | 'sending' | 'success'>('idle')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const activeHotelSlides = ref<Record<string, number>>(
   Object.fromEntries(hotelPreviews.map((hotel) => [hotel.id, 0])),
@@ -106,9 +114,97 @@ const restartHotelAutoplay = () => {
   startHotelAutoplay()
 }
 
+const openBookingModal = (hotelId: string) => {
+  bookingHotelId.value = hotelId
+  firstName.value = ''
+  lastName.value = ''
+  email.value = ''
+  formError.value = ''
+  formStatus.value = 'idle'
+}
+
+const closeBookingModal = () => {
+  bookingHotelId.value = null
+}
+
+const handleModalKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') closeBookingModal()
+}
+
+const submitBookingRequest = async () => {
+  formError.value = ''
+
+  if (!firstName.value.trim() || !lastName.value.trim() || !email.value.trim()) {
+    formError.value = t('home.hotels.bookingModal.errors.required')
+    return
+  }
+
+  if (!emailPattern.test(email.value.trim())) {
+    formError.value = t('home.hotels.bookingModal.errors.email')
+    return
+  }
+
+  const hotel = hotelPreviews.find((item) => item.id === bookingHotelId.value)
+  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
+  const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
+  if (!serviceId || !templateId || !publicKey) {
+    formError.value = t('home.hotels.bookingModal.errors.config')
+    return
+  }
+
+  formStatus.value = 'sending'
+
+  try {
+    const hotelName = hotel ? t(hotel.nameKey) : bookingHotelId.value
+    const fullName = `${firstName.value.trim()} ${lastName.value.trim()}`
+
+    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_id: serviceId,
+        template_id: templateId,
+        user_id: publicKey,
+        template_params: {
+          first_name: firstName.value.trim(),
+          last_name: lastName.value.trim(),
+          user_email: email.value.trim(),
+          hotel: hotelName,
+          from_name: fullName,
+          from_email: email.value.trim(),
+          name: fullName,
+          email: email.value.trim(),
+          reply_to: email.value.trim(),
+          message: `${t('home.hotels.bookingModal.hotelLabel')}: ${hotelName}`,
+        },
+      }),
+    })
+
+    if (!response.ok) throw new Error(await response.text())
+
+    formStatus.value = 'success'
+  } catch (error) {
+    console.error('EmailJS request failed', error)
+    formStatus.value = 'idle'
+    formError.value = t('home.hotels.bookingModal.errors.send')
+  }
+}
+
+watch(bookingHotelId, async (hotelId) => {
+  document.body.classList.toggle('is-booking-modal-open', Boolean(hotelId))
+
+  if (hotelId) {
+    await nextTick()
+    bookingModal.value?.querySelector<HTMLElement>('input')?.focus()
+  }
+})
+
 onMounted(startHotelAutoplay)
 onBeforeUnmount(() => {
   stopHotelAutoplay()
+  document.body.classList.remove('is-booking-modal-open')
 
   if (filterAnimationTimer) {
     window.clearTimeout(filterAnimationTimer)
@@ -231,7 +327,7 @@ onBeforeUnmount(() => {
             unelevated
             no-caps
             class="fd-btn fd-btn--outline"
-            href="https://wa.me/393341822113"
+            @click="openBookingModal(hotel.id)"
           >
             <AnimatedText :text="t('home.hotels.bookWithBonus')" tag="span" />
           </q-btn>
@@ -244,5 +340,123 @@ onBeforeUnmount(() => {
         <AnimatedText :text="t('home.hotels.viewAll')" tag="span" />
       </q-btn>
     </div>
+
+    <Teleport to="body">
+      <Transition name="booking-modal">
+        <div
+          v-if="bookingHotelId"
+          ref="bookingModal"
+          class="booking-modal"
+          role="dialog"
+          aria-modal="true"
+          :aria-labelledby="`booking-modal-title-${bookingHotelId}`"
+          @click.self="closeBookingModal"
+          @keydown="handleModalKeydown"
+        >
+          <section class="booking-modal__panel">
+            <button
+              class="booking-modal__close"
+              type="button"
+              :aria-label="t('home.hotels.bookingModal.close')"
+              @click="closeBookingModal"
+            >
+              <span aria-hidden="true"></span>
+            </button>
+
+            <div class="booking-modal__intro">
+              <div>
+                <h2
+                  :id="`booking-modal-title-${bookingHotelId}`"
+                  class="booking-modal__title"
+                >
+                  {{ t('home.hotels.bookingModal.title') }}
+                </h2>
+                <p class="booking-modal__description">
+                  {{ t('home.hotels.bookingModal.description') }}
+                </p>
+              </div>
+
+              <p class="booking-modal__privacy-note">
+                {{ t('home.hotels.bookingModal.privacyNote') }}
+              </p>
+            </div>
+
+            <form class="booking-modal__form" novalidate @submit.prevent="submitBookingRequest">
+              <label class="booking-modal__field">
+                <span>{{ t('home.hotels.bookingModal.firstName') }}</span>
+                <input
+                  v-model="firstName"
+                  type="text"
+                  required
+                  autocomplete="given-name"
+                  :placeholder="t('home.hotels.bookingModal.firstNamePlaceholder')"
+                />
+              </label>
+
+              <label class="booking-modal__field">
+                <span>{{ t('home.hotels.bookingModal.lastName') }}</span>
+                <input
+                  v-model="lastName"
+                  type="text"
+                  required
+                  autocomplete="family-name"
+                  :placeholder="t('home.hotels.bookingModal.lastNamePlaceholder')"
+                />
+              </label>
+
+              <label class="booking-modal__field">
+                <span>{{ t('home.hotels.bookingModal.email') }}</span>
+                <input
+                  v-model="email"
+                  type="email"
+                  required
+                  autocomplete="email"
+                  :placeholder="t('home.hotels.bookingModal.emailPlaceholder')"
+                />
+              </label>
+
+              <p
+                class="booking-modal__required"
+                :class="{
+                  'booking-modal__required--error': formError,
+                  'booking-modal__required--success': formStatus === 'success',
+                }"
+                aria-live="polite"
+              >
+                {{
+                  formStatus === 'success'
+                    ? t('home.hotels.bookingModal.success')
+                    : formError || t('home.hotels.bookingModal.required')
+                }}
+              </p>
+
+              <div class="booking-modal__actions">
+                <button
+                  class="booking-modal__primary"
+                  type="submit"
+                  :disabled="formStatus === 'sending' || formStatus === 'success'"
+                >
+                  {{
+                    formStatus === 'sending'
+                      ? t('home.hotels.bookingModal.sending')
+                      : formStatus === 'success'
+                        ? t('home.hotels.bookingModal.sent')
+                        : t('home.hotels.bookingModal.continue')
+                  }}
+                </button>
+                <button class="booking-modal__secondary" type="button">
+                  {{ t('home.hotels.bookingModal.copyPromo') }}
+                </button>
+              </div>
+
+              <p class="booking-modal__agreement">
+                {{ t('home.hotels.bookingModal.agreement') }}
+                <a href="#">{{ t('home.hotels.bookingModal.privacyPolicy') }}</a>
+              </p>
+            </form>
+          </section>
+        </div>
+      </Transition>
+    </Teleport>
   </section>
 </template>

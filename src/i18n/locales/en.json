@@ -44,6 +44,33 @@
       "subtitle": "Direct booking at the hotel price, plus personal benefits from me",
       "viewAll": "View all hotels",
       "bookWithBonus": "Book with bonus",
+      "bookingModal": {
+        "title": "Enter your details\nto receive the bonus",
+        "description": "Enter the details of the person the booking will be made for. They are used only to confirm the bonus when checking in at the hotel.",
+        "privacyNote": "Your privacy is guaranteed. The details are shared only with the hotel. No mailing lists.",
+        "firstName": "First name",
+        "firstNamePlaceholder": "Anna",
+        "lastName": "Last name",
+        "lastNamePlaceholder": "Smith",
+        "email": "Email",
+        "emailPlaceholder": "your{'@'}email.com",
+        "required": "All fields are required",
+        "sending": "Sending...",
+        "sent": "Sent",
+        "success": "Your details have been sent successfully",
+        "hotelLabel": "Hotel",
+        "errors": {
+          "required": "Please complete all fields",
+          "email": "Enter a valid email address",
+          "config": "The email service is not configured",
+          "send": "Could not send your details. Please try again"
+        },
+        "continue": "Continue with bonus",
+        "copyPromo": "Copy promo code",
+        "agreement": "By clicking “Continue with bonus”, you agree to the",
+        "privacyPolicy": "Privacy Policy",
+        "close": "Close dialog"
+      },
       "features": "Features:",
       "filters": {
         "label": "Hotel filter",

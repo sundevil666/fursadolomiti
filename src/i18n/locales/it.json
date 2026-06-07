@@ -44,6 +44,33 @@
       "subtitle": "Prenotazione diretta al prezzo dell'hotel, con vantaggi personali da parte mia",
       "viewAll": "Vedi tutti gli hotel",
       "bookWithBonus": "Prenota con bonus",
+      "bookingModal": {
+        "title": "Inserisci i dati\nper ricevere il bonus",
+        "description": "Inserisci i dati della persona a cui sarà intestata la prenotazione. Saranno utilizzati solo per confermare il bonus al check-in in hotel.",
+        "privacyNote": "La privacy è garantita. I dati vengono trasmessi solo all’hotel. Nessuna newsletter.",
+        "firstName": "Nome",
+        "firstNamePlaceholder": "Anna",
+        "lastName": "Cognome",
+        "lastNamePlaceholder": "Rossi",
+        "email": "Email",
+        "emailPlaceholder": "your{'@'}email.com",
+        "required": "Tutti i campi sono obbligatori",
+        "sending": "Invio...",
+        "sent": "Inviato",
+        "success": "I dati sono stati inviati correttamente",
+        "hotelLabel": "Hotel",
+        "errors": {
+          "required": "Compila tutti i campi",
+          "email": "Inserisci un indirizzo email valido",
+          "config": "Il servizio email non è configurato",
+          "send": "Impossibile inviare i dati. Riprova"
+        },
+        "continue": "Continua con il bonus",
+        "copyPromo": "Copia il codice promo",
+        "agreement": "Facendo clic su “Continua con il bonus”, accetti la",
+        "privacyPolicy": "Informativa sulla privacy",
+        "close": "Chiudi finestra"
+      },
       "features": "Caratteristiche:",
       "filters": {
         "label": "Filtro hotel",
