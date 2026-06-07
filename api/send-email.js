@@ -1,9 +1,12 @@
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-const recipients = (process.env.EMAIL_RECIPIENTS || 'sundevildi@gmail.com')
-  .split(',')
-  .map((email) => email.trim())
-  .filter(Boolean)
+const describeEnv = (name, value) => ({
+  name,
+  present: Boolean(value),
+  length: value?.length ?? 0,
+  preview: value ? `${value.slice(0, 4)}...${value.slice(-3)}` : null,
+  hasWhitespace: value ? value !== value.trim() : false,
+})
 
 export default async function handler(request, response) {
   if (request.method !== 'POST') {
@@ -29,6 +32,19 @@ export default async function handler(request, response) {
   const templateId = process.env.EMAILJS_TEMPLATE_ID
   const publicKey = process.env.EMAILJS_PUBLIC_KEY
   const privateKey = process.env.EMAILJS_PRIVATE_KEY
+  const recipientsValue = process.env.EMAIL_RECIPIENTS || 'sundevildi@gmail.com'
+  const recipients = recipientsValue
+    .split(',')
+    .map((recipient) => recipient.trim())
+    .filter(Boolean)
+
+  console.info('EmailJS environment:', [
+    describeEnv('EMAILJS_SERVICE_ID', serviceId),
+    describeEnv('EMAILJS_TEMPLATE_ID', templateId),
+    describeEnv('EMAILJS_PUBLIC_KEY', publicKey),
+    describeEnv('EMAILJS_PRIVATE_KEY', privateKey),
+    describeEnv('EMAIL_RECIPIENTS', recipientsValue),
+  ])
 
   if (!serviceId || !templateId || !publicKey || !privateKey || recipients.length === 0) {
     return response.status(500).json({ error: 'Email service is not configured' })
