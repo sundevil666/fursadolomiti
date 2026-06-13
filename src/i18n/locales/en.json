@@ -42,8 +42,8 @@
     "previousSlide": "Previous slide",
     "nextSlide": "Next slide",
     "hotels": {
-      "title": "Hotels with personal bonuses",
-      "subtitle": "Direct booking at the hotel price, plus personal benefits from me",
+      "title": "Partner hotels",
+      "subtitle": "Book direct and enjoy exclusive perks",
       "viewAll": "View all hotels",
       "bookWithBonus": "Book with a bonus",
       "bookingModal": {
