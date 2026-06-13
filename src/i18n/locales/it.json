@@ -45,7 +45,7 @@
       "title": "Hotel con bonus personali",
       "subtitle": "Prenotazione diretta al prezzo dell'hotel, con vantaggi personali da parte mia",
       "viewAll": "Vedi tutti gli hotel",
-      "bookWithBonus": "Prenota con bonus",
+      "bookWithBonus": "Prenota con un bonus",
       "bookingModal": {
         "title": "Inserisci i dati\nper ricevere il bonus",
         "description": "Inserisci i dati della persona a cui sarà intestata la prenotazione. Saranno utilizzati solo per confermare il bonus al check-in in hotel.",
@@ -173,12 +173,12 @@
     },
     "howItWorks": {
       "title": "Come prenotare e ricevere il bonus",
-      "note": "Prenotare tramite FursaDolomiti non e solo un modo comodo per trovare l'hotel giusto per il soggiorno. Ti da accesso a bonus non disponibili con una prenotazione diretta.",
-      "help": "Se hai bisogno di aiuto per scegliere un hotel o uno chalet, scrivimi e ti aiutero a trovare l'opzione giusta.",
+      "note": "Prenotare tramite FursaDolomiti non è solo un modo comodo per trovare l'hotel giusto per il soggiorno. Ti dà accesso a bonus non disponibili con una prenotazione diretta.",
+      "help": "Se hai bisogno di aiuto per scegliere un hotel o uno chalet, scrivimi e ti aiuterò a trovare l'opzione giusta.",
       "whatsapp": "Scrivi su WhatsApp",
       "copyPromo": "Copia codice promo",
       "promoCopied": "Codice promo copiato",
-      "disclaimer": "La dimensione e il formato del bonus dipendono dall'hotel e dal periodo di prenotazione.",
+      "disclaimer": "L'entità e la tipologia del bonus dipendono dall'hotel e dal periodo di prenotazione.",
       "steps": [
         {
           "id": 1,
@@ -188,12 +188,12 @@
         {
           "id": 2,
           "title": "Vai al sito dell'hotel",
-          "text": "Clicca su “Prenota con bonus” e si aprira il modulo per inserire i tuoi dati."
+          "text": "Clicca su “Prenota con un bonus” per aprire il modulo e inserire i tuoi dati."
         },
         {
           "id": 3,
           "title": "Inserisci nome, cognome ed email",
-          "text": "Cosi posso identificarti come ospite FursaDolomiti e preparare il tuo bonus personale."
+          "text": "Così posso identificarti come ospite FursaDolomiti e preparare il tuo bonus personale."
         },
         {
           "id": 4,
@@ -208,7 +208,7 @@
         {
           "id": 6,
           "title": "Ricevi il bonus al check-in",
-          "text": "Preparero personalmente un bonus per il tuo soggiorno, che ti aspettera al tuo arrivo."
+          "text": "Preparerò personalmente un bonus per il tuo soggiorno, che ti aspetterà al tuo arrivo."
         }
       ]
     },

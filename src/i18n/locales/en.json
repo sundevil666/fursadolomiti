@@ -45,7 +45,7 @@
       "title": "Hotels with personal bonuses",
       "subtitle": "Direct booking at the hotel price, plus personal benefits from me",
       "viewAll": "View all hotels",
-      "bookWithBonus": "Book with bonus",
+      "bookWithBonus": "Book with a bonus",
       "bookingModal": {
         "title": "Enter your details\nto receive the bonus",
         "description": "Enter the details of the person the booking will be made for. They are used only to confirm the bonus when checking in at the hotel.",
@@ -188,7 +188,7 @@
         {
           "id": 2,
           "title": "Go to the hotel website",
-          "text": "Click “Book with bonus” and the form for entering your details will open."
+          "text": "Click “Book with a bonus” to open the form and enter your details."
         },
         {
           "id": 3,
