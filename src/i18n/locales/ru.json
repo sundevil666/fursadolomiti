@@ -4,7 +4,9 @@
     "logo": "Логотип",
     "language": "Язык",
     "openMenu": "Открыть меню",
-    "closeMenu": "Закрыть меню"
+    "closeMenu": "Закрыть меню",
+    "call": "Позвонить",
+    "writeWhatsApp": "Написать в WhatsApp"
   },
   "home": {
     "slide1": {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -13,6 +13,8 @@ const { locale, t } = useI18n()
 const route = useRoute()
 const menuItems = menuItemsMock as MenuItem[]
 const isMobileMenuOpen = ref(false)
+const isContactMenuOpen = ref(false)
+const contactMenu = useTemplateRef<HTMLElement>('contactMenu')
 
 const currentLocale = computed<AppLocale>({
   get: () => locale.value as AppLocale,
@@ -31,6 +33,28 @@ const navLabelWidth = (item: MenuItem) => {
   const maxLength = Math.max(...Object.values(item.labels).map((label) => label.length))
   return `${maxLength + (item.id === 'webcams' ? 3 : 0)}ch`
 }
+
+const closeContactMenu = (event: MouseEvent) => {
+  if (!contactMenu.value?.contains(event.target as Node)) {
+    isContactMenuOpen.value = false
+  }
+}
+
+const handleEscape = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    isContactMenuOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', closeContactMenu)
+  document.addEventListener('keydown', handleEscape)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', closeContactMenu)
+  document.removeEventListener('keydown', handleEscape)
+})
 </script>
 
 <template>
@@ -61,7 +85,37 @@ const navLabelWidth = (item: MenuItem) => {
 
       <div class="app-header__contacts">
         <a class="app-header__contact app-header__contact--email" href="mailto:info@fursadolomiti.com">info@fursadolomiti.com</a>
-        <a class="app-header__contact app-header__contact--phone" href="tel:+393341822113">+39 334 1822 113</a>
+        <div ref="contactMenu" class="app-header__phone-menu">
+          <button
+            class="app-header__contact app-header__contact--phone"
+            type="button"
+            :aria-expanded="isContactMenuOpen"
+            aria-controls="app-header-contact-menu"
+            @click="isContactMenuOpen = !isContactMenuOpen"
+          >
+            +39 334 1822 113
+          </button>
+
+          <Transition name="contact-menu">
+            <div
+              v-if="isContactMenuOpen"
+              id="app-header-contact-menu"
+              class="app-header__contact-menu"
+            >
+              <a href="tel:+393341822113" @click="isContactMenuOpen = false">
+                {{ t('app.call') }}
+              </a>
+              <a
+                href="https://wa.me/393341822113"
+                target="_blank"
+                rel="noopener noreferrer"
+                @click="isContactMenuOpen = false"
+              >
+                {{ t('app.writeWhatsApp') }}
+              </a>
+            </div>
+          </Transition>
+        </div>
       </div>
 
       <LanguageSwitcher class="app-header__language" />

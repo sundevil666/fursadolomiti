@@ -4,7 +4,9 @@
     "logo": "Logo",
     "language": "Lingua",
     "openMenu": "Apri menu",
-    "closeMenu": "Chiudi menu"
+    "closeMenu": "Chiudi menu",
+    "call": "Chiama",
+    "writeWhatsApp": "Scrivi su WhatsApp"
   },
   "home": {
     "slide1": {
