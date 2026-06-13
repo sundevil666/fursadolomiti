@@ -173,10 +173,10 @@
     },
     "howItWorks": {
       "title": "How to book and receive your bonus",
-      "note": "Booking through FursaDolomiti is more than a convenient way to find the right hotel for your stay. It gives you access to bonuses that are not available with a direct booking.",
+      "note": "Booking through Fursa Dolomiti is more than a convenient way to find the right hotel for your stay. It gives you access to bonuses that are not available with a direct booking.",
       "help": "If you need help choosing a hotel or chalet, message me and I will help you find the right option.",
       "whatsapp": "Write on WhatsApp",
-      "copyPromo": "Copy promo code",
+      "copyPromo": "Copy promo code FURSADOLOMITI",
       "promoCopied": "Promo code copied",
       "disclaimer": "The size and format of the bonus depend on the hotel and booking period. Bonuses are not guaranteed during high season.",
       "steps": [
@@ -193,11 +193,11 @@
         {
           "id": 3,
           "title": "Enter your name, surname and email",
-          "text": "This lets me identify you as a FursaDolomiti guest and prepare your personal bonus."
+          "text": "This lets me identify you as a Fursa Dolomiti guest and prepare your personal bonus."
         },
         {
           "id": 4,
-          "title": "Use the FursaDolomiti promo code",
+          "title": "Use promo code FURSADOLOMITI",
           "text": "When searching or booking a room, enter the promo code in the dedicated field or add it to the booking comments."
         },
         {

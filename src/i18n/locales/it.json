@@ -173,10 +173,10 @@
     },
     "howItWorks": {
       "title": "Come prenotare e ricevere il bonus",
-      "note": "Prenotare tramite FursaDolomiti non è solo un modo comodo per trovare l'hotel giusto per il soggiorno. Ti dà accesso a bonus non disponibili con una prenotazione diretta.",
+      "note": "Prenotare tramite Fursa Dolomiti non è solo un modo comodo per trovare l'hotel giusto per il soggiorno. Ti dà accesso a bonus non disponibili con una prenotazione diretta.",
       "help": "Se hai bisogno di aiuto per scegliere un hotel o uno chalet, scrivimi e ti aiuterò a trovare l'opzione giusta.",
       "whatsapp": "Scrivi su WhatsApp",
-      "copyPromo": "Copia codice promo",
+      "copyPromo": "Copia il codice promozionale FURSADOLOMITI",
       "promoCopied": "Codice promo copiato",
       "disclaimer": "L'entità e la tipologia del bonus dipendono dall'hotel e dal periodo di prenotazione. I bonus non sono garantiti durante l'alta stagione.",
       "steps": [
@@ -193,11 +193,11 @@
         {
           "id": 3,
           "title": "Inserisci nome, cognome ed email",
-          "text": "Così posso identificarti come ospite FursaDolomiti e preparare il tuo bonus personale."
+          "text": "Così posso identificarti come ospite di Fursa Dolomiti e preparare il tuo bonus personale."
         },
         {
           "id": 4,
-          "title": "Usa il codice promo FursaDolomiti",
+          "title": "Usa il codice promozionale FURSADOLOMITI",
           "text": "Durante la ricerca o la prenotazione della camera, inserisci il codice promo nel campo dedicato o nei commenti della prenotazione."
         },
         {
