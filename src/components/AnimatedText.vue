@@ -68,6 +68,7 @@ watch([locale, languageChangeCounter], () => {
 
   &__content {
     display: inline-block;
+    white-space: pre-line;
   }
 }
 
