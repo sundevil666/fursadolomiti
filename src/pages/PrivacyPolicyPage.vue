@@ -2,7 +2,7 @@
 import { onMounted } from 'vue'
 
 onMounted(() => {
-  document.title = 'Privacy Policy | Fursa Dolomiti'
+  document.title = 'Privacy Policy | FursaDolomiti'
 })
 </script>
 
@@ -10,7 +10,7 @@ onMounted(() => {
   <q-page class="legal-page">
     <main class="legal-page__inner">
       <header class="legal-page__header">
-        <p class="legal-page__eyebrow">Fursa Dolomiti</p>
+        <p class="legal-page__eyebrow">FursaDolomiti</p>
         <h1>Privacy Policy</h1>
         <p class="legal-page__updated">Last updated: 14 June 2026</p>
       </header>
@@ -20,7 +20,7 @@ onMounted(() => {
           <h2>1. Who we are</h2>
           <p>
             This website is operated by Tatiana Fursa, Val Gardena, South Tyrol, Italy
-            (“Fursa Dolomiti”, “we”, “us” or “our”).
+            (“FursaDolomiti”, “we”, “us” or “our”).
           </p>
           <dl>
             <div>
@@ -93,7 +93,7 @@ onMounted(() => {
         <section>
           <h2>4. Booking requests and hotel websites</h2>
           <p>
-            When you submit a booking request, its details are sent to Fursa Dolomiti by email. The
+            When you submit a booking request, its details are sent to FursaDolomiti by email. The
             website then redirects you to the selected hotel’s official booking website and may
             place your name, email address and promotional code into that hotel’s booking form.
           </p>
@@ -109,7 +109,7 @@ onMounted(() => {
           <h2>5. Who receives your information</h2>
           <p>Personal data may be processed by:</p>
           <ul>
-            <li>Fursa Dolomiti and authorised persons assisting with your request;</li>
+            <li>FursaDolomiti and authorised persons assisting with your request;</li>
             <li>the selected hotel or its booking technology provider;</li>
             <li>
               Vercel, which hosts and delivers the website and provides related infrastructure;

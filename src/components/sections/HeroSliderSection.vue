@@ -64,7 +64,7 @@ onBeforeUnmount(stopAutoplay)
 <template>
   <section
     class="hero-slider"
-    aria-label="Fursa Dolomiti"
+    aria-label="FursaDolomiti"
     @touchstart.passive="handleTouchStart"
     @touchend.passive="handleTouchEnd"
   >

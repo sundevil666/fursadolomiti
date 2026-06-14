@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Fursa Dolomiti",
+    "name": "FursaDolomiti",
     "logo": "Logo",
     "language": "Lingua",
     "openMenu": "Apri menu",
@@ -10,7 +10,7 @@
   },
   "home": {
     "slide1": {
-      "title": "Hotel e chalet in Val Gardena con i vantaggi esclusivi di Fursa Dolomiti",
+      "title": "Hotel e chalet in Val Gardena con i vantaggi esclusivi di FursaDolomiti",
       "text": "Una selezione di hotel partner 4 e 5 stelle e chalet prenotabili direttamente, con vantaggi extra e consigli personalizzati."
     },
     "slide2": {
@@ -27,7 +27,7 @@
     },
     "slide5": {
       "title": "Molto più di una semplice prenotazione",
-      "text": "Chi sceglie Fursa Dolomiti riceve consigli personalizzati, vantaggi presso i partner, offerte speciali e assistenza prima dell’arrivo e durante tutto il soggiorno."
+      "text": "Chi sceglie FursaDolomiti riceve consigli personalizzati, vantaggi presso i partner, offerte speciali e assistenza prima dell’arrivo e durante tutto il soggiorno."
     },
     "slide6": {
       "title": "Noleggio sci e bici a condizioni vantaggiose",
@@ -173,7 +173,7 @@
     },
     "howItWorks": {
       "title": "Come prenotare e ricevere il bonus",
-      "note": "Prenotare tramite Fursa Dolomiti non è solo un modo comodo per trovare l'hotel giusto per il soggiorno. Ti dà accesso a bonus non disponibili con una prenotazione diretta.",
+      "note": "Prenotare tramite FursaDolomiti non è solo un modo comodo per trovare l'hotel giusto per il soggiorno. Ti dà accesso a bonus non disponibili con una prenotazione diretta.",
       "help": "Se hai bisogno di aiuto per scegliere un hotel o uno chalet, scrivimi e ti aiuterò a trovare l'opzione giusta.",
       "whatsapp": "Scrivi su WhatsApp",
       "copyPromo": "Copia il codice promozionale FURSADOLOMITI",
@@ -193,7 +193,7 @@
         {
           "id": 3,
           "title": "Inserisci nome, cognome ed email",
-          "text": "Così posso identificarti come ospite di Fursa Dolomiti e preparare il tuo bonus personale."
+          "text": "Così posso identificarti come ospite di FursaDolomiti e preparare il tuo bonus personale."
         },
         {
           "id": 4,
@@ -299,7 +299,7 @@
     }
   },
   "page": {
-    "eyebrow": "Fursa Dolomiti"
+    "eyebrow": "FursaDolomiti"
   },
   "footer": {
     "tagline": "Non una piattaforma. Una persona.",

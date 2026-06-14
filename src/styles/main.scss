@@ -67,10 +67,8 @@ a {
     margin: 0 auto;
     padding: 0 max(20px, calc((100vw - var(--container)) / 2));
     border-radius: 0 0 5px 5px;
-    background: rgb(255 252 243 / 50%);
-    backdrop-filter: blur(8px);
-    box-shadow: 0 8px 28px rgb(5 38 35 / 5%);
-    column-gap: clamp(24px, 3.8vw, 60px);
+    background: #d1c5bb;
+    column-gap: 28px;
 
     .q-space {
       display: none;
@@ -83,7 +81,7 @@ a {
     align-items: center;
     justify-content: center;
     min-width: 0;
-    gap: clamp(26px, 3.6vw, 58px);
+    gap: 26px;
   }
 
   &__nav-link {
@@ -161,7 +159,7 @@ a {
     align-items: center;
     justify-content: flex-end;
     min-width: 0;
-    gap: clamp(24px, 3.6vw, 62px);
+    gap: 30px;
 
     > a,
     .app-header__contact--phone {
@@ -1045,7 +1043,7 @@ a {
   }
 
   &__header {
-    max-width: 1336px;
+    width: min(var(--container), 100%);
     margin: 0 auto;
     color: #08211f;
     padding: 100px 0 40px;
@@ -1053,11 +1051,14 @@ a {
   }
 
   &__title {
+    max-width: 470px;
     margin: 0;
     padding-bottom: 20px;
-    font-size: clamp(34px, 2.5vw, 44px);
-    font-weight: 600;
-    line-height: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: 45px;
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: 0;
 
   }
 
@@ -5153,6 +5154,50 @@ body.is-booking-modal-open {
   }
 }
 
+@media (min-width: 1501px) and (max-width: 2100px) {
+  .app-header {
+    &__toolbar {
+      grid-template-columns: 204px minmax(0, 1fr) auto 64px;
+      padding-inline: max(20px, calc((100vw - var(--container)) / 2));
+      column-gap: 28px;
+    }
+
+    &__brand {
+      width: 204px;
+      min-width: 204px;
+      flex-basis: 204px;
+
+      img {
+        width: 204px !important;
+        min-width: 204px;
+      }
+    }
+
+    &__nav {
+      justify-content: center;
+      gap: 26px;
+    }
+
+    &__contacts {
+      gap: 30px;
+    }
+
+    &__language {
+      width: 64px;
+    }
+  }
+
+  .language-switcher {
+    width: 64px;
+    flex-basis: 64px;
+  }
+
+  .language-switcher__trigger {
+    width: 64px;
+    min-width: 64px;
+  }
+}
+
 @media (max-width: 1500px) {
   .app-header {
     &__toolbar {
@@ -6465,7 +6510,7 @@ body.is-booking-modal-open {
 @media (min-width: 641px) and (max-width: 1100px) {
   .app-header {
     &__toolbar {
-      grid-template-columns: 134px minmax(0, 1fr) auto 44px;
+      grid-template-columns: 134px minmax(0, 1fr) auto 44px 44px;
       min-height: 50px;
       padding: 6px 10px;
       gap: 14px;
@@ -6497,7 +6542,9 @@ body.is-booking-modal-open {
     }
 
     &__menu-button {
-      display: none;
+      display: inline-flex;
+      width: 44px;
+      height: 44px;
     }
 
     &__language {
@@ -7122,16 +7169,7 @@ body.is-booking-modal-open {
     }
 
     &__contacts {
-      display: flex;
-      flex: 1 1 auto;
-      justify-content: flex-end;
-      min-width: 0;
-      gap: 10px;
-
-      > a,
-      .app-header__contact--phone {
-        font-size: 8px;
-      }
+      display: none;
     }
 
     &__contact--email {
@@ -7139,7 +7177,9 @@ body.is-booking-modal-open {
     }
 
     &__menu-button {
-      display: none;
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
     }
 
     &__language {
@@ -7322,7 +7362,7 @@ body.is-booking-modal-open {
 @media (max-width: 380px) {
   .app-header {
     &__toolbar {
-      grid-template-columns: 112px minmax(0, 1fr) 42px;
+      grid-template-columns: 112px minmax(0, 1fr) 42px 42px;
       min-height: 50px;
       padding: 6px 8px;
       gap: 8px;
@@ -7340,15 +7380,7 @@ body.is-booking-modal-open {
     }
 
     &__contacts {
-      display: flex;
-      justify-content: flex-end;
-      min-width: 0;
-      gap: 0;
-
-      > a,
-      .app-header__contact--phone {
-        font-size: 8px;
-      }
+      display: none;
     }
 
     &__contact--email {
@@ -7356,7 +7388,9 @@ body.is-booking-modal-open {
     }
 
     &__menu-button {
-      display: none;
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
     }
 
     &__language {

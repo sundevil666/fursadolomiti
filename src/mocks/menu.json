@@ -1,5 +1,14 @@
 [
   {
+    "id": "home",
+    "routeName": "home",
+    "labels": {
+      "ru": "Главная",
+      "en": "Home",
+      "it": "Home"
+    }
+  },
+  {
     "id": "hotels",
     "routeName": "hotels",
     "labels": {

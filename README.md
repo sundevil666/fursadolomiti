@@ -1,4 +1,4 @@
-# Fursa Dolomiti Frontend
+# FursaDolomiti Frontend
 
 Quasar + Vite + Vue 3 + TypeScript starter without Pinia.
 
