@@ -29,10 +29,10 @@ const instructorFeatures = computed(() => tm('home.instructor.features') as Inst
         </p>
       </div>
 
-      <h3 class="instructor-section__subtitle">
+      <h3 v-if="t('home.instructor.organizeTitle')" class="instructor-section__subtitle">
         <AnimatedText :text="t('home.instructor.organizeTitle')" tag="span" />
       </h3>
-      <ul class="instructor-section__list">
+      <ul v-if="instructorFeatures.length" class="instructor-section__list">
         <li
           v-for="feature in instructorFeatures"
           :key="feature.id"

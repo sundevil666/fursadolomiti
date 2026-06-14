@@ -120,11 +120,11 @@ const scrollToTop = () => {
         </div>
 
         <div class="app-footer__legal">
-          <RouterLink :to="{ name: 'home' }">
+          <RouterLink :to="{ name: 'privacy-policy' }">
             <AnimatedText :text="t('footer.privacy')" tag="span" />
           </RouterLink>
           <span aria-hidden="true" />
-          <RouterLink :to="{ name: 'home' }">
+          <RouterLink :to="{ name: 'privacy-policy', hash: '#cookies' }">
             <AnimatedText :text="t('footer.cookies')" tag="span" />
           </RouterLink>
           <span aria-hidden="true" />

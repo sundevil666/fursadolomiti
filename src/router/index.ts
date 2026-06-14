@@ -3,6 +3,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import MainLayout from '@/layouts/MainLayout.vue'
 import HomePage from '@/pages/HomePage.vue'
 import HotelsPage from '@/pages/HotelsPage.vue'
+import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage.vue'
 import RentalPage from '@/pages/RentalPage.vue'
 import WebcamsPage from '@/pages/WebcamsPage.vue'
 
@@ -30,6 +31,11 @@ export const routes: RouteRecordRaw[] = [
         path: 'webcams',
         name: 'webcams',
         component: WebcamsPage,
+      },
+      {
+        path: 'privacy-policy',
+        name: 'privacy-policy',
+        component: PrivacyPolicyPage,
       },
     ],
   },

@@ -266,13 +266,8 @@
       "lead": "In high season, good instructors get booked quickly.",
       "text1": "I work with trusted schools and instructors I know personally.",
       "text2": "I arrange direct booking with your skiing level and age in mind.",
-      "organizeTitle": "What I arrange:",
-      "features": [
-        {
-          "id": 1,
-          "text": "I help you find and book Russian-speaking instructors in Val Gardena."
-        }
-      ],
+      "organizeTitle": "",
+      "features": [],
       "cta": "Write on WhatsApp"
     },
     "reviews": {

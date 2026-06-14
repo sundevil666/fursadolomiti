@@ -463,7 +463,9 @@ onBeforeUnmount(() => {
 
               <p class="booking-modal__agreement">
                 {{ t('home.hotels.bookingModal.agreement') }}
-                <a href="#">{{ t('home.hotels.bookingModal.privacyPolicy') }}</a>
+                <RouterLink :to="{ name: 'privacy-policy' }" target="_blank">
+                  {{ t('home.hotels.bookingModal.privacyPolicy') }}
+                </RouterLink>
               </p>
             </form>
           </section>
