@@ -8,7 +8,9 @@ import { heroSlides } from '@/data/homeSections'
 const { t } = useI18n()
 
 const activeSlide = ref(0)
+const isAutoplayPaused = ref(false)
 const touchStartX = ref<number | null>(null)
+const didSwipe = ref(false)
 const activeHero = computed(() => heroSlides[activeSlide.value])
 const autoplayDelay = 8000
 let autoplayTimer: number | undefined
@@ -16,7 +18,7 @@ let autoplayTimer: number | undefined
 const setSlide = (index: number, shouldRestartAutoplay = true) => {
   activeSlide.value = (index + heroSlides.length) % heroSlides.length
 
-  if (shouldRestartAutoplay) {
+  if (shouldRestartAutoplay && !isAutoplayPaused.value) {
     restartAutoplay()
   }
 }
@@ -40,7 +42,26 @@ const restartAutoplay = () => {
   startAutoplay()
 }
 
+const toggleAutoplay = (event: MouseEvent) => {
+  if (didSwipe.value) {
+    didSwipe.value = false
+    return
+  }
+
+  const target = event.target as HTMLElement
+  if (target.closest('button, a')) return
+
+  isAutoplayPaused.value = !isAutoplayPaused.value
+
+  if (isAutoplayPaused.value) {
+    stopAutoplay()
+  } else {
+    startAutoplay()
+  }
+}
+
 const handleTouchStart = (event: TouchEvent) => {
+  didSwipe.value = false
   touchStartX.value = event.touches[0]?.clientX ?? null
 }
 
@@ -51,6 +72,7 @@ const handleTouchEnd = (event: TouchEvent) => {
   const distance = touchStartX.value - endX
 
   if (Math.abs(distance) > 44) {
+    didSwipe.value = true
     setSlide(activeSlide.value + (distance > 0 ? 1 : -1))
   }
 
@@ -64,7 +86,9 @@ onBeforeUnmount(stopAutoplay)
 <template>
   <section
     class="hero-slider"
+    :class="{ 'hero-slider--paused': isAutoplayPaused }"
     aria-label="FursaDolomiti"
+    @click="toggleAutoplay"
     @touchstart.passive="handleTouchStart"
     @touchend.passive="handleTouchEnd"
   >
@@ -79,6 +103,17 @@ onBeforeUnmount(stopAutoplay)
     </article>
 
     <div class="hero-slider__shade" />
+
+    <Transition name="hero-pause">
+      <div
+        v-if="isAutoplayPaused"
+        class="hero-slider__pause-indicator"
+        role="status"
+        :aria-label="t('home.sliderPaused')"
+      >
+        <q-icon name="pause" />
+      </div>
+    </Transition>
 
     <div class="hero-slider__content">
       <Transition name="hero-copy" mode="out-in">

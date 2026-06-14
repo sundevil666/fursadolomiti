@@ -6,6 +6,11 @@ import AppHeader from '@/components/AppHeader.vue'
 
 const isFooterVisible = ref(false)
 let footerObserver: IntersectionObserver | null = null
+let isFooterIntersecting = false
+
+const updateHeaderVisibility = () => {
+  isFooterVisible.value = isFooterIntersecting && window.scrollY > 80
+}
 
 onMounted(() => {
   const footer = document.querySelector('#app-footer')
@@ -16,15 +21,18 @@ onMounted(() => {
 
   footerObserver = new IntersectionObserver(
     ([entry]) => {
-      isFooterVisible.value = entry.isIntersecting
+      isFooterIntersecting = entry.isIntersecting
+      updateHeaderVisibility()
     },
     { threshold: 0.1 },
   )
   footerObserver.observe(footer)
+  window.addEventListener('scroll', updateHeaderVisibility, { passive: true })
 })
 
 onBeforeUnmount(() => {
   footerObserver?.disconnect()
+  window.removeEventListener('scroll', updateHeaderVisibility)
 })
 </script>
 
