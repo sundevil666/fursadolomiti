@@ -15,7 +15,7 @@ const locations = computed(() => tm('home.dolomitesExpert.locations') as Locatio
 </script>
 
 <template>
-  <section class="dolomites-expert" aria-labelledby="dolomites-expert-title">
+  <section id="dolomites-expert" class="dolomites-expert" aria-labelledby="dolomites-expert-title">
     <div class="dolomites-expert__inner">
       <div class="dolomites-expert__portrait-side">
         <h2 id="dolomites-expert-title" class="dolomites-expert__title">

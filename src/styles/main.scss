@@ -2088,8 +2088,8 @@ a {
 
   &__inner {
     display: grid;
-    min-height: 804px;
-    width: min(1208px, calc(100% - 36px));
+    min-height: 805px;
+    width: 100%;
     margin: 0 auto;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
@@ -2102,12 +2102,12 @@ a {
   &__portrait-side {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 99px 78px 90px 0;
+    align-items: flex-end;
+    padding: 101px 60px 0 24px;
   }
 
   &__copy-side {
-    padding: 98px 0 90px 39px;
+    padding: 100px 24px 0 39px;
     border-left: 1px solid #cbbfb5;
   }
 
@@ -2115,9 +2115,9 @@ a {
     width: min(544px, 100%);
     margin: 0;
     color: #08211f;
-    font-size: 46px;
+    font-size: 42px;
     font-weight: 700;
-    line-height: 0.96;
+    line-height: 1.05;
     letter-spacing: 0;
   }
 
@@ -2163,7 +2163,7 @@ a {
     display: block;
     width: 312px;
     height: 420px;
-    margin-top: 21px;
+    margin: 21px 100px 0 0;
     border-radius: 5px;
     object-fit: cover;
     object-position: 50% 43%;
@@ -2173,7 +2173,7 @@ a {
     max-width: 566px;
 
     + .dolomites-expert__copy {
-      margin-top: 26px;
+      margin-top: 25px;
     }
 
     h3 {
