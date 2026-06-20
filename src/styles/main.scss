@@ -891,7 +891,7 @@ a {
   color: var(--green);
 
   &__filters {
-    --filter-all-width: 92px;
+    --filter-all-width: 158px;
     --filter-hotel-width: 220px;
     --filter-chalet-width: 92px;
     --filter-gap: 74px;
@@ -1038,6 +1038,7 @@ a {
     span {
       position: relative;
       z-index: 2;
+      white-space: nowrap;
     }
 
     &:hover,
@@ -4120,7 +4121,7 @@ body.is-booking-modal-open {
 
   .hotels-section {
     &__filters {
-      --filter-all-width: 76px;
+      --filter-all-width: 132px;
       --filter-hotel-width: 188px;
       --filter-chalet-width: 76px;
       --filter-gap: 42px;
@@ -4612,7 +4613,7 @@ body.is-booking-modal-open {
 
   .hotels-section {
     &__filters {
-      --filter-all-width: 70px;
+      --filter-all-width: 118px;
       --filter-hotel-width: 154px;
       --filter-chalet-width: 70px;
       --filter-gap: 30px;
