@@ -297,6 +297,33 @@
           "source": "google"
         }
       ]
+    },
+    "dolomitesExpert": {
+      "title": "Over 20 years in the Dolomites",
+      "quote": "A good holiday starts with choosing the right location and stay.",
+      "author": "— Tatiana Fursa.",
+      "photoAlt": "Tatiana Fursa in the Dolomites",
+      "stayTitle": "Hotels, chalets and apartments in Val Gardena",
+      "stayText": "I help you choose accommodation in Ortisei, Selva di Val Gardena and Santa Cristina, from family hotels and spa hotels to luxury chalets and modern apartments in the Dolomites.",
+      "yearRoundTitle": "Dolomites holidays all year round",
+      "yearRoundText": "Val Gardena is one of the most popular destinations for ski holidays in winter and active mountain holidays in summer. The region suits family trips, romantic escapes, holidays with friends, hiking routes, cycling and time in nature.",
+      "locationsTitle": "Val Gardena locations",
+      "locations": [
+        {
+          "id": 1,
+          "text": "Ortisei is ideal if you like developed infrastructure and the atmosphere of a resort town"
+        },
+        {
+          "id": 2,
+          "text": "Santa Cristina is chosen for a calm stay and beautiful views"
+        },
+        {
+          "id": 3,
+          "text": "Selva di Val Gardena is best for being close to the slopes"
+        }
+      ],
+      "help": "Not sure what to choose? I will select the right option personally",
+      "cta": "WhatsApp"
     }
   },
   "page": {

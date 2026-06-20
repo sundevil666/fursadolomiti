@@ -297,6 +297,33 @@
           "source": "google"
         }
       ]
+    },
+    "dolomitesExpert": {
+      "title": "Oltre 20 anni nelle Dolomiti",
+      "quote": "Una buona vacanza inizia dalla scelta giusta della località e dell'alloggio.",
+      "author": "— Tatiana Fursa.",
+      "photoAlt": "Tatiana Fursa nelle Dolomiti",
+      "stayTitle": "Hotel, chalet e appartamenti in Val Gardena",
+      "stayText": "Ti aiuto a scegliere l'alloggio a Ortisei, Selva di Val Gardena e Santa Cristina: dagli hotel per famiglie e hotel spa agli chalet di lusso e agli appartamenti moderni nelle Dolomiti.",
+      "yearRoundTitle": "Vacanze nelle Dolomiti tutto l'anno",
+      "yearRoundText": "La Val Gardena e una delle destinazioni piu amate per le vacanze sulla neve in inverno e per una vacanza attiva in montagna d'estate. La zona e adatta a famiglie, viaggi romantici, gruppi di amici, trekking, ciclismo e momenti nella natura.",
+      "locationsTitle": "Localita della Val Gardena",
+      "locations": [
+        {
+          "id": 1,
+          "text": "Ortisei e ideale per chi ama servizi sviluppati e l'atmosfera di una localita turistica"
+        },
+        {
+          "id": 2,
+          "text": "Santa Cristina e scelta per una vacanza tranquilla e bei panorami"
+        },
+        {
+          "id": 3,
+          "text": "Selva di Val Gardena e scelta per la vicinanza alle piste"
+        }
+      ],
+      "help": "Non sei sicuro della scelta? Trovero personalmente l'opzione giusta",
+      "cta": "WhatsApp"
     }
   },
   "page": {

@@ -2081,6 +2081,168 @@ a {
   }
 }
 
+.dolomites-expert {
+  overflow: hidden;
+  background: #fff6e1;
+  color: #08211f;
+
+  &__inner {
+    display: grid;
+    min-height: 804px;
+    width: min(1208px, calc(100% - 36px));
+    margin: 0 auto;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  &__portrait-side,
+  &__copy-side {
+    min-width: 0;
+  }
+
+  &__portrait-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 99px 78px 90px 0;
+  }
+
+  &__copy-side {
+    padding: 98px 0 90px 39px;
+    border-left: 1px solid #cbbfb5;
+  }
+
+  &__title {
+    width: min(544px, 100%);
+    margin: 0;
+    color: #08211f;
+    font-size: 46px;
+    font-weight: 700;
+    line-height: 0.96;
+    letter-spacing: 0;
+  }
+
+  &__quote {
+    position: relative;
+    width: min(520px, 100%);
+    margin: 42px 0 0;
+    padding-left: 50px;
+    color: #08211f;
+    font-family: Manrope, sans-serif;
+
+    &::before {
+      position: absolute;
+      top: -16px;
+      left: 0;
+      color: #175445;
+      font-family: "Playfair Display", serif;
+      font-size: 76px;
+      font-weight: 700;
+      line-height: 1;
+      content: '“';
+    }
+
+    blockquote {
+      max-width: 410px;
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.34;
+    }
+
+    figcaption {
+      max-width: 410px;
+      margin-top: 9px;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.34;
+      text-align: right;
+    }
+  }
+
+  &__photo {
+    display: block;
+    width: 312px;
+    height: 420px;
+    margin-top: 21px;
+    border-radius: 5px;
+    object-fit: cover;
+    object-position: 50% 43%;
+  }
+
+  &__copy {
+    max-width: 566px;
+
+    + .dolomites-expert__copy {
+      margin-top: 26px;
+    }
+
+    h3 {
+      margin: 0 0 17px;
+      font-family: Manrope, sans-serif;
+      font-size: 25px;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    p {
+      margin: 0;
+      font-family: Manrope, sans-serif;
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.34;
+    }
+  }
+
+  &__locations {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      padding: 10px 0 12px;
+      border-bottom: 1px solid #cbbfb5;
+      font-family: Manrope, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.34;
+
+      &:first-child {
+        padding-top: 0;
+      }
+    }
+  }
+
+  &__footer {
+    display: grid;
+    align-items: center;
+    max-width: 434px;
+    margin-top: 24px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 24px;
+
+    p {
+      margin: 0;
+      font-family: Manrope, sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.34;
+    }
+  }
+
+  &__button {
+    min-width: 143px;
+    min-height: 50px;
+    border-radius: 999px;
+    padding: 0 28px;
+    background: #175445;
+    color: #fff9ea;
+    font-family: Manrope, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+  }
+}
+
 .reviews-section {
   overflow: visible;
   background: #efe4c9;
@@ -5497,6 +5659,137 @@ body.is-booking-modal-open {
     &__brand img {
       width: 172px !important;
       min-width: 172px;
+    }
+  }
+}
+
+@media (max-width: 1100px) {
+  .dolomites-expert {
+    &__inner {
+      width: min(920px, calc(100% - 32px));
+      min-height: 0;
+    }
+
+    &__portrait-side {
+      padding: 72px 36px 72px 0;
+    }
+
+    &__copy-side {
+      padding: 72px 0 72px 32px;
+    }
+
+    &__title {
+      font-size: 40px;
+    }
+
+    &__photo {
+      width: min(312px, 100%);
+      height: 390px;
+    }
+  }
+}
+
+@media (max-width: 760px) {
+  .dolomites-expert {
+    &__inner {
+      width: min(560px, calc(100% - 32px));
+      grid-template-columns: 1fr;
+    }
+
+    &__portrait-side {
+      align-items: flex-start;
+      padding: 56px 0 42px;
+    }
+
+    &__copy-side {
+      padding: 42px 0 56px;
+      border-top: 1px solid #cbbfb5;
+      border-left: 0;
+    }
+
+    &__title {
+      width: 100%;
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    &__quote {
+      width: 100%;
+      margin-top: 30px;
+      padding-left: 44px;
+
+      blockquote,
+      figcaption {
+        max-width: none;
+      }
+    }
+
+    &__photo {
+      align-self: center;
+      width: min(312px, 100%);
+      height: 420px;
+    }
+
+    &__copy {
+      max-width: none;
+    }
+
+    &__footer {
+      max-width: none;
+    }
+  }
+}
+
+@media (max-width: 520px) {
+  .dolomites-expert {
+    &__inner {
+      width: calc(100% - 30px);
+    }
+
+    &__portrait-side {
+      padding-top: 48px;
+    }
+
+    &__copy-side {
+      padding-bottom: 48px;
+    }
+
+    &__title {
+      font-size: 34px;
+    }
+
+    &__quote {
+      padding-left: 40px;
+
+      &::before {
+        top: -11px;
+        font-size: 62px;
+      }
+    }
+
+    &__photo {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 312 / 420;
+    }
+
+    &__copy {
+      h3 {
+        font-size: 23px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+    }
+
+    &__footer {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    &__button {
+      justify-self: start;
     }
   }
 }
