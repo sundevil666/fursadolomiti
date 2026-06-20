@@ -130,7 +130,15 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'alpenroyal',
     category: 'fiveStar',
-    images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
+    images: [
+      '/alpenroyal/alpenroyal-summer-pool-mountain-view.jpg',
+      '/alpenroyal/alpenroyal-summer-exterior-pool.jpg',
+      '/alpenroyal/alpenroyal-winter-exterior-aerial.jpg',
+      '/alpenroyal/alpenroyal-suite-bedroom.jpg',
+      '/alpenroyal/alpenroyal-restaurant-dining-room.jpg',
+      '/alpenroyal/alpenroyal-spa-relaxation-room.jpg',
+      '/alpenroyal/alpenroyal-spa-lounge.jpg',
+    ],
     promoCode: 'REPLACE_ALPENROYAL',
     bookingUrl: 'https://example.com/alpenroyal/booking',
     bookingParams: {
