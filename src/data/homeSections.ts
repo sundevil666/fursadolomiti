@@ -23,6 +23,11 @@ export type HotelPreview = {
   featuresKey: string
   featuresLabelKey?: string
   statsKey?: string
+  bookingSuedtirol?: {
+    id: string
+    propertyId: number
+    promotion: [string, string, string]
+  }
 }
 
 export type HotelCategory = 'fiveStar' | 'fourStar' | 'chalet'
@@ -202,6 +207,30 @@ export const hotelPreviews: HotelPreview[] = [
     locationKey: 'home.hotels.lunaMondschein.location',
     descriptionKey: 'home.hotels.lunaMondschein.description',
     featuresKey: 'home.hotels.lunaMondschein.features',
+  },
+  {
+    id: 'test-chalet-booking-suedtirol',
+    category: 'chalet',
+    images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    promoCode: 'TEST_BOOKING_SUEDTIROL',
+    bookingUrl: 'https://example.com/test-chalet-booking-suedtirol/booking',
+    bookingParams: {
+      firstName: 'contact_first_name',
+      lastName: 'contact_last_name',
+      email: 'contact_email',
+      promoCode: 'referral_code',
+    },
+    nameKey: 'home.hotels.testChaletBookingSuedtirol.name',
+    locationKey: 'home.hotels.testChaletBookingSuedtirol.location',
+    descriptionKey: 'home.hotels.testChaletBookingSuedtirol.description',
+    featuresKey: 'home.hotels.testChaletBookingSuedtirol.features',
+    featuresLabelKey: 'home.hotels.testChaletBookingSuedtirol.featuresLabel',
+    statsKey: 'home.hotels.testChaletBookingSuedtirol.stats',
+    bookingSuedtirol: {
+      id: 'cb10173a-7255-4e60-99c5-6cfb42c2f5b4',
+      propertyId: 10957,
+      promotion: ['affiliate', 'fursadolomiti.com', 'test_chalet_10957'],
+    },
   },
   {
     id: 'dolomites-chalet',

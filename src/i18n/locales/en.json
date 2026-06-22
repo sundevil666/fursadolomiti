@@ -69,7 +69,17 @@
         "continue": "Continue with bonus",
         "agreement": "By clicking “Continue with bonus”, you agree to the",
         "privacyPolicy": "Privacy Policy",
-        "close": "Close dialog"
+        "close": "Close dialog",
+        "widgetTitle": "Booking Südtirol\ntest widget",
+        "widgetDescription": "This test chalet is connected to the Booking Südtirol widget. We pass the propertyId and FursaDolomiti attribution to inspect the interface and callbacks.",
+        "widgetPrivacyNote": "Test mode: booking data is handled by the Booking Südtirol widget. The debug panel below shows events returned by the widget.",
+        "widgetDebugTitle": "Widget responses and events",
+        "widgetStatus": {
+          "idle": "Widget is not loaded yet",
+          "loading": "Loading Booking Südtirol widget...",
+          "ready": "Widget loaded",
+          "error": "Could not load the widget"
+        }
       },
       "features": "Features:",
       "filters": {
@@ -143,6 +153,32 @@
           "Spacious spa center with pools and saunas",
           "Outdoor pool and garden in the warm season",
           "Suitable for active holidays year-round"
+        ]
+      },
+      "testChaletBookingSuedtirol": {
+        "name": "Booking Südtirol test chalet",
+        "location": "Test property, propertyId 10957",
+        "description": "A technical card for checking the Booking Südtirol widget and FursaDolomiti partner attribution.",
+        "featuresLabel": "What we test:",
+        "features": [
+          "Embedding the widget in a modal window",
+          "Passing propertyId and widget id",
+          "Passing promotion: affiliate / fursadolomiti.com / test_chalet_10957",
+          "Callbacks onStaySelection, onBookingSuccess and onBookingError"
+        ],
+        "stats": [
+          {
+            "icon": "science",
+            "value": "test"
+          },
+          {
+            "icon": "home",
+            "value": "10957"
+          },
+          {
+            "icon": "sell",
+            "value": "utm"
+          }
         ]
       },
       "dolomitesChalet": {
