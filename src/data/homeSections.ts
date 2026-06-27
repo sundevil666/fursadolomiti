@@ -160,7 +160,11 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'posta',
     category: 'fourStar',
-    images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    images: [
+      '/posta_4/Posta4 (1).jpg',
+      '/posta_4/H.Post-138.jpg',
+      '/posta_4/FamilyHotel(3) (3).jpg',
+    ],
     promoCode: 'REPLACE_POSTA',
     bookingUrl: 'https://example.com/posta/booking',
     bookingParams: {
