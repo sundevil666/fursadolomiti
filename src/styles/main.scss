@@ -380,19 +380,6 @@ a {
     border-radius: inherit;
     content: '';
   }
-
-  &:hover {
-    box-shadow:
-      0 8px 18px rgb(20 93 79 / 8%),
-      inset 0 1px 0 rgb(255 255 255 / 72%);
-    color: #145d4f;
-    background: #f5ecd5;
-
-    &::before {
-      opacity: 1;
-      transform: rotate(158deg) scale(1);
-    }
-  }
 }
 
 .language-switcher__glow {
