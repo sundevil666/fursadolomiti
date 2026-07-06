@@ -104,19 +104,16 @@ a {
   }
 
   &__nav-link {
-    position: relative;
     min-height: 38px;
     min-width: var(--nav-label-width);
     overflow: visible;
     padding: 0;
-    color: #145d4f;
+    color: #175445;
     font-size: 17px;
     font-weight: 400;
     font-family: 'Manrope', sans-serif;
     white-space: nowrap;
-    transition:
-      color 240ms ease,
-      transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1);
+    transition: color 240ms ease;
 
     &::before {
       display: none;
@@ -130,7 +127,6 @@ a {
       width: 100%;
       justify-content: center;
       flex-wrap: nowrap;
-      transition: transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1);
     }
 
     .q-icon {
@@ -139,15 +135,7 @@ a {
 
     &:hover,
     &:focus-visible {
-      color: #3a6e61;
-
-      .q-btn__content {
-        transform: translateY(-1px);
-      }
-
-      .q-icon {
-        transform: translate(2px, 1px);
-      }
+      color: #3A6E61;
     }
 
     &:active {
