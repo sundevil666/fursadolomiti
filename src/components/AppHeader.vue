@@ -14,6 +14,7 @@ const route = useRoute()
 const menuItems = menuItemsMock as MenuItem[]
 const isMobileMenuOpen = ref(false)
 const isContactMenuOpen = ref(false)
+const isHeaderScrolled = ref(false)
 const contactMenu = useTemplateRef<HTMLElement>('contactMenu')
 
 const currentLocale = computed<AppLocale>({
@@ -28,6 +29,8 @@ const currentLocale = computed<AppLocale>({
 const isActiveRoute = (routeName: string) => {
   return route.name === routeName
 }
+
+const isPrivacyPolicyRoute = computed(() => route.name === 'privacy-policy')
 
 const navLabelWidth = (item: MenuItem) => {
   const maxLength = Math.max(...Object.values(item.labels).map((label) => label.length))
@@ -46,22 +49,35 @@ const handleEscape = (event: KeyboardEvent) => {
   }
 }
 
+const updateHeaderScrolled = () => {
+  isHeaderScrolled.value = window.scrollY > 200
+}
+
 onMounted(() => {
+  updateHeaderScrolled()
+  window.addEventListener('scroll', updateHeaderScrolled, { passive: true })
   document.addEventListener('click', closeContactMenu)
   document.addEventListener('keydown', handleEscape)
 })
 
 onBeforeUnmount(() => {
+  window.removeEventListener('scroll', updateHeaderScrolled)
   document.removeEventListener('click', closeContactMenu)
   document.removeEventListener('keydown', handleEscape)
 })
 </script>
 
 <template>
-  <q-header class="app-header">
+  <q-header
+    class="app-header"
+    :class="{
+      'app-header--scrolled': isHeaderScrolled,
+      'app-header--privacy-policy': isPrivacyPolicyRoute,
+    }"
+  >
     <q-toolbar class="app-header__toolbar">
       <RouterLink class="app-header__brand" :to="{ name: 'home' }" :aria-label="t('app.name')">
-        <img src="@/assets/img/logo.svg" alt="logo">
+        <img src="@/assets/img/logo.svg" alt="logo" />
       </RouterLink>
 
       <q-space />
@@ -84,7 +100,11 @@ onBeforeUnmount(() => {
       </nav>
 
       <div class="app-header__contacts">
-        <a class="app-header__contact app-header__contact--email" href="mailto:info@fursadolomiti.com">info@fursadolomiti.com</a>
+        <a
+          class="app-header__contact app-header__contact--email"
+          href="mailto:info@fursadolomiti.com"
+          >info@fursadolomiti.com</a
+        >
         <div ref="contactMenu" class="app-header__phone-menu">
           <button
             class="app-header__contact app-header__contact--phone"

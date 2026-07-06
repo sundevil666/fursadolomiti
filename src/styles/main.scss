@@ -72,7 +72,8 @@ a {
   left: 0;
   z-index: 50;
   padding: 0;
-  background: transparent;
+  background: rgba(255, 252, 243, 0.5);
+  transition: background 1s ease;
   color: #0f5b4c;
 
   &__toolbar {
@@ -84,14 +85,15 @@ a {
     margin: 0 auto;
     padding: 0 max(var(--page-gutter), calc((100vw - var(--container)) / 2));
     border-radius: 0 0 5px 5px;
-    background: #d1c5bb;
     column-gap: 28px;
 
     .q-space {
       display: none;
     }
   }
-
+  &--scrolled {
+    background: rgba(255, 252, 243, 1);
+  }
 
   &__nav {
     display: flex;
@@ -279,6 +281,13 @@ a {
   &__mobile-menu {
     display: none;
   }
+}
+.app-header.app-header--privacy-policy {
+  background: rgba(142, 131, 97, 0.5);
+  transition: background 1s ease;
+}
+.app-header.app-header--privacy-policy.app-header--scrolled  {
+  background: rgba(142, 131, 97, 1);
 }
 
 .contact-menu-enter-active,
@@ -2546,7 +2555,7 @@ body.is-booking-modal-open {
 .legal-page {
   min-height: 100vh;
   padding: clamp(9rem, 14vw, 13rem) 1.5rem clamp(5rem, 9vw, 9rem);
-  background: #f6f0e4;
+  background: rgba(255, 246, 225, 1);
   color: #08211f;
 }
 
@@ -4090,22 +4099,6 @@ body.is-booking-modal-open {
   }
 }
 
-@keyframes sectionReveal {
-  from {
-    clip-path: inset(0 0 10% 0);
-    filter: blur(10px);
-    opacity: 0.72;
-    transform: translateY(54px) scale(0.992);
-  }
-
-  to {
-    clip-path: inset(0 0 0 0);
-    filter: blur(0);
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 @keyframes mediaFloatIn {
   from {
     filter: saturate(0.88) contrast(0.94);
@@ -4190,16 +4183,6 @@ body.is-booking-modal-open {
 }
 
 @supports (animation-timeline: view()) {
-  .hotel-preview,
-  .how-it-works__inner,
-  .why-me__body,
-  .personal-selection__content,
-  .instructor-section__content,
-  .reviews-section__stage {
-    animation: sectionReveal both;
-    animation-range: entry 8% cover 34%;
-    animation-timeline: view();
-  }
 
   .hotel-preview__image--active,
   .why-me__image,
