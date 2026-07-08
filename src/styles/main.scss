@@ -675,11 +675,9 @@ a {
     top: 62%;
     width: 40px;
     height: 40px;
-    background: rgb(246 244 235 / 86%);
-    color: #145d4f;
+    background: rgba(255, 249, 236, 0.8);
     transform: translateY(-50%);
     transition:
-      box-shadow 320ms ease,
       background 320ms ease,
       transform 320ms cubic-bezier(0.2, 0.9, 0.2, 1);
 
@@ -696,11 +694,7 @@ a {
     }
 
     &:hover {
-      background: #fffaf0;
-      box-shadow:
-        0 14px 36px rgb(5 38 35 / 24%),
-        0 0 0 8px rgb(255 250 240 / 18%);
-      transform: translateY(-50%) scale(1.1);
+      background: #efe4c9;
 
       &::before {
         opacity: 1;

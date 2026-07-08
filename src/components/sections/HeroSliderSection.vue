@@ -132,18 +132,34 @@ onBeforeUnmount(stopAutoplay)
       class="hero-slider__arrow hero-slider__arrow--prev"
       round
       unelevated
-      icon="chevron_left"
       :aria-label="t('home.previousSlide')"
       @click="setSlide(activeSlide - 1)"
-    />
+    >
+      <svg width="9" height="17" viewBox="0 0 9 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M8.5 0.500001L0.5 8.5L8.5 16.5"
+          stroke="#08211F"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </q-btn>
     <q-btn
       class="hero-slider__arrow hero-slider__arrow--next"
       round
       unelevated
-      icon="chevron_right"
       :aria-label="t('home.nextSlide')"
       @click="setSlide(activeSlide + 1)"
-    />
+    >
+      <svg width="9" height="17" viewBox="0 0 9 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M0.499999 0.500001L8.5 8.5L0.5 16.5"
+          stroke="#08211F"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </q-btn>
 
     <div class="hero-slider__progress" aria-hidden="true">
       <button
