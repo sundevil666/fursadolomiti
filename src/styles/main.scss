@@ -850,8 +850,15 @@ a {
     font-weight: 700;
     min-height: 48px;
     border-radius: 999px;
-    padding: 11px 28px;
+    padding: 0 28px;
     font-size: 17px;
+    line-height: 100%;
+    min-height: 50px;
+
+    > span {
+      position: relative;
+      top: -1px;
+    }
   }
 
   &__primary {
