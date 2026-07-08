@@ -47,11 +47,6 @@
   background: var(--fd-btn-bg-hover);
   border-color: var(--fd-btn-border-hover);
   color: var(--fd-btn-color-hover);
-  transform: translateY(-1px);
-}
-
-.q-btn.fd-btn:active {
-  transform: translateY(0);
 }
 
 .q-btn.fd-btn--filled {
