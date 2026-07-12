@@ -1,0 +1,382 @@
+@keyframes bookingModalSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes heroImageDrift {
+  0% {
+    filter: saturate(0.95) contrast(0.96);
+    transform: scale(1.04) translate3d(-1.1%, 0.4%, 0);
+  }
+
+  50% {
+    filter: saturate(1.06) contrast(1);
+  }
+
+  100% {
+    filter: saturate(1.02) contrast(1.02);
+    transform: scale(1.1) translate3d(1.1%, -0.8%, 0);
+  }
+}
+
+@keyframes progressFill {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes hotelProgressFill {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes hotelFilterDepartFade {
+  0% {
+    opacity: 0.58;
+    filter: blur(0) saturate(1);
+    box-shadow:
+      0 16px 36px rgb(8 33 31 / 12%),
+      inset 0 1px 0 rgb(255 255 255 / 16%);
+    transform: translate3d(var(--filter-leave-x), 0, 0) scale(1);
+  }
+
+  42% {
+    opacity: 0.32;
+    filter: blur(5px) saturate(1.04);
+    transform: translate3d(var(--filter-leave-x), 0, 0) scale(0.965);
+  }
+
+  72% {
+    opacity: 0.12;
+    filter: blur(10px) saturate(0.96);
+  }
+
+  100% {
+    opacity: 0;
+    filter: blur(16px) saturate(0.88);
+    box-shadow:
+      0 0 0 rgb(8 33 31 / 0%),
+      inset 0 1px 0 rgb(255 255 255 / 0%);
+    transform: translate3d(var(--filter-leave-x), 0, 0) scale(0.9);
+  }
+}
+
+@keyframes hotelFilterArriveFlash {
+  0% {
+    box-shadow:
+      0 14px 34px rgb(8 33 31 / 12%),
+      inset 0 1px 0 rgb(255 255 255 / 10%);
+    filter: brightness(0.98) saturate(0.98);
+  }
+
+  44% {
+    box-shadow:
+      0 18px 42px rgb(8 33 31 / 16%),
+      0 0 0 rgb(255 246 225 / 0%),
+      inset 0 1px 0 rgb(255 255 255 / 14%);
+    filter: brightness(1) saturate(1);
+  }
+
+  64% {
+    box-shadow:
+      0 25px 58px rgb(8 33 31 / 18%),
+      0 0 22px rgb(255 246 225 / 34%),
+      inset 0 1px 0 rgb(255 255 255 / 24%);
+    filter: brightness(1.1) saturate(1.08);
+  }
+
+  82% {
+    box-shadow:
+      0 20px 48px rgb(8 33 31 / 17%),
+      0 0 12px rgb(255 246 225 / 18%),
+      inset 0 1px 0 rgb(255 255 255 / 18%);
+    filter: brightness(1.04) saturate(1.03);
+  }
+
+  100% {
+    box-shadow:
+      0 18px 42px rgb(8 33 31 / 16%),
+      inset 0 1px 0 rgb(255 255 255 / 14%);
+    filter: brightness(1) saturate(1);
+  }
+}
+
+@keyframes hotelListLightSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-42%);
+  }
+
+  18% {
+    opacity: 0.82;
+  }
+
+  62% {
+    opacity: 0.34;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(42%);
+  }
+}
+
+@keyframes hotelCardMediaReveal {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    filter: blur(10px) saturate(0.85) brightness(0.94);
+    transform: scale(1.035);
+  }
+
+  58% {
+    clip-path: inset(0 0 0 0);
+    filter: blur(0) saturate(1.04) brightness(1.04);
+    transform: scale(1.006);
+  }
+
+  100% {
+    clip-path: inset(0 0 0 0);
+    filter: blur(0) saturate(1) brightness(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes hotelCardContentReveal {
+  0% {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translate3d(28px, 0, 0);
+  }
+
+  56% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  72% {
+    filter: brightness(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hotelCardMediaDepart {
+  0% {
+    filter: blur(0) saturate(1) brightness(1);
+    transform: scale(1);
+  }
+
+  100% {
+    filter: blur(9px) saturate(0.78) brightness(0.84);
+    transform: scale(1.025);
+  }
+}
+
+@keyframes hotelCardContentDepart {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translate3d(-22px, 0, 0);
+  }
+}
+
+@keyframes progressGlint {
+  0%,
+  18% {
+    opacity: 0;
+    transform: translateX(-120%);
+  }
+
+  45% {
+    opacity: 1;
+  }
+
+  78%,
+  100% {
+    opacity: 0;
+    transform: translateX(240%);
+  }
+}
+
+@keyframes languageOptionRise {
+  from {
+    filter: blur(8px);
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+
+  to {
+    filter: blur(0);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes headerMenuItemRise {
+  from {
+    filter: blur(10px);
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.96);
+  }
+
+  to {
+    filter: blur(0);
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes languagePulse {
+  0% {
+    box-shadow:
+      0 0 0 0 rgb(20 93 79 / 0%),
+      inset 0 1px 0 rgb(255 255 255 / 62%);
+  }
+
+  42% {
+    box-shadow:
+      0 12px 24px rgb(20 93 79 / 12%),
+      0 0 0 7px rgb(255 255 255 / 30%),
+      0 0 0 13px rgb(20 93 79 / 6%),
+      inset 0 1px 0 rgb(255 255 255 / 70%);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 0 rgb(20 93 79 / 0%),
+      inset 0 1px 0 rgb(255 255 255 / 62%);
+  }
+}
+
+@keyframes languageGlowSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-78%) skewX(-18deg);
+  }
+
+  22% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(78%) skewX(-18deg);
+  }
+}
+
+@keyframes languageSpark {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+  }
+
+  28% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.7) rotate(160deg);
+  }
+}
+
+@keyframes languageParticle {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+
+  30% {
+    opacity: 0.92;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(0.05);
+  }
+}
+
+@keyframes activeUnderline {
+  from {
+    transform: translateX(-50%) scaleX(0);
+  }
+
+  to {
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+@keyframes mediaFloatIn {
+  from {
+    filter: saturate(0.88) contrast(0.94);
+    transform: scale(1.045);
+  }
+
+  to {
+    filter: saturate(1) contrast(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes footerToTopPulse {
+  0% {
+    box-shadow:
+      0 0 0 0 rgb(239 228 201 / 50%),
+      0 0 0 0 rgb(239 228 201 / 30%),
+      0 4px 12px rgb(5 38 35 / 12%);
+    transform: scale(1) rotate(0deg);
+  }
+
+  25% {
+    box-shadow:
+      0 0 0 8px rgb(239 228 201 / 30%),
+      0 0 0 16px rgb(239 228 201 / 15%),
+      0 6px 18px rgb(5 38 35 / 18%);
+    transform: scale(1.08) rotate(5deg);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 16px rgb(239 228 201 / 20%),
+      0 0 0 28px rgb(239 228 201 / 8%),
+      0 8px 24px rgb(5 38 35 / 24%);
+    transform: scale(1.12) rotate(-3deg);
+  }
+
+  75% {
+    box-shadow:
+      0 0 0 8px rgb(239 228 201 / 25%),
+      0 0 0 14px rgb(239 228 201 / 10%),
+      0 6px 18px rgb(5 38 35 / 18%);
+    transform: scale(1.06) rotate(2deg);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 0 rgb(239 228 201 / 0%),
+      0 0 0 0 rgb(239 228 201 / 0%),
+      0 4px 12px rgb(5 38 35 / 12%);
+    transform: scale(1) rotate(0deg);
+  }
+}
