@@ -1199,7 +1199,6 @@ a {
   display: grid;
   min-height: 501px;
   grid-template-columns: minmax(0, 1fr) minmax(430px, 1fr);
-  background:  #efe4c9;
   color: var(--green-deep);
   border-top: 2px solid #cbbfb5;
 
@@ -1329,6 +1328,13 @@ a {
   &__content {
     min-height: 100%;
     padding: 32px 40px;
+    background:  #efe4c9;
+    transition: background 260ms ease;
+
+    &:hover {
+      background:  #dbd0b5;
+      cursor: pointer;
+    }
   }
 
   &__name {

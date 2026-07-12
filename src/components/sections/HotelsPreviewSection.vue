@@ -414,7 +414,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <div class="hotel-preview__content">
+        <div class="hotel-preview__content" @click="openBookingModal(hotel.id)">
           <h3 class="hotel-preview__name">
             <AnimatedText :text="t(hotel.nameKey)" tag="span" />
           </h3>
@@ -450,7 +450,7 @@ onBeforeUnmount(() => {
             unelevated
             no-caps
             class="fd-btn fd-btn--outline"
-            @click="openBookingModal(hotel.id)"
+            @click.stop="openBookingModal(hotel.id)"
           >
             <AnimatedText :text="t('home.hotels.bookWithBonus')" tag="span" />
           </q-btn>
@@ -492,10 +492,7 @@ onBeforeUnmount(() => {
 
             <div v-if="formStatus !== 'redirecting'" class="booking-modal__intro">
               <div>
-                <h2
-                  :id="`booking-modal-title-${bookingHotelId}`"
-                  class="booking-modal__title"
-                >
+                <h2 :id="`booking-modal-title-${bookingHotelId}`" class="booking-modal__title">
                   {{
                     isBookingSuedtirolHotel
                       ? t('home.hotels.bookingModal.widgetTitle')
@@ -613,7 +610,6 @@ onBeforeUnmount(() => {
                   </span>
                 </button>
               </div>
-
             </form>
           </section>
         </div>
