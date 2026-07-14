@@ -8,7 +8,6 @@ import type { HowItWorksStep } from '@/data/homeSections'
 const { t, tm } = useI18n()
 
 const promoCode = 'FURSADOLOMITI'
-const isPromoCopied = ref(false)
 const howItWorksSteps = computed(() => tm('home.howItWorks.steps') as HowItWorksStep[])
 
 const stepTitleMain = (step: HowItWorksStep) =>
@@ -17,17 +16,6 @@ const stepTitleMain = (step: HowItWorksStep) =>
 const stepTitlePromo = (step: HowItWorksStep) =>
   step.id === 4 && /FursaDolomiti/i.test(step.title) ? promoCode : ''
 
-const copyPromoCode = async () => {
-  try {
-    await navigator.clipboard.writeText(promoCode)
-    isPromoCopied.value = true
-    window.setTimeout(() => {
-      isPromoCopied.value = false
-    }, 1800)
-  } catch {
-    isPromoCopied.value = false
-  }
-}
 </script>
 
 <template>
@@ -56,14 +44,6 @@ const copyPromoCode = async () => {
               href="https://wa.me/393341822113"
             >
               <AnimatedText :text="t('home.howItWorks.whatsapp')" tag="span" />
-            </q-btn>
-            <q-btn flat no-caps class="fd-btn fd-btn--outline" @click="copyPromoCode">
-              <AnimatedText
-                :text="
-                  isPromoCopied ? t('home.howItWorks.promoCopied') : t('home.howItWorks.copyPromo')
-                "
-                tag="span"
-              />
             </q-btn>
           </div>
         </div>
