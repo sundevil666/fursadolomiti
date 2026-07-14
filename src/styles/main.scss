@@ -1346,6 +1346,7 @@ a {
     font-weight: 400;
     line-height: 1;
     font-family: 'Manrope', sans-serif;
+    margin-bottom: 12px;
   }
 
   &__description {
@@ -1362,7 +1363,7 @@ a {
     display: grid;
     width: 100%;
     max-width: 544px;
-    gap: 12px;
+    gap: 16px;
   }
 
   &__features-label {
@@ -1381,12 +1382,12 @@ a {
     font-size: 15px;
     line-height: 1.35;
     list-style: none;
-    margin-bottom: 44px;
+    margin-bottom: 32px;
 
     li {
       min-height: 46px;
-      padding-bottom: 15px;
-      padding-top: 16px;
+      padding-bottom: 14px;
+      padding-top: 15px;
       border-bottom: 1px solid var(--sand-line);
       font-family: 'Manrope', sans-serif;
       font-weight: 400;
