@@ -1,5 +1,6 @@
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/src/css/index.sass'
+import '@/styles/base.css'
 import '@/styles/main.scss'
 import '@/styles/buttons.css'
 

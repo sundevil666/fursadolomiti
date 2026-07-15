@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+:root {
+  --page-cream: #fff6e1;
+  --page-warm: #fff9ea;
+  --panel-cream: #fff9ec;
+  --panel-soft: #fffcf3;
+  --sand: #efe4c9;
+  --sand-line: #cbbfb5;
+  --green: #175445;
+  --green-deep: #08211f;
+  --green-soft: #a5c0b9;
+  --brown: #5a4634;
+  --container: 1208px;
+  --page-gutter: clamp(16px, 4vw, 48px);
+  --container-safe: min(var(--container), calc(100% - (var(--page-gutter) * 2)));
+  --container-wide-safe: min(1336px, calc(100% - (var(--page-gutter) * 2)));
+
+  color-scheme: light;
+  font-family:
+    Manrope,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  background: var(--page-cream);
+  color: var(--green);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--page-cream);
+  font-family: 'Playfair Display', sans-serif;
+}
+
+:where(section, article, aside, header, footer, main, div, p, h1, h2, h3, h4, h5, h6, li) {
+  min-width: 0;
+}
+
+:where(p, h1, h2, h3, h4, h5, h6, li, a, button, blockquote) {
+  overflow-wrap: anywhere;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.w-1336 {
+  width: var(--container-safe);
+  margin: 0 auto;
+  height: 100%;
+}
