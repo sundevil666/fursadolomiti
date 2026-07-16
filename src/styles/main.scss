@@ -807,12 +807,12 @@
   color: var(--green);
 
   &__filters {
-    --filter-all-width: 158px;
-    --filter-hotel-width: 220px;
-    --filter-chalet-width: 92px;
     --filter-gap: 74px;
-    --filter-active-x: calc(var(--filter-all-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap));
-    --filter-active-width: var(--filter-hotel-width);
+    --filter-side-padding: 24px;
+    --filter-width: clamp(120px, calc((100vw - (var(--filter-side-padding) * 2) - (var(--filter-gap) * 3)) / 4), 220px);
+    --filter-step: calc(var(--filter-width) + var(--filter-gap));
+    --filter-active-x: calc(var(--filter-step) * 2);
+    --filter-active-width: var(--filter-width);
     --filter-leave-x: var(--filter-active-x);
     --filter-leave-width: var(--filter-active-width);
 
@@ -820,28 +820,22 @@
     display: grid;
     width: fit-content;
     max-width: 100%;
-    grid-template-columns:
-      var(--filter-all-width)
-      var(--filter-hotel-width)
-      var(--filter-hotel-width)
-      var(--filter-chalet-width);
+    grid-template-columns: repeat(4, var(--filter-width));
     justify-content: center;
     align-items: center;
     gap: var(--filter-gap);
     margin: 0 auto;
-    padding: 164px 24px 42px;
+    padding: 120px 24px 30px;
     background: var(--page-cream);
 
     &::before,
     &::after {
       position: absolute;
-      bottom: 42px;
+      bottom: 30px;
       left: 24px;
       height: 58px;
       border-radius: 8px;
-      background:
-        radial-gradient(circle at 72% 18%, rgb(255 246 225 / 20%), transparent 34%),
-        linear-gradient(135deg, #1d604f 0%, #175445 56%, #0f4539 100%);
+      background: #175445;
       content: '';
       pointer-events: none;
     }
@@ -880,46 +874,34 @@
 
   &__filters--active-all {
     --filter-active-x: 0px;
-    --filter-active-width: var(--filter-all-width);
   }
 
   &__filters--active-fiveStar {
-    --filter-active-x: calc(var(--filter-all-width) + var(--filter-gap));
-    --filter-active-width: var(--filter-hotel-width);
+    --filter-active-x: var(--filter-step);
   }
 
   &__filters--active-fourStar {
-    --filter-active-x: calc(var(--filter-all-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap));
-    --filter-active-width: var(--filter-hotel-width);
+    --filter-active-x: calc(var(--filter-step) * 2);
   }
 
   &__filters--active-chalet {
-    --filter-active-x: calc(
-      var(--filter-all-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap)
-    );
-    --filter-active-width: var(--filter-chalet-width);
+    --filter-active-x: calc(var(--filter-step) * 3);
   }
 
   &__filters--leave-all {
     --filter-leave-x: 0px;
-    --filter-leave-width: var(--filter-all-width);
   }
 
   &__filters--leave-fiveStar {
-    --filter-leave-x: calc(var(--filter-all-width) + var(--filter-gap));
-    --filter-leave-width: var(--filter-hotel-width);
+    --filter-leave-x: var(--filter-step);
   }
 
   &__filters--leave-fourStar {
-    --filter-leave-x: calc(var(--filter-all-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap));
-    --filter-leave-width: var(--filter-hotel-width);
+    --filter-leave-x: calc(var(--filter-step) * 2);
   }
 
   &__filters--leave-chalet {
-    --filter-leave-x: calc(
-      var(--filter-all-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap) + var(--filter-hotel-width) + var(--filter-gap)
-    );
-    --filter-leave-width: var(--filter-chalet-width);
+    --filter-leave-x: calc(var(--filter-step) * 3);
   }
 
   &__filter {
@@ -960,7 +942,6 @@
     &:hover,
     &:focus-visible {
       color: #175445;
-      transform: translateY(-1px);
     }
 
     &--active {
@@ -3890,10 +3871,8 @@ body.is-booking-modal-open {
 
   .hotels-section {
     &__filters {
-      --filter-all-width: 132px;
-      --filter-hotel-width: 188px;
-      --filter-chalet-width: 76px;
       --filter-gap: 42px;
+      --filter-side-padding: 18px;
 
       padding: 96px 18px 30px;
 
@@ -4356,10 +4335,8 @@ body.is-booking-modal-open {
 
   .hotels-section {
     &__filters {
-      --filter-all-width: 118px;
-      --filter-hotel-width: 154px;
-      --filter-chalet-width: 70px;
       --filter-gap: 30px;
+      --filter-side-padding: 16px;
 
       justify-content: flex-start;
       overflow-x: auto;
