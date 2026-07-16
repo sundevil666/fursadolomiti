@@ -5409,36 +5409,28 @@ body.is-booking-modal-open {
     }
 
     &__title {
-      font-size: clamp(32px, 2.5vw, 42px);
+      max-width: 100%;
     }
 
     &__note {
-      width: min(520px, 100%);
-      margin-top: 28px;
-      padding: 24px 28px;
-
-      p {
-        font-size: 15px;
-      }
+      width: 100%;
     }
 
     &__help {
-      display: grid;
-      max-width: 760px;
-      grid-template-columns: 1fr;
+      display: flex;
       align-items: start;
       margin-top: 34px;
-      gap: 18px;
+      gap: 20px;
 
       p {
-        max-width: 420px;
-        font-size: 14px;
+        width: 50%;
       }
     }
 
     &__actions {
       margin-top: 0;
-      justify-content: flex-start;
+      width: 50%;
+      flex-shrink: 0;
     }
 
     &__steps {
@@ -5454,14 +5446,7 @@ body.is-booking-modal-open {
       width: auto;
     }
 
-    &__step-number {
-      width: 32px;
-      height: 32px;
-      font-size: 21px;
-    }
-
     &__step-header {
-      grid-template-columns: 32px minmax(0, 1fr);
       margin-bottom: 8px;
     }
 
@@ -5469,15 +5454,10 @@ body.is-booking-modal-open {
       transform: translateY(8px);
     }
 
-    &__step-title,
-    &__step-text {
-      font-size: 13px;
-    }
 
     &__disclaimer {
       position: static;
       grid-column: 1 / -1;
-      font-size: 11px;
     }
   }
 
@@ -5564,9 +5544,6 @@ body.is-booking-modal-open {
       min-height: 0;
       padding: 22px 24px;
 
-      p {
-        font-size: 13px;
-      }
     }
 
     &__visual {
@@ -5701,7 +5678,6 @@ body.is-booking-modal-open {
 
     &__tagline {
       margin: 8px 0 34px;
-      font-size: 11px;
     }
 
     &__columns {
@@ -5709,19 +5685,13 @@ body.is-booking-modal-open {
       gap: 28px;
     }
 
-    &__heading,
-    &__gallery-title {
-      font-size: 12px;
-    }
 
     &__links {
       gap: 12px;
-      font-size: 12px;
     }
 
     &__legal {
       margin-top: 34px;
-      font-size: 10px;
     }
 
     &__media {
@@ -5732,10 +5702,6 @@ body.is-booking-modal-open {
     &__gallery {
       height: auto;
       aspect-ratio: 1 / 0.58;
-    }
-
-    &__camera figcaption {
-      font-size: 12px;
     }
 
     &__partners {
@@ -6906,16 +6872,6 @@ body.is-booking-modal-open {
       padding: 72px var(--page-gutter) 54px;
     }
 
-    &__title,
-    &__note,
-    &__help {
-      max-width: 720px;
-    }
-
-    &__note {
-      width: 100%;
-    }
-
     &__help {
       width: 100%;
       margin-top: 52px;
@@ -6932,11 +6888,6 @@ body.is-booking-modal-open {
     &__step {
       position: static;
       width: auto;
-    }
-
-    &__disclaimer {
-      position: static;
-      grid-column: 1 / -1;
     }
   }
 
