@@ -35,7 +35,6 @@ const bookingHotelId = ref<string | null>(null)
 const bookingModal = ref<HTMLElement | null>(null)
 const bookingSuedtirolContainer = ref<HTMLElement | null>(null)
 const bookingSuedtirolStatus = ref<'idle' | 'loading' | 'ready' | 'error'>('idle')
-const bookingSuedtirolLog = ref<string[]>([])
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
@@ -51,6 +50,7 @@ const hotelAutoplayDelay = 5200
 let hotelAutoplayTimer: number | undefined
 let filterAnimationTimer: number | undefined
 let bookingSuedtirolScriptPromise: Promise<void> | undefined
+const bookingSuedtirolLocales = new Set(['en', 'it'])
 
 const hasLimit = computed(() => Boolean(props.limit && props.limit > 0))
 
@@ -144,7 +144,6 @@ const openBookingModal = (hotelId: string) => {
   formError.value = ''
   formStatus.value = 'idle'
   bookingSuedtirolStatus.value = 'idle'
-  bookingSuedtirolLog.value = []
 }
 
 const closeBookingModal = () => {
@@ -155,11 +154,6 @@ const closeBookingModal = () => {
 
 const handleModalKeydown = (event: KeyboardEvent) => {
   if (event.key === 'Escape') closeBookingModal()
-}
-
-const addBookingSuedtirolLog = (label: string, payload?: unknown) => {
-  const message = payload ? `${label}: ${JSON.stringify(payload, null, 2)}` : label
-  bookingSuedtirolLog.value = [message, ...bookingSuedtirolLog.value].slice(0, 6)
 }
 
 const loadBookingSuedtirolScript = () => {
@@ -191,13 +185,15 @@ const loadBookingSuedtirolScript = () => {
   return bookingSuedtirolScriptPromise
 }
 
+const getBookingSuedtirolLocale = (appLocale: string) =>
+  bookingSuedtirolLocales.has(appLocale) ? appLocale : 'en'
+
 const mountBookingSuedtirolWidget = async (hotel: HotelPreview) => {
   const widgetConfig = hotel.bookingSuedtirol
 
   if (!widgetConfig || !bookingSuedtirolContainer.value) return
 
   bookingSuedtirolStatus.value = 'loading'
-  addBookingSuedtirolLog('Loading Booking Südtirol widget')
 
   try {
     await loadBookingSuedtirolScript()
@@ -212,34 +208,17 @@ const mountBookingSuedtirolWidget = async (hotel: HotelPreview) => {
     bookingWidget(bookingSuedtirolContainer.value, {
       id: widgetConfig.id,
       propertyId: widgetConfig.propertyId,
-      lang: locale.value,
+      lang: getBookingSuedtirolLocale(locale.value),
       privacyURL: `${window.location.origin}/privacy-policy`,
       termsURL: `${window.location.origin}/privacy-policy`,
       promotion: widgetConfig.promotion,
       source: 'fursadolomiti.com',
-      onOccupanciesChange: (guests: number[][]) => {
-        addBookingSuedtirolLog('onOccupanciesChange', guests)
-      },
-      onStaySelection: (stay: unknown) => {
-        addBookingSuedtirolLog('onStaySelection', stay)
-      },
-      onBookingSuccess: (reservation: unknown) => {
-        addBookingSuedtirolLog('onBookingSuccess', reservation)
-      },
-      onBookingError: (error: unknown) => {
-        addBookingSuedtirolLog('onBookingError', error)
-      },
-      onEnquirySuccess: (reservation: unknown) => {
-        addBookingSuedtirolLog('onEnquirySuccess', reservation)
-      },
     })
 
     bookingSuedtirolStatus.value = 'ready'
-    addBookingSuedtirolLog('Widget mounted')
   } catch (error) {
     console.error('Booking Südtirol widget failed', error)
     bookingSuedtirolStatus.value = 'error'
-    addBookingSuedtirolLog(error instanceof Error ? error.message : 'Widget failed')
   }
 }
 
@@ -499,6 +478,9 @@ onBeforeUnmount(() => {
                       : t('home.hotels.bookingModal.title')
                   }}
                 </h2>
+                <p v-if="isBookingSuedtirolHotel" class="booking-modal__privacy-note">
+                  {{ t('home.hotels.bookingModal.widgetPrivacyNote') }}
+                </p>
                 <p class="booking-modal__description">
                   {{
                     isBookingSuedtirolHotel
@@ -508,12 +490,8 @@ onBeforeUnmount(() => {
                 </p>
               </div>
 
-              <p class="booking-modal__privacy-note">
-                {{
-                  isBookingSuedtirolHotel
-                    ? t('home.hotels.bookingModal.widgetPrivacyNote')
-                    : t('home.hotels.bookingModal.privacyNote')
-                }}
+              <p v-if="!isBookingSuedtirolHotel" class="booking-modal__privacy-note">
+                {{ t('home.hotels.bookingModal.privacyNote') }}
               </p>
             </div>
 
@@ -540,11 +518,6 @@ onBeforeUnmount(() => {
               </div>
 
               <div ref="bookingSuedtirolContainer" class="booking-modal__widget"></div>
-
-              <details class="booking-modal__debug" open>
-                <summary>{{ t('home.hotels.bookingModal.widgetDebugTitle') }}</summary>
-                <pre>{{ bookingSuedtirolLog.join('\n\n') || '-' }}</pre>
-              </details>
             </div>
 
             <form

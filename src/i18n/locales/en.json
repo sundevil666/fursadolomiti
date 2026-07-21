@@ -70,10 +70,9 @@
         "agreement": "By clicking “Continue with bonus”, you agree to the",
         "privacyPolicy": "Privacy Policy",
         "close": "Close dialog",
-        "widgetTitle": "Booking Südtirol\ntest widget",
-        "widgetDescription": "This test chalet is connected to the Booking Südtirol widget. We pass the propertyId and FursaDolomiti attribution to inspect the interface and callbacks.",
-        "widgetPrivacyNote": "Test mode: booking data is handled by the Booking Südtirol widget. The debug panel below shows events returned by the widget.",
-        "widgetDebugTitle": "Widget responses and events",
+        "widgetTitle": "Hotel Posta\nbooking",
+        "widgetDescription": "Choose your dates, guests and preferred room in the official Booking Südtirol booking widget.",
+        "widgetPrivacyNote": "Booking data is handled through Booking Südtirol and used only to process your request.",
         "widgetStatus": {
           "idle": "Widget is not loaded yet",
           "loading": "Loading Booking Südtirol widget...",
@@ -155,32 +154,6 @@
           "Spacious wellness area for complete rest and recovery"
         ]
       },
-      "testChaletBookingSuedtirol": {
-        "name": "Booking Südtirol test chalet",
-        "location": "Test property, propertyId 10957",
-        "description": "A technical card for checking the Booking Südtirol widget and FursaDolomiti partner attribution.",
-        "featuresLabel": "What we test:",
-        "features": [
-          "Embedding the widget in a modal window",
-          "Passing propertyId and widget id",
-          "Passing promotion: affiliate / fursadolomiti.com / test_chalet_10957",
-          "Callbacks onStaySelection, onBookingSuccess and onBookingError"
-        ],
-        "stats": [
-          {
-            "icon": "science",
-            "value": "test"
-          },
-          {
-            "icon": "home",
-            "value": "10957"
-          },
-          {
-            "icon": "sell",
-            "value": "utm"
-          }
-        ]
-      },
       "dolomitesChalet": {
         "name": "Chalet in the Dolomites",
         "location": "Selected by individual request",
@@ -205,6 +178,18 @@
             "icon": "shower",
             "value": "2"
           }
+        ]
+      },
+      "luxuryChaletP": {
+        "name": "Luxury Chalet P",
+        "location": "Ortisei",
+        "description": "Elegant natural-wood chalets combining Alpine traditions, modern comforts and exclusive design",
+        "featuresLabel": "Features:",
+        "features": [
+          "6 exclusive apartments, ideal for a large group of up to 24 people",
+          "Set on a sunny slope at the edge of the forest, with magnificent panoramic views of Ortisei",
+          "Daily in-room breakfast and eco-friendly housekeeping service",
+          "Large spa area with indoor pool, sauna and relaxation zone"
         ]
       }
     },
