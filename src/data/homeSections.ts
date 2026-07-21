@@ -181,7 +181,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'continental',
     category: 'fourStar',
-    images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
+    images: ['hotel-continental/continental1.jpg', 'hotel-continental/continental2.jpg', 'hotel-continental/continental3.jpg', 'hotel-continental/continental4.png'],
     promoCode: 'REPLACE_CONTINENTAL',
     bookingUrl: 'https://example.com/continental/booking',
     bookingParams: {
