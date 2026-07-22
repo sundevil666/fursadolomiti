@@ -118,7 +118,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'edenselva',
     category: 'fourStar',
-    images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    images: ['/edenselva/edenselva1.jpg', '/edenselva/edenselva2.jpg', '/edenselva/edenselva3.jpg', '/edenselva/edenselva4.jpg'],
     promoCode: 'REPLACE_EDENSELVA',
     bookingUrl: 'https://example.com/edenselva/booking',
     bookingParams: {
@@ -186,7 +186,12 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'continental',
     category: 'fourStar',
-    images: ['hotel-continental/continental1.jpg', 'hotel-continental/continental2.jpg', 'hotel-continental/continental3.jpg', 'hotel-continental/continental4.png'],
+    images: [
+      'hotel-continental/continental1.jpg',
+      'hotel-continental/continental2.jpg',
+      'hotel-continental/continental3.jpg',
+      'hotel-continental/continental4.png',
+    ],
     promoCode: 'REPLACE_CONTINENTAL',
     bookingUrl: 'https://example.com/continental/booking',
     bookingParams: {
