@@ -3410,6 +3410,13 @@ body.is-booking-modal-open {
     height: 100%;
     object-fit: cover;
     filter: saturate(0.92);
+    transform: scale(1.0);
+    transition: transform 300ms ease;
+
+    &:hover,
+    &:focus-visible {
+      transform: scale(1.2);
+    }
   }
 
   &__partners {
