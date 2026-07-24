@@ -3141,6 +3141,10 @@ body.is-booking-modal-open {
   }
 }
 
+.main-page .app-footer {
+  margin-top: 0;
+  border: 0;
+}
 .app-footer {
   position: relative;
   overflow: hidden;
@@ -3150,6 +3154,7 @@ body.is-booking-modal-open {
   background: #175445;
   color: #fff9ea;
   font-family: 'Manrope', sans-serif;
+  margin-top: -5px;
 
   &__dot-field {
     position: absolute;
