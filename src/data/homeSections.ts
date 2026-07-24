@@ -208,7 +208,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'luna-mondschein',
     category: 'fourStar',
-    images: ['hotel-luna/luna1.jpg', 'hotel-luna/luna2.jpg', 'hotel-luna/luna3.jpg'],
+    images: ['hotel-luna/luna1.jpg', 'hotel-luna/luna2.jpg', 'hotel-luna/luna3.jpg', 'hotel-luna/luna4.jpg'],
     promoCode: 'REPLACE_LUNA_MONDSCHEIN',
     bookingUrl: 'https://example.com/luna-mondschein/booking',
     bookingParams: {

@@ -28,7 +28,7 @@ type HotelStat = {
   value: string
 }
 
-const activeFilter = ref<HotelFilter>('fourStar')
+const activeFilter = ref<HotelFilter>('all')
 const previousFilter = ref<HotelFilter>('fourStar')
 const isFilterAnimating = ref(false)
 const bookingHotelId = ref<string | null>(null)
