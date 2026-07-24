@@ -161,7 +161,7 @@ export const hotelPreviews: HotelPreview[] = [
     category: 'fourStar',
     images: [
       '/posta_4/Posta4 (1).jpg',
-      '/posta_4/H.Post-138.jpg',
+      '/posta_4/posta1.jpg',
       '/posta_4/FamilyHotel(3) (3).jpg',
     ],
     promoCode: 'REPLACE_POSTA',
