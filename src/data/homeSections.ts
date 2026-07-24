@@ -261,7 +261,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'villa-carolina',
     category: 'chalet',
-    images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    images: ['villa-carolina/villa-carolina1.jpg', 'villa-carolina/villa-carolina2.jpg', 'villa-carolina/villa-carolina3.jpg', 'villa-carolina/villa-carolina4.jpg'],
     promoCode: 'REPLACE_VILLA_CAROLINA',
     bookingUrl: 'https://example.com/villa-carolina/booking',
     bookingParams: {
