@@ -136,7 +136,6 @@ export const hotelPreviews: HotelPreview[] = [
     id: 'alpenroyal',
     category: 'fiveStar',
     images: [
-      '/alpenroyal/alpenroyal-summer-pool-mountain-view.jpg',
       '/alpenroyal/alpenroyal-summer-exterior-pool.jpg',
       '/alpenroyal/alpenroyal-winter-exterior-aerial.jpg',
       '/alpenroyal/alpenroyal-suite-bedroom.jpg',
