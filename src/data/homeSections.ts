@@ -258,4 +258,22 @@ export const hotelPreviews: HotelPreview[] = [
     featuresKey: 'home.hotels.luxuryChaletP.features',
     featuresLabelKey: 'home.hotels.luxuryChaletP.featuresLabel',
   },
+  {
+    id: 'villa-carolina',
+    category: 'chalet',
+    images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    promoCode: 'REPLACE_VILLA_CAROLINA',
+    bookingUrl: 'https://example.com/villa-carolina/booking',
+    bookingParams: {
+      firstName: 'contact_first_name',
+      lastName: 'contact_last_name',
+      email: 'contact_email',
+      promoCode: 'referral_code',
+    },
+    nameKey: 'home.hotels.villaCarolina.name',
+    locationKey: 'home.hotels.villaCarolina.location',
+    descriptionKey: 'home.hotels.villaCarolina.description',
+    featuresKey: 'home.hotels.villaCarolina.features',
+    featuresLabelKey: 'home.hotels.villaCarolina.featuresLabel',
+  },
 ]

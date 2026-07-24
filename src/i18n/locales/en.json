@@ -190,6 +190,18 @@
           "Daily in-room breakfast and eco-friendly housekeeping service",
           "Large spa area with indoor pool, sauna and relaxation zone"
         ]
+      },
+      "villaCarolina": {
+        "name": "Villa Carolina",
+        "location": "Santa Cristina",
+        "description": "An exclusive chalet for maximum comfort and privacy, with panoramic views of the Dolomites",
+        "featuresLabel": "Features:",
+        "features": [
+          "Breathtaking views of the Sassolungo and Sella massifs from almost every living area",
+          "Private sauna, mountain-view jacuzzi and fitness room for maximum comfort and recovery",
+          "Close to the Col Raiser lift",
+          "With good snow conditions, you can ski to within 100 m of the chalet"
+        ]
       }
     },
     "howItWorks": {
