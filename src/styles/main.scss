@@ -4363,14 +4363,6 @@ body.is-booking-modal-open {
       min-height: 523px;
     }
 
-    &__name {
-      font-size: 38px;
-    }
-
-    &__description {
-      font-size: 14px;
-    }
-
     &__content {
       min-height: 523px;
       padding: 54px 20px 58px;
@@ -5326,14 +5318,6 @@ body.is-booking-modal-open {
       padding: 28px 28px 30px;
     }
 
-    &__name {
-      font-size: clamp(22px, 2vw, 30px);
-    }
-
-    &__description {
-      padding-bottom: 10px;
-    }
-
     &__features {
       gap: 6px;
     }
@@ -5745,11 +5729,6 @@ body.is-booking-modal-open {
       min-height: 0;
       padding: 24px 16px 30px;
     }
-
-    &__name {
-      font-size: 24px;
-    }
-
 
     &__features-label {
       font-size: 15px;

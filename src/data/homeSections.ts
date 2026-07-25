@@ -101,7 +101,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'oswald',
     category: 'fourStar',
-    images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
+    images: ['/mockup-assets/luxury-chalet-p1.png', '/mockup-assets/luxury-chalet-p2.png'],
     promoCode: 'REPLACE_OSWALD',
     bookingUrl: 'https://example.com/oswald/booking',
     bookingParams: {
@@ -118,7 +118,12 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'edenselva',
     category: 'fourStar',
-    images: ['/edenselva/edenselva1.jpg', '/edenselva/edenselva2.jpg', '/edenselva/edenselva3.jpg', '/edenselva/edenselva4.jpg'],
+    images: [
+      '/edenselva/edenselva1.jpg',
+      '/edenselva/edenselva2.jpg',
+      '/edenselva/edenselva3.jpg',
+      '/edenselva/edenselva4.jpg',
+    ],
     promoCode: 'REPLACE_EDENSELVA',
     bookingUrl: 'https://example.com/edenselva/booking',
     bookingParams: {
@@ -159,11 +164,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'posta',
     category: 'fourStar',
-    images: [
-      '/posta_4/Posta4 (1).jpg',
-      '/posta_4/posta1.jpg',
-      '/posta_4/FamilyHotel(3) (3).jpg',
-    ],
+    images: ['/posta_4/Posta4 (1).jpg', '/posta_4/posta1.jpg', '/posta_4/FamilyHotel(3) (3).jpg'],
     promoCode: 'REPLACE_POSTA',
     bookingUrl: 'https://example.com/posta/booking',
     bookingParams: {
@@ -207,7 +208,12 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'luna-mondschein',
     category: 'fourStar',
-    images: ['hotel-luna/luna1.jpg', 'hotel-luna/luna2.jpg', 'hotel-luna/luna3.jpg', 'hotel-luna/luna4.jpg'],
+    images: [
+      'hotel-luna/luna1.jpg',
+      'hotel-luna/luna2.jpg',
+      'hotel-luna/luna3.jpg',
+      'hotel-luna/luna4.jpg',
+    ],
     promoCode: 'REPLACE_LUNA_MONDSCHEIN',
     bookingUrl: 'https://example.com/luna-mondschein/booking',
     bookingParams: {
@@ -224,7 +230,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'dolomites-chalet',
     category: 'chalet',
-    images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    images: ['/mockup-assets/luxury-chalet-p2.png', '/mockup-assets/luxury-chalet-p1.png'],
     promoCode: 'REPLACE_DOLOMITES_CHALET',
     bookingUrl: 'https://example.com/dolomites-chalet/booking',
     bookingParams: {
@@ -243,7 +249,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'luxury-chalet-p',
     category: 'chalet',
-    images: ['/mockup-assets/image8.png', '/mockup-assets/image7.png'],
+    images: ['/luxury-chalet-p/luxury-chalet-p1.png', '/luxury-chalet-p/luxury-chalet-p2.png', '/luxury-chalet-p/luxury-chalet-p3.jpeg', '/luxury-chalet-p/luxury-chalet-p4.jpeg'],
     promoCode: 'REPLACE_LUXURY_CHALET_P',
     bookingUrl: 'https://example.com/luxury-chalet-p/booking',
     bookingParams: {
@@ -261,7 +267,12 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'villa-carolina',
     category: 'chalet',
-    images: ['villa-carolina/villa-carolina1.jpg', 'villa-carolina/villa-carolina2.jpg', 'villa-carolina/villa-carolina3.jpg', 'villa-carolina/villa-carolina4.jpg'],
+    images: [
+      'villa-carolina/villa-carolina1.jpg',
+      'villa-carolina/villa-carolina2.jpg',
+      'villa-carolina/villa-carolina3.jpg',
+      'villa-carolina/villa-carolina4.jpg',
+    ],
     promoCode: 'REPLACE_VILLA_CAROLINA',
     bookingUrl: 'https://example.com/villa-carolina/booking',
     bookingParams: {
