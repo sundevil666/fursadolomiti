@@ -88,17 +88,6 @@
         "fourStar": "4* hotels",
         "chalet": "Chalets"
       },
-      "oswald": {
-        "name": "Oswald 4★",
-        "location": "Selva",
-        "description": "Modern hotel with panoramic views and convenient access to the lifts",
-        "features": [
-          "Shuttle to the lift",
-          "Rooftop pool with mountain views",
-          "Spa area for rest and recovery",
-          "Suitable for both calm and active holidays"
-        ]
-      },
       "alpenroyal": {
         "name": "Alpenroyal 5★",
         "location": "Selva",

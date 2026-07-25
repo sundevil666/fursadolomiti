@@ -88,17 +88,6 @@
         "fourStar": "Hotel 4*",
         "chalet": "Chalet"
       },
-      "oswald": {
-        "name": "Oswald 4★",
-        "location": "Selva",
-        "description": "Hotel moderno con viste panoramiche e accesso comodo agli impianti",
-        "features": [
-          "Navetta per l’impianto",
-          "Piscina sul tetto con vista sulle montagne",
-          "Area spa per relax e recupero",
-          "Adatto a vacanze tranquille e attive"
-        ]
-      },
       "alpenroyal": {
         "name": "Alpenroyal 5★",
         "location": "Selva",

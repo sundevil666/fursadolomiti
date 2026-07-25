@@ -99,23 +99,6 @@ export const heroSlides: HeroSlide[] = [
 
 export const hotelPreviews: HotelPreview[] = [
   {
-    id: 'oswald',
-    category: 'fourStar',
-    images: ['/mockup-assets/luxury-chalet-p1.png', '/mockup-assets/luxury-chalet-p2.png'],
-    promoCode: 'REPLACE_OSWALD',
-    bookingUrl: 'https://example.com/oswald/booking',
-    bookingParams: {
-      firstName: 'firstName',
-      lastName: 'lastName',
-      email: 'email',
-      promoCode: 'promoCode',
-    },
-    nameKey: 'home.hotels.oswald.name',
-    locationKey: 'home.hotels.oswald.location',
-    descriptionKey: 'home.hotels.oswald.description',
-    featuresKey: 'home.hotels.oswald.features',
-  },
-  {
     id: 'edenselva',
     category: 'fourStar',
     images: [
