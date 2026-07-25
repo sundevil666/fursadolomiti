@@ -4376,11 +4376,6 @@ body.is-booking-modal-open {
       padding: 54px 20px 58px;
     }
 
-    &__location,
-    &__features-label {
-      font-size: 13px;
-    }
-
     &__features-list {
       font-size: 13px;
     }
@@ -5335,12 +5330,6 @@ body.is-booking-modal-open {
       font-size: clamp(22px, 2vw, 30px);
     }
 
-    &__location,
-    &__description,
-    &__features-list li {
-      font-size: 13px;
-    }
-
     &__description {
       padding-bottom: 10px;
     }
@@ -5761,11 +5750,6 @@ body.is-booking-modal-open {
       font-size: 24px;
     }
 
-    &__location,
-    &__description,
-    &__features-list li {
-      font-size: 10px;
-    }
 
     &__features-label {
       font-size: 15px;
