@@ -213,7 +213,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'dolomites-chalet',
     category: 'chalet',
-    images: ['/mockup-assets/luxury-chalet-p2.png', '/mockup-assets/luxury-chalet-p1.png'],
+    images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
     promoCode: 'REPLACE_DOLOMITES_CHALET',
     bookingUrl: 'https://example.com/dolomites-chalet/booking',
     bookingParams: {
