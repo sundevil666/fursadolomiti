@@ -21,7 +21,7 @@ const visibleReviews = computed(() => {
     reviews.value[(activeReviewIndex.value + 1) % reviews.value.length],
   ]
 })
-const reviewAutoplayDelay = 60000
+const reviewAutoplayDelay = 10000
 let reviewAutoplayTimer: number | undefined
 const reviewPreviewLength = 260
 

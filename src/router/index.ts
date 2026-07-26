@@ -5,7 +5,6 @@ import HomePage from '@/pages/HomePage.vue'
 import HotelsPage from '@/pages/HotelsPage.vue'
 import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage.vue'
 import RentalPage from '@/pages/RentalPage.vue'
-import WebcamsPage from '@/pages/WebcamsPage.vue'
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -26,11 +25,6 @@ export const routes: RouteRecordRaw[] = [
         path: 'rental',
         name: 'rental',
         component: RentalPage,
-      },
-      {
-        path: 'webcams',
-        name: 'webcams',
-        component: WebcamsPage,
       },
       {
         path: 'privacy-policy',

@@ -34,7 +34,7 @@ const isPrivacyPolicyRoute = computed(() => route.name === 'privacy-policy')
 
 const navLabelWidth = (item: MenuItem) => {
   const maxLength = Math.max(...Object.values(item.labels).map((label) => label.length))
-  return `${maxLength + (item.id === 'webcams' ? 3 : 0)}ch`
+  return `${maxLength}ch`
 }
 
 const closeContactMenu = (event: MouseEvent) => {
@@ -95,11 +95,6 @@ onBeforeUnmount(() => {
           :to="{ name: item.routeName }"
         >
           <AnimatedText :text="item.labels[currentLocale]" tag="span" />
-          <template v-if="item.id === 'webcams'">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 9L12 15L18 9" stroke="#3A6E61" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </template>
         </q-btn>
       </nav>
 

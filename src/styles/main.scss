@@ -37,6 +37,7 @@
     justify-content: center;
     min-width: 0;
     gap: 26px;
+    margin-left: auto;
   }
 
   &__nav-link {
@@ -3401,7 +3402,7 @@ body.is-booking-modal-open {
       right: 16px;
       bottom: 19px;
       left: 16px;
-      z-index: 1;
+      z-index: 2;
       color: #fff9ea;
       font-size: 18px;
       font-weight: 700;
@@ -3411,19 +3412,21 @@ body.is-booking-modal-open {
     }
   }
 
-  &__image {
+  &__camera-preview {
     display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 220%;
+    height: 220%;
+    border: 0;
     filter: saturate(0.92);
-    transform: scale(1.0);
-    transition: transform 300ms ease;
+    pointer-events: none;
+    transform: scale(0.455);
+    transform-origin: top left;
+  }
 
-    &:hover,
-    &:focus-visible {
-      transform: scale(1.2);
-    }
+  &__camera-link {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
   }
 
   &__partners {
@@ -4643,11 +4646,6 @@ body.is-booking-modal-open {
         width: 204px !important;
         min-width: 204px;
       }
-    }
-
-    &__nav {
-      justify-content: center;
-      gap: 26px;
     }
 
     &__contacts {

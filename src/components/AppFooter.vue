@@ -9,10 +9,11 @@ import type { AppLocale } from '@/i18n'
 import menuItemsMock from '@/mocks/menu.json'
 import type { MenuItem } from '@/types'
 
-type FooterImage = {
-  src: string
+type FooterCamera = {
+  id: string
   altKey: string
   label: string
+  previewUrl: string
   url: string
 }
 
@@ -26,29 +27,33 @@ type FooterLogo = {
 const { locale, t } = useI18n()
 const footerMenuIds = ['hotels', 'rental']
 const menuItems = (menuItemsMock as MenuItem[]).filter((item) => footerMenuIds.includes(item.id))
-const footerImages: FooterImage[] = [
+const footerCameras: FooterCamera[] = [
   {
-    src: '/mockup-assets/image1.png',
+    id: 'seceda',
     altKey: 'footer.images.seceda',
     label: 'Secada',
+    previewUrl: 'https://valgardena.panomax.com/',
     url: 'https://valgardena.panomax.com/',
   },
   {
-    src: '/mockup-assets/image4.png',
+    id: 'alpe-di-siusi',
     altKey: 'footer.images.alpeDiSiusi',
     label: 'Alpe di Siusi',
+    previewUrl: 'https://seiseralm-puflatsch.panomax.com/',
     url: 'https://seiseralm-puflatsch.panomax.com/',
   },
   {
-    src: '/mockup-assets/image2.png',
+    id: 'ciampinoi',
     altKey: 'footer.images.ciampinoi',
     label: 'Ciampinoi',
+    previewUrl: 'https://valgardena.panomax.com/ciampinoi',
     url: 'https://valgardena.panomax.com/ciampinoi',
   },
   {
-    src: '/mockup-assets/image3.png',
+    id: 'dantercapies',
     altKey: 'footer.images.dantercapies',
     label: 'Dantercapies',
+    previewUrl: 'https://valgardena.panomax.com/dantercepies',
     url: 'https://valgardena.panomax.com/dantercepies',
   },
 ]
@@ -175,16 +180,22 @@ const scrollToTop = () => {
         </div>
 
         <div class="app-footer__gallery" :aria-label="t('footer.gallery')">
-          <figure v-for="image in footerImages" :key="image.src" class="app-footer__camera">
-            <a :href="image.url" target="_blank" rel="noreferrer">
-              <img
-                class="app-footer__image"
-                :src="image.src"
-                :alt="t(image.altKey)"
-                loading="lazy"
-              />
-            </a>
-            <figcaption>{{ image.label }}</figcaption>
+          <figure v-for="camera in footerCameras" :key="camera.id" class="app-footer__camera">
+            <iframe
+              class="app-footer__camera-preview"
+              :src="camera.previewUrl"
+              :title="t(camera.altKey)"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            />
+            <a
+              class="app-footer__camera-link"
+              :href="camera.url"
+              target="_blank"
+              rel="noreferrer"
+              :aria-label="t(camera.altKey)"
+            />
+            <figcaption>{{ camera.label }}</figcaption>
           </figure>
         </div>
 

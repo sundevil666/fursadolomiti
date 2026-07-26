@@ -25,14 +25,5 @@
       "en": "Rental",
       "it": "Noleggio"
     }
-  },
-  {
-    "id": "webcams",
-    "routeName": "webcams",
-    "labels": {
-      "ru": "Веб-камеры",
-      "en": "Webcams",
-      "it": "Webcam"
-    }
   }
 ]

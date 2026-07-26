@@ -52,23 +52,5 @@
       "en": "Later this page will include rental categories, item cards, terms and a quick request flow. The placeholder helps verify language switching and page structure.",
       "it": "In seguito questa pagina includera categorie di noleggio, schede, condizioni e richiesta rapida. Il segnaposto aiuta a verificare lingua e struttura."
     }
-  },
-  {
-    "id": "webcams",
-    "title": {
-      "ru": "Веб-камеры",
-      "en": "Webcams",
-      "it": "Webcam"
-    },
-    "lead": {
-      "ru": "Страница для будущих трансляций и погодных виджетов.",
-      "en": "A page for future live streams and weather widgets.",
-      "it": "Una pagina per future dirette e widget meteo."
-    },
-    "body": {
-      "ru": "В дальнейшем здесь появятся карточки камер, статусы, превью и ссылки на трансляции. Сейчас это placeholder-контент, подключенный через JSON-мок.",
-      "en": "Camera cards, statuses, previews and stream links will be added later. At the moment this is placeholder content loaded from a JSON mock.",
-      "it": "In futuro saranno aggiunte schede webcam, stati, anteprime e link alle dirette. Ora e contenuto segnaposto caricato da un mock JSON."
-    }
   }
 ]
