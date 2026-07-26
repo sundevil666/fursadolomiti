@@ -52,6 +52,7 @@ export type InstructorFeature = {
 export type Review = {
   id: number
   text: string
+  translations?: Partial<Record<'ru' | 'en' | 'it', string>>
   author: string
   location: string
   date: string

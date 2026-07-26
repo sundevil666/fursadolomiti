@@ -4,15 +4,18 @@ import { useI18n } from 'vue-i18n'
 
 import AnimatedText from '@/components/AnimatedText.vue'
 import type { Review } from '@/data/homeSections'
+import type { AppLocale } from '@/i18n'
 
-const { t, tm } = useI18n()
+const { locale, t, tm } = useI18n()
 
 const reviewTouchStartX = ref<number | null>(null)
 const activeReviewIndex = ref(0)
 const isReviewAutoplayPaused = ref(false)
 const selectedReview = ref<Review | null>(null)
 const previouslyFocusedElement = ref<HTMLElement | null>(null)
+const translatedReviewIds = ref<Record<number, boolean>>({})
 const reviews = computed(() => tm('home.reviews.items') as Review[])
+const currentLocale = computed(() => locale.value as AppLocale)
 const visibleReviews = computed(() => {
   if (reviews.value.length <= 1) return reviews.value
 
@@ -83,12 +86,33 @@ const handleReviewTouchEnd = (event: TouchEvent) => {
   reviewTouchStartX.value = null
 }
 
-const isLongReview = (text: string) => text.length > reviewPreviewLength
+const getReviewTranslation = (review: Review) => review.translations?.[currentLocale.value]?.trim()
+
+const hasReviewTranslation = (review: Review) => Boolean(getReviewTranslation(review))
+
+const isReviewTranslated = (review: Review) =>
+  Boolean(translatedReviewIds.value[review.id] && hasReviewTranslation(review))
+
+const getDisplayReviewText = (review: Review) =>
+  isReviewTranslated(review) ? (getReviewTranslation(review) ?? review.text) : review.text
+
+const toggleReviewTranslation = (review: Review) => {
+  if (!hasReviewTranslation(review)) return
+
+  translatedReviewIds.value = {
+    ...translatedReviewIds.value,
+    [review.id]: !isReviewTranslated(review),
+  }
+}
+
+const isLongReview = (review: Review) => getDisplayReviewText(review).length > reviewPreviewLength
 
 const getReviewText = (review: Review) => {
-  if (!isLongReview(review.text)) return review.text
+  const text = getDisplayReviewText(review)
 
-  return `${review.text.slice(0, reviewPreviewLength).trim()}...`
+  if (!isLongReview(review)) return text
+
+  return `${text.slice(0, reviewPreviewLength).trim()}...`
 }
 
 const openReviewModal = (review: Review) => {
@@ -112,6 +136,8 @@ const closeReviewModal = () => {
 }
 
 const handleReviewKeydown = (event: KeyboardEvent, review: Review) => {
+  if (event.target instanceof HTMLButtonElement) return
+
   if (event.key === 'Enter' || event.key === ' ') {
     event.preventDefault()
     openReviewModal(review)
@@ -182,26 +208,46 @@ onBeforeUnmount(() => {
               <p class="reviews-section__text">
                 <AnimatedText :text="getReviewText(review)" tag="span" />
               </p>
-              <span v-if="isLongReview(review.text)" class="reviews-section__read-more">
-                <AnimatedText :text="t('home.reviews.readMore')" tag="span" />
-              </span>
-              <footer class="reviews-section__author">
-                <span
-                  class="reviews-section__social"
-                  :class="`reviews-section__social--${review.source}`"
-                  aria-hidden="true"
-                >
-                  <span v-if="review.source === 'instagram'" class="reviews-section__instagram-mark" />
-                  <span v-else>G</span>
+              <div class="reviews-section__actions">
+                <span v-if="isLongReview(review)" class="reviews-section__read-more">
+                  <AnimatedText :text="t('home.reviews.readMore')" tag="span" />
                 </span>
-                <span class="reviews-section__author-copy">
-                  <strong>
-                    <AnimatedText :text="`${review.author}, ${review.location}`" tag="span" />
-                  </strong>
-                  <span>
-                    <AnimatedText :text="review.date" tag="span" />
+              </div>
+              <footer class="reviews-section__author">
+                <span class="reviews-section__author-main">
+                  <span
+                    class="reviews-section__social"
+                    :class="`reviews-section__social--${review.source}`"
+                    aria-hidden="true"
+                  >
+                    <span v-if="review.source === 'instagram'" class="reviews-section__instagram-mark" />
+                    <span v-else>G</span>
+                  </span>
+                  <span class="reviews-section__author-copy">
+                    <strong>
+                      <AnimatedText :text="`${review.author}, ${review.location}`" tag="span" />
+                    </strong>
+                    <span>
+                      <AnimatedText :text="review.date" tag="span" />
+                    </span>
                   </span>
                 </span>
+                <button
+                  v-if="hasReviewTranslation(review)"
+                  class="reviews-section__translate"
+                  type="button"
+                  @click.stop="toggleReviewTranslation(review)"
+                >
+                  <q-icon :name="isReviewTranslated(review) ? 'undo' : 'translate'" />
+                  <AnimatedText
+                    :text="
+                      isReviewTranslated(review)
+                        ? t('home.reviews.showOriginal')
+                        : t('home.reviews.translate')
+                    "
+                    tag="span"
+                  />
+                </button>
               </footer>
             </article>
           </div>
@@ -222,7 +268,10 @@ onBeforeUnmount(() => {
             :key="index"
             class="reviews-section__dot"
             :class="{ 'reviews-section__dot--active': index === activeReviewIndex }"
-            :style="{ '--review-slide-duration': `${reviewAutoplayDelay}ms` }"
+            :style="{
+              '--review-dot-count': reviews.length,
+              '--review-slide-duration': `${reviewAutoplayDelay}ms`,
+            }"
             type="button"
             @click="setReview(index)"
           />
@@ -254,26 +303,43 @@ onBeforeUnmount(() => {
 
             <div class="reviews-modal__content">
               <p class="reviews-modal__text">
-                {{ selectedReview.text }}
+                {{ getDisplayReviewText(selectedReview) }}
               </p>
             </div>
 
             <footer class="reviews-modal__author">
-              <span
-                class="reviews-section__social"
-                :class="`reviews-section__social--${selectedReview.source}`"
-                aria-hidden="true"
-              >
+              <span class="reviews-section__author-main">
                 <span
-                  v-if="selectedReview.source === 'instagram'"
-                  class="reviews-section__instagram-mark"
-                />
-                <span v-else>G</span>
+                  class="reviews-section__social"
+                  :class="`reviews-section__social--${selectedReview.source}`"
+                  aria-hidden="true"
+                >
+                  <span
+                    v-if="selectedReview.source === 'instagram'"
+                    class="reviews-section__instagram-mark"
+                  />
+                  <span v-else>G</span>
+                </span>
+                <span class="reviews-section__author-copy">
+                  <strong>{{ selectedReview.author }}, {{ selectedReview.location }}</strong>
+                  <span>{{ selectedReview.date }}</span>
+                </span>
               </span>
-              <span class="reviews-section__author-copy">
-                <strong>{{ selectedReview.author }}, {{ selectedReview.location }}</strong>
-                <span>{{ selectedReview.date }}</span>
-              </span>
+              <button
+                v-if="hasReviewTranslation(selectedReview)"
+                class="reviews-modal__translate"
+                type="button"
+                @click="toggleReviewTranslation(selectedReview)"
+              >
+                <q-icon :name="isReviewTranslated(selectedReview) ? 'undo' : 'translate'" />
+                <span>
+                  {{
+                    isReviewTranslated(selectedReview)
+                      ? t('home.reviews.showOriginal')
+                      : t('home.reviews.translate')
+                  }}
+                </span>
+              </button>
             </footer>
           </article>
         </div>

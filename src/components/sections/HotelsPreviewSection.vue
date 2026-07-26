@@ -42,6 +42,8 @@ const formError = ref('')
 const formStatus = ref<'idle' | 'sending' | 'redirecting'>('idle')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const homeShownHotelsCookie = 'fd_home_shown_hotels'
+const homeShownHotelsCookieMaxAge = 60 * 60 * 24 * 180
 
 const activeHotelSlides = ref<Record<string, number>>(
   Object.fromEntries(hotelPreviews.map((hotel) => [hotel.id, 0])),
@@ -51,11 +53,18 @@ let hotelAutoplayTimer: number | undefined
 let filterAnimationTimer: number | undefined
 let bookingSuedtirolScriptPromise: Promise<void> | undefined
 const bookingSuedtirolLocales = new Set(['en', 'it'])
+const homeDisplayedHotelIds = ref<string[]>([])
 
 const hasLimit = computed(() => Boolean(props.limit && props.limit > 0))
 
 const displayedHotels = computed(() => {
-  if (hasLimit.value) return hotelPreviews.slice(0, props.limit ?? 0)
+  if (hasLimit.value) {
+    const selectedHotels = homeDisplayedHotelIds.value
+      .map((id) => hotelPreviews.find((hotel) => hotel.id === id))
+      .filter((hotel): hotel is HotelPreview => Boolean(hotel))
+
+    return selectedHotels.length ? selectedHotels : hotelPreviews.slice(0, props.limit ?? 0)
+  }
 
   if (activeFilter.value === 'all') return hotelPreviews
 
@@ -80,6 +89,67 @@ const getHotelFeatures = (key: string) => tm(key) as string[]
 const getHotelStats = (key?: string) => (key ? (tm(key) as HotelStat[]) : [])
 
 const getActiveHotelSlide = (hotelId: string) => activeHotelSlides.value[hotelId] ?? 0
+
+const readShownHomeHotelIds = () => {
+  const cookieValue = document.cookie
+    .split('; ')
+    .find((cookie) => cookie.startsWith(`${homeShownHotelsCookie}=`))
+    ?.split('=')
+    .slice(1)
+    .join('=')
+
+  if (!cookieValue) return []
+
+  try {
+    const parsedValue = JSON.parse(decodeURIComponent(cookieValue))
+
+    return Array.isArray(parsedValue) ? parsedValue.filter((id): id is string => typeof id === 'string') : []
+  } catch {
+    return []
+  }
+}
+
+const writeShownHomeHotelIds = (hotelIds: string[]) => {
+  document.cookie = `${homeShownHotelsCookie}=${encodeURIComponent(
+    JSON.stringify(hotelIds),
+  )}; path=/; max-age=${homeShownHotelsCookieMaxAge}; samesite=lax`
+}
+
+const getRandomHotels = (hotelIds: string[], limit: number, excludedHotelIds: string[] = []) => {
+  const excludedIds = new Set(excludedHotelIds)
+  const availableHotelIds = hotelIds.filter((id) => !excludedIds.has(id))
+
+  return availableHotelIds
+    .map((id) => ({ id, sort: Math.random() }))
+    .sort((hotelA, hotelB) => hotelA.sort - hotelB.sort)
+    .slice(0, limit)
+    .map(({ id }) => id)
+}
+
+const selectHomePreviewHotels = () => {
+  const limit = props.limit ?? 0
+  const hotelIds = hotelPreviews.map((hotel) => hotel.id)
+
+  if (!hasLimit.value || limit <= 0 || hotelIds.length === 0) return
+
+  const currentHotelIds = new Set(hotelIds)
+  const normalizedShownIds = readShownHomeHotelIds().filter((id) => currentHotelIds.has(id))
+  const unseenHotelIds = hotelIds.filter((id) => !normalizedShownIds.includes(id))
+  let selectedHotelIds = getRandomHotels(unseenHotelIds, limit)
+  let nextShownIds = [...normalizedShownIds, ...selectedHotelIds]
+
+  if (selectedHotelIds.length < Math.min(limit, hotelIds.length)) {
+    const freshHotelIds = getRandomHotels(hotelIds, limit - selectedHotelIds.length, selectedHotelIds)
+
+    selectedHotelIds = [...selectedHotelIds, ...freshHotelIds]
+    nextShownIds = freshHotelIds
+  } else if (nextShownIds.length >= hotelIds.length) {
+    nextShownIds = []
+  }
+
+  homeDisplayedHotelIds.value = selectedHotelIds
+  writeShownHomeHotelIds(nextShownIds)
+}
 
 const setActiveFilter = (filter: HotelFilter) => {
   if (hasLimit.value || activeFilter.value === filter || isFilterDisabled(filter)) return
@@ -303,7 +373,10 @@ watch(bookingHotelId, async (hotelId) => {
   }
 })
 
-onMounted(startHotelAutoplay)
+onMounted(() => {
+  selectHomePreviewHotels()
+  startHotelAutoplay()
+})
 onBeforeUnmount(() => {
   stopHotelAutoplay()
   document.body.classList.remove('is-booking-modal-open')

@@ -2230,7 +2230,7 @@
 
   &__read-more {
     align-self: flex-start;
-    margin-top: 10px;
+    margin: 0;
     padding: 0;
     border: 0;
     background: transparent;
@@ -2252,10 +2252,62 @@
     }
   }
 
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 10px;
+    gap: 12px 16px;
+  }
+
+  &__translate {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 32px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #175445;
+    font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.25;
+    max-width: 160px;
+    text-align: right;
+    cursor: pointer;
+    gap: 7px;
+    transition:
+      color 220ms ease,
+      transform 220ms ease;
+
+    .q-icon {
+      font-size: 18px;
+    }
+
+    &:hover,
+    &:focus-visible {
+      color: #08211f;
+      outline: 0;
+      transform: translateY(-1px);
+    }
+  }
+
   &__author {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: space-between;
     margin-top: auto;
+    gap: 18px;
+  }
+
+  &__author-main {
+    display: flex;
+    min-width: 0;
+    align-items: center;
     gap: 14px;
   }
 
@@ -2317,6 +2369,7 @@
 
   &__author-copy {
     display: grid;
+    min-width: 0;
     gap: 4px;
 
     strong {
@@ -2398,7 +2451,7 @@
     width: min(360px, 42vw);
     height: 7px;
     overflow: visible;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(var(--review-dot-count, 2), minmax(0, 1fr));
     gap: 10px;
     transform: translateX(50%);
   }
@@ -3115,12 +3168,49 @@ body.is-booking-modal-open {
   line-height: 1.33;
 }
 
+.reviews-modal__translate {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #175445;
+  font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.25;
+  max-width: 180px;
+  text-align: right;
+  cursor: pointer;
+  gap: 7px;
+  transition:
+    color 220ms ease,
+    transform 220ms ease;
+
+  .q-icon {
+    font-size: 18px;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: #08211f;
+    outline: 0;
+    transform: translateY(-1px);
+  }
+}
+
 .reviews-modal__author {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   margin-top: 26px;
   padding-top: 0;
-  gap: 14px;
+  gap: 14px 18px;
 }
 
 .review-modal-enter-active,
