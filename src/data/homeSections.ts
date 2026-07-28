@@ -254,7 +254,6 @@ export const hotelPreviews: HotelPreview[] = [
     images: [
       'villa-carolina/villa-carolina1.jpg',
       'villa-carolina/villa-carolina2.jpg',
-      'villa-carolina/villa-carolina3.jpg',
       'villa-carolina/villa-carolina4.jpg',
     ],
     promoCode: 'REPLACE_VILLA_CAROLINA',
@@ -270,5 +269,6 @@ export const hotelPreviews: HotelPreview[] = [
     descriptionKey: 'home.hotels.villaCarolina.description',
     featuresKey: 'home.hotels.villaCarolina.features',
     featuresLabelKey: 'home.hotels.villaCarolina.featuresLabel',
+    statsKey: 'home.hotels.villaCarolina.stats',
   },
 ]

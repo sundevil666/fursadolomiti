@@ -183,7 +183,7 @@
       },
       "villaCarolina": {
         "name": "Villa Carolina",
-        "location": "Santa Cristina",
+        "location": "Selva",
         "description": "Chalet esclusivo per il massimo comfort e privacy, con vista panoramica sulle Dolomiti",
         "featuresLabel": "Caratteristiche:",
         "features": [
@@ -191,6 +191,20 @@
           "Sauna privata, jacuzzi con vista sulle montagne e palestra per il massimo comfort e recupero",
           "Vicino all'impianto Col Raiser",
           "Con buone condizioni di innevamento, si puo arrivare con gli sci fino a 100 m dallo chalet"
+        ],
+        "stats": [
+          {
+            "icon": "groups",
+            "value": "10 ospiti"
+          },
+          {
+            "icon": "bed",
+            "value": "5 camere"
+          },
+          {
+            "icon": "shower",
+            "value": "6 docce"
+          }
         ]
       }
     },
