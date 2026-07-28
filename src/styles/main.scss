@@ -235,6 +235,7 @@
 }
 
 .language-switcher {
+  position: relative;
 
   &--changing {
     .language-switcher__trigger {

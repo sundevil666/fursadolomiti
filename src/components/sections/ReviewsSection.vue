@@ -16,22 +16,21 @@ const previouslyFocusedElement = ref<HTMLElement | null>(null)
 const translatedReviewIds = ref<Record<number, boolean>>({})
 const reviews = computed(() => tm('home.reviews.items') as Review[])
 const currentLocale = computed(() => locale.value as AppLocale)
+const reviewsPerSlide = 2
+const totalReviewSlides = computed(() => Math.ceil(reviews.value.length / reviewsPerSlide))
 const visibleReviews = computed(() => {
-  if (reviews.value.length <= 1) return reviews.value
+  const startIndex = activeReviewIndex.value * reviewsPerSlide
 
-  return [
-    reviews.value[activeReviewIndex.value],
-    reviews.value[(activeReviewIndex.value + 1) % reviews.value.length],
-  ]
+  return reviews.value.slice(startIndex, startIndex + reviewsPerSlide)
 })
 const reviewAutoplayDelay = 10000
 let reviewAutoplayTimer: number | undefined
 const reviewPreviewLength = 260
 
 const setReview = (index: number, shouldRestartAutoplay = true) => {
-  if (!reviews.value.length) return
+  if (!totalReviewSlides.value) return
 
-  activeReviewIndex.value = (index + reviews.value.length) % reviews.value.length
+  activeReviewIndex.value = (index + totalReviewSlides.value) % totalReviewSlides.value
 
   if (shouldRestartAutoplay && !isReviewAutoplayPaused.value) {
     restartReviewAutoplay()
@@ -39,7 +38,7 @@ const setReview = (index: number, shouldRestartAutoplay = true) => {
 }
 
 const startReviewAutoplay = () => {
-  if (isReviewAutoplayPaused.value) return
+  if (isReviewAutoplayPaused.value || totalReviewSlides.value <= 1) return
 
   stopReviewAutoplay()
   reviewAutoplayTimer = window.setInterval(() => {
@@ -74,7 +73,7 @@ const handleReviewTouchStart = (event: TouchEvent) => {
 }
 
 const handleReviewTouchEnd = (event: TouchEvent) => {
-  if (reviewTouchStartX.value === null) return
+  if (reviewTouchStartX.value === null || totalReviewSlides.value <= 1) return
 
   const endX = event.changedTouches[0]?.clientX ?? reviewTouchStartX.value
   const distance = reviewTouchStartX.value - endX
@@ -168,6 +167,7 @@ onBeforeUnmount(() => {
 
 <template>
   <section
+    v-if="reviews.length"
     class="reviews-section"
     aria-labelledby="reviews-title"
     @touchstart.passive="handleReviewTouchStart"
@@ -184,6 +184,7 @@ onBeforeUnmount(() => {
 
       <div class="reviews-section__stage">
         <button
+          v-if="totalReviewSlides > 1"
           class="reviews-section__nav reviews-section__nav--prev"
           type="button"
           :aria-label="t('home.reviews.previous')"
@@ -254,6 +255,7 @@ onBeforeUnmount(() => {
         </Transition>
 
         <button
+          v-if="totalReviewSlides > 1"
           class="reviews-section__nav reviews-section__nav--next"
           type="button"
           :aria-label="t('home.reviews.next')"
@@ -262,18 +264,18 @@ onBeforeUnmount(() => {
           <q-icon name="chevron_right" />
         </button>
 
-        <div class="reviews-section__dots" aria-hidden="true">
+        <div v-if="totalReviewSlides > 1" class="reviews-section__dots" aria-hidden="true">
           <button
-            v-for="(_, index) in reviews"
+            v-for="index in totalReviewSlides"
             :key="index"
             class="reviews-section__dot"
-            :class="{ 'reviews-section__dot--active': index === activeReviewIndex }"
+            :class="{ 'reviews-section__dot--active': index - 1 === activeReviewIndex }"
             :style="{
-              '--review-dot-count': reviews.length,
+              '--review-dot-count': totalReviewSlides,
               '--review-slide-duration': `${reviewAutoplayDelay}ms`,
             }"
             type="button"
-            @click="setReview(index)"
+            @click="setReview(index - 1)"
           />
         </div>
       </div>
