@@ -233,7 +233,7 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'luxury-chalet-p',
     category: 'chalet',
-    images: ['/luxury-chalet-p/luxury-chalet-p1.png', '/luxury-chalet-p/luxury-chalet-p2.png', '/luxury-chalet-p/luxury-chalet-p3.jpeg', '/luxury-chalet-p/luxury-chalet-p4.jpeg'],
+    images: ['/luxury-chalet-p/luxury-chalet-p1.jpg', '/luxury-chalet-p/luxury-chalet-p2.jpeg', '/luxury-chalet-p/luxury-chalet-p3.jpeg', '/luxury-chalet-p/luxury-chalet-p4.jpeg'],
     promoCode: 'REPLACE_LUXURY_CHALET_P',
     bookingUrl: 'https://example.com/luxury-chalet-p/booking',
     bookingParams: {
@@ -254,6 +254,7 @@ export const hotelPreviews: HotelPreview[] = [
     images: [
       'villa-carolina/villa-carolina1.jpg',
       'villa-carolina/villa-carolina2.jpg',
+      'villa-carolina/villa-carolina3.jpg',
       'villa-carolina/villa-carolina4.jpg',
     ],
     promoCode: 'REPLACE_VILLA_CAROLINA',
