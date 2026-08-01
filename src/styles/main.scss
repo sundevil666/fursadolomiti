@@ -805,7 +805,7 @@
 }
 
 .hotels-section {
-  background: var(--page-cream);
+  background: var(--page-light);
   color: var(--green);
 
   &__filters {
@@ -1042,10 +1042,9 @@
   }
 
   &__footer {
-    background: var(--page-cream);
     color: #fffaf0;
     padding-top: 24px;
-    margin-bottom: 120px;
+    padding-bottom: 120px;
   }
 }
 
@@ -1562,7 +1561,7 @@
 }
 
 .why-me {
-  background: var(--page-cream);
+  background: var(--page-light);
   color: var(--green-deep);
 
   &__header {
@@ -1571,7 +1570,6 @@
     margin: 0 auto;
     padding-top: 100px;
     padding-bottom: 40px;
-    background: var(--page-cream);
   }
 
   &__title {

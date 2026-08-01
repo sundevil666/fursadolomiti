@@ -11,6 +11,8 @@
   --green-deep: #08211f;
   --green-soft: #a5c0b9;
   --brown: #5a4634;
+  --page-light: #FFF6E1;
+
   --container: 1208px;
   --page-gutter: clamp(16px, 4vw, 48px);
   --container-safe: min(var(--container), calc(100% - (var(--page-gutter) * 2)));
