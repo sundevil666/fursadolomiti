@@ -139,4 +139,25 @@ export const guestReviews: GuestReview[] = [
       it: 'Gennaio 2026',
     },
   },
+  {
+    id: 7,
+    text: 'Татьяна отличный специалист, подобрала нам отель и отдых в горах прошел на 5+. Пользуемся ее услугами уже на протяжении 10 лет. Спасибо!',
+    translations: {
+      ru: 'Татьяна отличный специалист, подобрала нам отель и отдых в горах прошел на 5+. Пользуемся ее услугами уже на протяжении 10 лет. Спасибо!',
+      en: 'Tatiana is an excellent specialist. She found the right hotel for us, and our mountain holiday was a 5+ experience. We have been using her services for 10 years already. Thank you!',
+      it: 'Tatiana è un’ottima specialista. Ci ha trovato l’hotel giusto e la nostra vacanza in montagna è stata da 5+. Utilizziamo i suoi servizi già da 10 anni. Grazie!',
+    },
+    source: 'google',
+    author: 'Артем',
+    location: {
+      ru: 'Россия',
+      en: 'Russia',
+      it: 'Russia',
+    },
+    date: {
+      ru: 'Январь 2026',
+      en: 'January 2026',
+      it: 'Gennaio 2026',
+    },
+  },
 ]
