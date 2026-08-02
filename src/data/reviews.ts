@@ -76,4 +76,25 @@ export const guestReviews: GuestReview[] = [
       it: 'Gennaio 2026',
     },
   },
+  {
+    id: 4,
+    text: 'Неймовірний відпочинок допомогла нам підготувати Тетяна. Боже, усе погодила, ми вибрали класний готель з усіма функціями, який нам супер підійшов. Вид з номера найкращий, прямо біля підйомника, коли приїхали, вона нас зустріла і одразу допомогла оформити прокат лиж, які нам привезли одразу в готель. Потім швидко провела екскурсію по місту і показала найкращі ресторани і розказала, де поряд ще можна з’їздити погуляти.\n\nЗабронювала в короткі строки нам інструктора для дитини. Вона за 4 дні вже впевнено каталась, хоча стала на лижі вперше. Потім ми змогли сходити на екскурсію в готель, який нам сподобався на наступну поїздку, подивились номери і поговорили по цінам. Було значно дешевше, чим на Букінгу.\n\nДякую за такий сервіс. Ми обов’язково ще повернемось. А так і ще, наш готель був в 30 метрах від підйомника. Просто казка.',
+    translations: {
+      ru: 'Невероятный отдых помогла нам подготовить Татьяна. Боже, она все согласовала, мы выбрали классный отель со всеми функциями, который нам супер подошел. Вид из номера был лучший, прямо возле подъемника. Когда мы приехали, она нас встретила и сразу помогла оформить прокат лыж, которые нам привезли прямо в отель. Потом быстро провела экскурсию по городу, показала лучшие рестораны и рассказала, куда рядом еще можно съездить погулять.\n\nВ короткие сроки забронировала нам инструктора для ребенка. За 4 дня она уже уверенно каталась, хотя впервые встала на лыжи. Потом мы смогли сходить на экскурсию в отель, который нам понравился для следующей поездки, посмотрели номера и поговорили о ценах. Было значительно дешевле, чем на Booking.\n\nСпасибо за такой сервис. Мы обязательно еще вернемся. И да, наш отель был в 30 метрах от подъемника. Просто сказка.',
+      en: 'Tatiana helped us prepare an incredible holiday. She arranged absolutely everything, and we chose a wonderful hotel with all the facilities we needed, which suited us perfectly. The view from the room was the best, right next to the lift. When we arrived, she met us and immediately helped arrange ski rental, which was delivered straight to the hotel. Then she gave us a quick tour of the town, showed us the best restaurants and told us where else nearby we could go for a walk or a day out.\n\nOn short notice, she booked an instructor for our child. In 4 days, our daughter was already skiing confidently, even though it was her first time on skis. Later, we were able to tour a hotel we liked for our next trip, see the rooms and discuss prices. It was significantly cheaper than on Booking.\n\nThank you for this level of service. We will definitely come back. And one more thing: our hotel was 30 meters from the lift. A real fairy tale.',
+      it: 'Tatiana ci ha aiutati a preparare una vacanza incredibile. Ha organizzato tutto, e abbiamo scelto un bellissimo hotel con tutti i servizi di cui avevamo bisogno, perfetto per noi. La vista dalla camera era fantastica, proprio vicino all’impianto di risalita. Quando siamo arrivati, ci ha accolti e ci ha subito aiutati a organizzare il noleggio degli sci, che ci sono stati consegnati direttamente in hotel. Poi ci ha fatto fare un breve giro della città, ci ha mostrato i migliori ristoranti e ci ha raccontato dove si poteva andare nei dintorni per una passeggiata o una gita.\n\nIn pochissimo tempo ci ha prenotato un maestro di sci per la bambina. In 4 giorni sciava già con sicurezza, anche se era la prima volta sugli sci. Poi siamo riusciti a visitare un hotel che ci era piaciuto per il prossimo viaggio, vedere le camere e parlare dei prezzi. Era molto più conveniente rispetto a Booking.\n\nGrazie per un servizio così. Torneremo sicuramente. E ancora una cosa: il nostro hotel era a 30 metri dall’impianto. Una vera favola.',
+    },
+    source: 'google',
+    author: 'Виктория',
+    location: {
+      ru: 'Украина',
+      en: 'Ukraine',
+      it: 'Ucraina',
+    },
+    date: {
+      ru: 'Январь 2026',
+      en: 'January 2026',
+      it: 'Gennaio 2026',
+    },
+  },
 ]
