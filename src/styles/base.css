@@ -27,7 +27,6 @@
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
-  background: var(--page-cream);
   color: var(--green);
 }
 
@@ -45,7 +44,6 @@ body,
 body {
   min-width: 320px;
   margin: 0;
-  background: var(--page-cream);
   font-family: 'Playfair Display', sans-serif;
 }
 

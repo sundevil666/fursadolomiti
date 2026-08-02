@@ -471,7 +471,6 @@
 
 .home-page {
   min-height: 100vh;
-  background: var(--page-cream);
 }
 
 .hotels-page {
@@ -837,7 +836,6 @@
     gap: var(--filter-gap);
     margin: 0 auto;
     padding: 120px 24px 30px;
-    background: var(--page-cream);
 
     &::before,
     &::after {
@@ -1037,7 +1035,7 @@
     margin: 0 auto;
     color: #08211f;
     padding: 100px 0 40px;
-    background: var(--page-cream);
+    background: var(--page-light);
   }
 
   &__title {
@@ -4005,6 +4003,7 @@ body.is-booking-modal-open {
   }
 
   .hotels-section {
+    background: var(--page-light);
     &__filters {
       --filter-gap: 42px;
       --filter-side-padding: 18px;
