@@ -729,7 +729,7 @@
 
 .hero-card {
   position: absolute;
-  right: max(var(--page-gutter), calc((100vw - var(--container)) / 2));
+  left: 50%;
   bottom: 0;
   z-index: 2;
   display: grid;
