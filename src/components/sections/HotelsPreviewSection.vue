@@ -34,7 +34,9 @@ const isFilterAnimating = ref(false)
 const bookingHotelId = ref<string | null>(null)
 const bookingModal = ref<HTMLElement | null>(null)
 const bookingSuedtirolContainer = ref<HTMLElement | null>(null)
+const bookingExpertContainer = ref<HTMLElement | null>(null)
 const bookingSuedtirolStatus = ref<'idle' | 'loading' | 'ready' | 'error'>('idle')
+const bookingExpertStatus = ref<'idle' | 'loading' | 'ready' | 'error'>('idle')
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
@@ -52,7 +54,9 @@ const hotelAutoplayDelay = 5200
 let hotelAutoplayTimer: number | undefined
 let filterAnimationTimer: number | undefined
 let bookingSuedtirolScriptPromise: Promise<void> | undefined
+let bookingExpertScriptPromise: Promise<void> | undefined
 const bookingSuedtirolLocales = new Set(['en', 'it'])
+const bookingExpertLocales = new Set(['en', 'it', 'fr', 'de'])
 const homeDisplayedHotelIds = ref<string[]>([])
 
 const hasLimit = computed(() => Boolean(props.limit && props.limit > 0))
@@ -76,6 +80,19 @@ const activeBookingHotel = computed(() =>
 )
 
 const isBookingSuedtirolHotel = computed(() => Boolean(activeBookingHotel.value?.bookingSuedtirol))
+const isBookingExpertHotel = computed(() => Boolean(activeBookingHotel.value?.bookingExpert))
+const isWidgetHotel = computed(() => isBookingSuedtirolHotel.value || isBookingExpertHotel.value)
+const widgetStatus = computed(() =>
+  isBookingExpertHotel.value ? bookingExpertStatus.value : bookingSuedtirolStatus.value,
+)
+const widgetProviderName = computed(() =>
+  isBookingExpertHotel.value ? 'BookingExpert' : 'Booking Südtirol',
+)
+const activeBookingHotelName = computed(() => {
+  const hotel = activeBookingHotel.value
+
+  return hotel ? t(hotel.nameKey) : ''
+})
 
 const getFilterCount = (filter: HotelFilter) => {
   if (filter === 'all') return hotelPreviews.length
@@ -103,7 +120,9 @@ const readShownHomeHotelIds = () => {
   try {
     const parsedValue = JSON.parse(decodeURIComponent(cookieValue))
 
-    return Array.isArray(parsedValue) ? parsedValue.filter((id): id is string => typeof id === 'string') : []
+    return Array.isArray(parsedValue)
+      ? parsedValue.filter((id): id is string => typeof id === 'string')
+      : []
   } catch {
     return []
   }
@@ -139,7 +158,11 @@ const selectHomePreviewHotels = () => {
   let nextShownIds = [...normalizedShownIds, ...selectedHotelIds]
 
   if (selectedHotelIds.length < Math.min(limit, hotelIds.length)) {
-    const freshHotelIds = getRandomHotels(hotelIds, limit - selectedHotelIds.length, selectedHotelIds)
+    const freshHotelIds = getRandomHotels(
+      hotelIds,
+      limit - selectedHotelIds.length,
+      selectedHotelIds,
+    )
 
     selectedHotelIds = [...selectedHotelIds, ...freshHotelIds]
     nextShownIds = freshHotelIds
@@ -214,6 +237,7 @@ const openBookingModal = (hotelId: string) => {
   formError.value = ''
   formStatus.value = 'idle'
   bookingSuedtirolStatus.value = 'idle'
+  bookingExpertStatus.value = 'idle'
 }
 
 const closeBookingModal = () => {
@@ -255,8 +279,52 @@ const loadBookingSuedtirolScript = () => {
   return bookingSuedtirolScriptPromise
 }
 
+const getSupportedWidgetLocale = (appLocale: string, supportedLocales: Set<string>) => {
+  const normalizedLocale = appLocale.toLowerCase().split('-')[0]
+
+  return supportedLocales.has(normalizedLocale) ? normalizedLocale : 'en'
+}
+
 const getBookingSuedtirolLocale = (appLocale: string) =>
-  bookingSuedtirolLocales.has(appLocale) ? appLocale : 'en'
+  getSupportedWidgetLocale(appLocale, bookingSuedtirolLocales)
+
+const loadBookingExpertScript = () => {
+  if (customElements.get('be-searchbox')) return Promise.resolve()
+  if (bookingExpertScriptPromise) return bookingExpertScriptPromise
+
+  bookingExpertScriptPromise = new Promise((resolve, reject) => {
+    const existingScript = document.querySelector<HTMLScriptElement>('#booking-expert-searchbox-js')
+
+    if (existingScript) {
+      existingScript.addEventListener('load', () => resolve(), { once: true })
+      existingScript.addEventListener('error', () => reject(new Error('BookingExpert failed')), {
+        once: true,
+      })
+      return
+    }
+
+    const script = document.createElement('script')
+    script.id = 'booking-expert-searchbox-js'
+    script.src = 'https://ber-js.my-cdn.cloud/widget/v0/searchbox.js'
+    script.type = 'module'
+    script.addEventListener('load', () => resolve(), { once: true })
+    script.addEventListener('error', () => reject(new Error('BookingExpert failed')), {
+      once: true,
+    })
+    document.head.append(script)
+  })
+
+  return bookingExpertScriptPromise
+}
+
+const getBookingExpertLocale = (appLocale: string) =>
+  getSupportedWidgetLocale(appLocale, bookingExpertLocales)
+
+const setBooleanAttribute = (element: HTMLElement, name: string, value?: boolean) => {
+  if (value === undefined) return
+
+  element.setAttribute(name, String(value))
+}
 
 const mountBookingSuedtirolWidget = async (hotel: HotelPreview) => {
   const widgetConfig = hotel.bookingSuedtirol
@@ -289,6 +357,45 @@ const mountBookingSuedtirolWidget = async (hotel: HotelPreview) => {
   } catch (error) {
     console.error('Booking Südtirol widget failed', error)
     bookingSuedtirolStatus.value = 'error'
+  }
+}
+
+const mountBookingExpertWidget = async (hotel: HotelPreview) => {
+  const widgetConfig = hotel.bookingExpert
+
+  if (!widgetConfig || !bookingExpertContainer.value) return
+
+  bookingExpertStatus.value = 'loading'
+
+  try {
+    await loadBookingExpertScript()
+    await customElements.whenDefined('be-searchbox')
+
+    bookingExpertContainer.value.innerHTML = ''
+
+    const searchbox = document.createElement('be-searchbox')
+    searchbox.setAttribute('searchbox', widgetConfig.searchbox)
+    searchbox.setAttribute('lang', getBookingExpertLocale(locale.value))
+    searchbox.setAttribute('hotel', String(widgetConfig.hotel))
+    searchbox.setAttribute('layout', String(widgetConfig.layout))
+    searchbox.setAttribute('guests', widgetConfig.guests)
+
+    if (widgetConfig.endpoint) searchbox.setAttribute('endpoint', widgetConfig.endpoint)
+    if (widgetConfig.calendar) searchbox.setAttribute('calendar', widgetConfig.calendar)
+    if (widgetConfig.room !== undefined) searchbox.setAttribute('room', String(widgetConfig.room))
+
+    setBooleanAttribute(searchbox, 'coupon', widgetConfig.coupon)
+    setBooleanAttribute(searchbox, 'agency', widgetConfig.agency)
+    setBooleanAttribute(searchbox, 'reservations', widgetConfig.reservations)
+    setBooleanAttribute(searchbox, 'rooms', widgetConfig.rooms)
+    setBooleanAttribute(searchbox, 'locations', widgetConfig.locations)
+    setBooleanAttribute(searchbox, 'hotels', widgetConfig.hotels)
+
+    bookingExpertContainer.value.append(searchbox)
+    bookingExpertStatus.value = 'ready'
+  } catch (error) {
+    console.error('BookingExpert widget failed', error)
+    bookingExpertStatus.value = 'error'
   }
 }
 
@@ -365,6 +472,12 @@ watch(bookingHotelId, async (hotelId) => {
 
     if (hotel?.bookingSuedtirol) {
       await mountBookingSuedtirolWidget(hotel)
+      bookingModal.value?.querySelector<HTMLElement>('.booking-modal__close')?.focus()
+      return
+    }
+
+    if (hotel?.bookingExpert) {
+      await mountBookingExpertWidget(hotel)
       bookingModal.value?.querySelector<HTMLElement>('.booking-modal__close')?.focus()
       return
     }
@@ -530,7 +643,10 @@ onBeforeUnmount(() => {
         >
           <section
             class="booking-modal__panel"
-            :class="{ 'booking-modal__panel--widget': isBookingSuedtirolHotel }"
+            :class="{
+              'booking-modal__panel--widget': isWidgetHotel,
+              'booking-modal__panel--expert': isBookingExpertHotel,
+            }"
           >
             <button
               v-if="formStatus === 'idle'"
@@ -546,24 +662,30 @@ onBeforeUnmount(() => {
               <div>
                 <h2 :id="`booking-modal-title-${bookingHotelId}`" class="booking-modal__title">
                   {{
-                    isBookingSuedtirolHotel
-                      ? t('home.hotels.bookingModal.widgetTitle')
+                    isWidgetHotel
+                      ? t('home.hotels.bookingModal.widgetTitle', { hotel: activeBookingHotelName })
                       : t('home.hotels.bookingModal.title')
                   }}
                 </h2>
-                <p v-if="isBookingSuedtirolHotel" class="booking-modal__privacy-note">
-                  {{ t('home.hotels.bookingModal.widgetPrivacyNote') }}
+                <p v-if="isWidgetHotel" class="booking-modal__privacy-note">
+                  {{
+                    t('home.hotels.bookingModal.widgetPrivacyNote', {
+                      provider: widgetProviderName,
+                    })
+                  }}
                 </p>
                 <p class="booking-modal__description">
                   {{
-                    isBookingSuedtirolHotel
-                      ? t('home.hotels.bookingModal.widgetDescription')
+                    isWidgetHotel
+                      ? t('home.hotels.bookingModal.widgetDescription', {
+                          provider: widgetProviderName,
+                        })
                       : t('home.hotels.bookingModal.description')
                   }}
                 </p>
               </div>
 
-              <p v-if="!isBookingSuedtirolHotel" class="booking-modal__privacy-note">
+              <p v-if="!isWidgetHotel" class="booking-modal__privacy-note">
                 {{ t('home.hotels.bookingModal.privacyNote') }}
               </p>
             </div>
@@ -578,19 +700,40 @@ onBeforeUnmount(() => {
               </p>
             </div>
 
-            <div v-if="isBookingSuedtirolHotel" class="booking-modal__widget-shell">
-              <div class="booking-modal__widget-status" aria-live="polite">
+            <div
+              v-if="isWidgetHotel"
+              class="booking-modal__widget-shell"
+              :class="{ 'booking-modal__widget-shell--expert': isBookingExpertHotel }"
+            >
+              <div
+                v-if="widgetStatus === 'loading' || widgetStatus === 'error'"
+                class="booking-modal__widget-status"
+                aria-live="polite"
+              >
                 <span
-                  v-if="bookingSuedtirolStatus === 'loading'"
+                  v-if="widgetStatus === 'loading'"
                   class="booking-modal__button-loader"
                   aria-hidden="true"
                 ></span>
                 <span>
-                  {{ t(`home.hotels.bookingModal.widgetStatus.${bookingSuedtirolStatus}`) }}
+                  {{
+                    t(`home.hotels.bookingModal.widgetStatus.${widgetStatus}`, {
+                      provider: widgetProviderName,
+                    })
+                  }}
                 </span>
               </div>
 
-              <div ref="bookingSuedtirolContainer" class="booking-modal__widget"></div>
+              <div
+                v-if="isBookingSuedtirolHotel"
+                ref="bookingSuedtirolContainer"
+                class="booking-modal__widget booking-modal__widget--suedtirol"
+              ></div>
+              <div
+                v-else
+                ref="bookingExpertContainer"
+                class="booking-modal__widget booking-modal__widget--expert"
+              ></div>
             </div>
 
             <form

@@ -70,12 +70,12 @@
         "agreement": "By clicking “Continue with bonus”, you agree to the",
         "privacyPolicy": "Privacy Policy",
         "close": "Close dialog",
-        "widgetTitle": "Hotel Posta\nbooking",
-        "widgetDescription": "Choose your dates, guests and preferred room in the official Booking Südtirol booking widget.",
-        "widgetPrivacyNote": "Booking data is handled through Booking Südtirol and used only to process your request.",
+        "widgetTitle": "{hotel}\nbooking",
+        "widgetDescription": "Choose your dates, guests and preferred room in the official {provider} booking widget.",
+        "widgetPrivacyNote": "Booking data is handled through {provider} and used only to process your request.",
         "widgetStatus": {
           "idle": "Widget is not loaded yet",
-          "loading": "Loading Booking Südtirol widget...",
+          "loading": "Loading {provider} widget...",
           "ready": "Widget loaded",
           "error": "Could not load the widget"
         }

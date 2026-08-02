@@ -72,7 +72,7 @@
 
     &:hover,
     &:focus-visible {
-      color: #3A6E61;
+      color: #3a6e61;
     }
 
     &:active {
@@ -208,7 +208,7 @@
   background: rgba(142, 131, 97, 0.5);
   transition: background 1s ease;
 }
-.app-header.app-header--privacy-policy.app-header--scrolled  {
+.app-header.app-header--privacy-policy.app-header--scrolled {
   background: rgba(142, 131, 97, 1);
 }
 
@@ -495,7 +495,13 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(162.9deg, rgba(29, 21, 1, 0.4) 32.56%, rgba(29, 21, 1, 0.08) 43.5%, rgba(29, 21, 1, 0.04) 58.25%, rgba(29, 21, 1, 0.32) 83.35%);
+    background: linear-gradient(
+      162.9deg,
+      rgba(29, 21, 1, 0.4) 32.56%,
+      rgba(29, 21, 1, 0.08) 43.5%,
+      rgba(29, 21, 1, 0.04) 58.25%,
+      rgba(29, 21, 1, 0.32) 83.35%
+    );
     content: '';
     z-index: 1;
   }
@@ -748,7 +754,6 @@
     position: absolute;
     top: 10px;
     left: 10px;
-
   }
 
   &__body {
@@ -811,7 +816,11 @@
   &__filters {
     --filter-gap: 74px;
     --filter-side-padding: 24px;
-    --filter-width: clamp(120px, calc((100vw - (var(--filter-side-padding) * 2) - (var(--filter-gap) * 3)) / 4), 220px);
+    --filter-width: clamp(
+      120px,
+      calc((100vw - (var(--filter-side-padding) * 2) - (var(--filter-gap) * 3)) / 4),
+      220px
+    );
     --filter-step: calc(var(--filter-width) + var(--filter-gap));
     --filter-active-x: calc(var(--filter-step) * 2);
     --filter-active-width: var(--filter-width);
@@ -998,8 +1007,19 @@
       inset: 0;
       z-index: 5;
       background:
-        linear-gradient(90deg, transparent 0%, rgb(255 246 225 / 18%) 42%, rgb(255 246 225 / 34%) 50%, transparent 64%),
-        linear-gradient(180deg, rgb(255 246 225 / 0%), rgb(255 246 225 / 18%), rgb(255 246 225 / 0%));
+        linear-gradient(
+          90deg,
+          transparent 0%,
+          rgb(255 246 225 / 18%) 42%,
+          rgb(255 246 225 / 34%) 50%,
+          transparent 64%
+        ),
+        linear-gradient(
+          180deg,
+          rgb(255 246 225 / 0%),
+          rgb(255 246 225 / 18%),
+          rgb(255 246 225 / 0%)
+        );
       opacity: 0;
       transform: translateX(-38%);
       pointer-events: none;
@@ -1029,7 +1049,6 @@
     font-weight: 700;
     line-height: 0.98;
     letter-spacing: 0;
-
   }
 
   &__subtitle {
@@ -1146,7 +1165,12 @@
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(180deg, rgb(0 19 14 / 0%) 56%, rgb(0 19 14 / 50%) 86%, #00130e 100%);
+    background: linear-gradient(
+      180deg,
+      rgb(0 19 14 / 0%) 56%,
+      rgb(0 19 14 / 50%) 86%,
+      #00130e 100%
+    );
     pointer-events: none;
     content: '';
   }
@@ -1237,11 +1261,11 @@
   &__content {
     min-height: 100%;
     padding: 32px 40px;
-    background:  #efe4c9;
+    background: #efe4c9;
     transition: background 260ms ease;
 
     &:hover {
-      background:  #dbd0b5;
+      background: #dbd0b5;
       cursor: pointer;
     }
   }
@@ -1349,7 +1373,6 @@
       line-height: 1;
     }
   }
-
 }
 
 .how-it-works {
@@ -1401,7 +1424,7 @@
   &__note {
     width: min(564px, 100%);
     margin-top: 40px;
-    padding:40px;
+    padding: 40px;
     border-radius: 8px;
     background: #175445;
     color: #fff9ea;
@@ -1686,7 +1709,12 @@
     opacity: 0.72;
     background-image: radial-gradient(circle, rgb(239 228 201 / 36%) 0 2px, transparent 2.4px);
     background-size: 27px 35px;
-    mask-image: radial-gradient(ellipse at 58% 45%, #000 0 48%, rgb(0 0 0 / 52%) 62%, transparent 78%);
+    mask-image: radial-gradient(
+      ellipse at 58% 45%,
+      #000 0 48%,
+      rgb(0 0 0 / 52%) 62%,
+      transparent 78%
+    );
     content: '';
     pointer-events: none;
   }
@@ -1883,7 +1911,6 @@
   }
 }
 
-
 .instructor-section {
   position: relative;
 
@@ -2029,7 +2056,7 @@
       top: -16px;
       left: 0;
       color: #175445;
-      font-family: "Playfair Display", serif;
+      font-family: 'Playfair Display', serif;
       font-size: 76px;
       font-weight: 700;
       line-height: 1;
@@ -2356,11 +2383,7 @@
 
   &__social--google {
     color: #fff6e1;
-    font-family:
-      Manrope,
-      ui-sans-serif,
-      system-ui,
-      sans-serif;
+    font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
     font-size: 22px;
     font-weight: 800;
     line-height: 1;
@@ -2689,6 +2712,10 @@ body.is-booking-modal-open {
   }
 }
 
+.booking-modal__panel--expert {
+  overflow: visible;
+}
+
 .booking-modal__close {
   position: absolute;
   z-index: 2;
@@ -2792,6 +2819,11 @@ body.is-booking-modal-open {
   overscroll-behavior: contain;
 }
 
+.booking-modal__widget-shell--expert {
+  max-height: none;
+  overflow: visible;
+}
+
 .booking-modal__widget-status {
   display: inline-flex;
   align-items: center;
@@ -2803,11 +2835,24 @@ body.is-booking-modal-open {
 }
 
 .booking-modal__widget {
-  min-height: 840px;
   overflow: visible;
   border: 1px solid #cbbfb5;
   border-radius: 8px;
   background: #fff;
+}
+
+.booking-modal__widget--suedtirol {
+  min-height: 840px;
+}
+
+.booking-modal__widget--expert {
+  min-height: 150px;
+  padding: 20px;
+  overflow: visible;
+
+  be-searchbox {
+    display: block;
+  }
 }
 
 .booking-modal__field {
@@ -2826,7 +2871,9 @@ body.is-booking-modal-open {
     border-radius: 8px;
     background: transparent;
     color: #08211f;
-    font: 400 16px/1 Manrope, sans-serif;
+    font:
+      400 16px/1 Manrope,
+      sans-serif;
     outline: 0;
     transition:
       border-color 180ms ease,
@@ -3029,8 +3076,19 @@ body.is-booking-modal-open {
     padding: 18px 24px 24px;
   }
 
+  .booking-modal__widget-shell--expert {
+    max-height: none;
+    overflow: visible;
+    padding-bottom: 360px;
+  }
+
   .booking-modal__widget {
     min-height: 520px;
+  }
+
+  .booking-modal__widget--expert {
+    min-height: 150px;
+    padding: 14px;
   }
 }
 
@@ -3445,7 +3503,7 @@ body.is-booking-modal-open {
       box-shadow 220ms ease;
     z-index: 1000;
 
-    &[style*="opacity: 1"] {
+    &[style*='opacity: 1'] {
       animation: footerToTopPulse 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
     }
 
@@ -3772,7 +3830,6 @@ body.is-booking-modal-open {
 }
 
 @supports (animation-timeline: view()) {
-
   .hotel-preview__image--active,
   .why-me__image,
   .personal-selection__phone,
@@ -3839,7 +3896,6 @@ body.is-booking-modal-open {
 
 @media (max-width: 900px) {
   .app-header {
-
     &__nav {
       display: none;
     }
@@ -3924,7 +3980,7 @@ body.is-booking-modal-open {
     }
 
     &__arrow {
-     display: none;
+      display: none;
     }
 
     &__progress {
@@ -4099,7 +4155,6 @@ body.is-booking-modal-open {
       min-height: 0;
       margin-top: 42px;
       padding: 36px;
-
     }
 
     &__visual {
@@ -4244,7 +4299,6 @@ body.is-booking-modal-open {
 
 @media (max-width: 640px) {
   .app-header {
-
     &__brand-text {
       display: grid;
     }
@@ -4262,7 +4316,6 @@ body.is-booking-modal-open {
   }
 
   .hero-slider {
-
     &__image {
       object-position: 50% center;
     }
@@ -4318,7 +4371,6 @@ body.is-booking-modal-open {
     &__footer {
       padding: 54px 20px 86px;
     }
-
   }
 
   .hotel-preview {
@@ -4413,7 +4465,6 @@ body.is-booking-modal-open {
     &__list {
       gap: 24px;
     }
-
   }
 
   .personal-selection {
@@ -4482,7 +4533,12 @@ body.is-booking-modal-open {
       min-height: 0;
       margin-left: 0;
       padding: 420px 16px 42px;
-      background: linear-gradient(180deg, transparent 0 290px, rgb(255 249 234 / 90%) 390px, rgb(255 249 234 / 92%) 100%);
+      background: linear-gradient(
+        180deg,
+        transparent 0 290px,
+        rgb(255 249 234 / 90%) 390px,
+        rgb(255 249 234 / 92%) 100%
+      );
     }
 
     &__list {
@@ -4555,7 +4611,6 @@ body.is-booking-modal-open {
     }
 
     &__nav {
-
       .q-icon {
         font-size: 28px;
       }
@@ -4759,7 +4814,6 @@ body.is-booking-modal-open {
 
 @media (max-width: 1500px) {
   .app-header {
-
     &__nav {
       display: none;
     }
@@ -4790,7 +4844,12 @@ body.is-booking-modal-open {
       &::before {
         position: absolute;
         inset: -40%;
-        background: linear-gradient(120deg, transparent 30%, rgb(255 255 255 / 60%) 48%, transparent 66%);
+        background: linear-gradient(
+          120deg,
+          transparent 30%,
+          rgb(255 255 255 / 60%) 48%,
+          transparent 66%
+        );
         opacity: 0;
         transform: translateX(-36%) rotate(18deg);
         transition:
@@ -4898,7 +4957,6 @@ body.is-booking-modal-open {
         color: #083f36;
       }
     }
-
   }
 }
 
@@ -5047,7 +5105,6 @@ body.is-booking-modal-open {
 
 @media (max-width: 1100px) {
   .hero-slider {
-
     &__image {
       object-position: 50% center;
     }
@@ -5195,7 +5252,6 @@ body.is-booking-modal-open {
       transform: translateY(8px);
     }
 
-
     &__disclaimer {
       position: static;
       grid-column: 1 / -1;
@@ -5257,7 +5313,6 @@ body.is-booking-modal-open {
       width: min(430px, 100%);
       min-height: 0;
       padding: 22px 24px;
-
     }
 
     &__visual {
@@ -5301,13 +5356,13 @@ body.is-booking-modal-open {
   }
 
   .instructor-section {
-    background: #EFE4C9;
+    background: #efe4c9;
     &__mockup {
       position: relative;
     }
     &__content {
       width: 100%;
-      background: #EFE4C9;
+      background: #efe4c9;
       padding: 0;
     }
   }
@@ -5359,7 +5414,6 @@ body.is-booking-modal-open {
       gap: 28px;
     }
 
-
     &__links {
       gap: 12px;
     }
@@ -5391,7 +5445,6 @@ body.is-booking-modal-open {
 
 @media (max-width: 640px) {
   .app-header {
-
     &__brand {
       flex: 0 0 204px;
       width: 204px;
@@ -5408,7 +5461,6 @@ body.is-booking-modal-open {
   }
 
   .hero-slider {
-
     &__title {
       max-width: 300px;
       font-size: clamp(25px, 4vw, 36px);
@@ -5558,7 +5610,6 @@ body.is-booking-modal-open {
       height: 310px;
       background-size: 18px 24px;
     }
-
   }
 
   .instructor-section {
@@ -5674,7 +5725,6 @@ body.is-booking-modal-open {
 
 @media (min-width: 641px) and (max-width: 1100px) {
   .app-header {
-
     &__contact--email {
       display: inline;
     }
@@ -5940,7 +5990,11 @@ body.is-booking-modal-open {
         width: 100%;
         min-height: 100%;
         opacity: 0.9;
-        background-image: radial-gradient(circle, rgb(239 228 201 / 52%) 0 2.2px, transparent 2.5px);
+        background-image: radial-gradient(
+          circle,
+          rgb(239 228 201 / 52%) 0 2.2px,
+          transparent 2.5px
+        );
         background-position: right 28px top 56px;
         background-size: 27px 35px;
         mask-image: linear-gradient(90deg, transparent 0, #000 26%, #000 100%);
@@ -5999,7 +6053,6 @@ body.is-booking-modal-open {
     }
 
     &__video {
-
       ul {
         align-self: end;
         color: var(--page-warm);
@@ -6149,7 +6202,6 @@ body.is-booking-modal-open {
 
 @media (min-width: 380px) and (max-width: 640px) {
   .app-header {
-
     &__contacts {
       display: none;
     }
@@ -6170,7 +6222,6 @@ body.is-booking-modal-open {
   }
 
   .hero-card {
-
     &__quote {
       display: none;
     }
@@ -6190,7 +6241,6 @@ body.is-booking-modal-open {
       min-height: 214px;
       padding: 48px 16px 42px !important;
     }
-
   }
 
   .hotel-preview {
@@ -6224,7 +6274,6 @@ body.is-booking-modal-open {
 
 @media (max-width: 380px) {
   .app-header {
-
     &__menu-button {
       display: inline-flex;
       width: 42px;
@@ -6233,7 +6282,6 @@ body.is-booking-modal-open {
   }
 
   .hero-slider {
-
     &__title {
       max-width: 330px;
       font-size: 34px;
@@ -6576,7 +6624,6 @@ body.is-booking-modal-open {
       min-width: 0;
     }
   }
-
 
   .app-footer {
     &__heading,

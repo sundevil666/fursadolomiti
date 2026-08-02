@@ -28,6 +28,21 @@ export type HotelPreview = {
     propertyId: number
     promotion: [string, string, string]
   }
+  bookingExpert?: {
+    searchbox: string
+    hotel: number
+    layout: number
+    guests: 'none' | 'list' | 'types' | 'ages' | 'typesandages'
+    endpoint?: string
+    calendar?: 'none' | 'nights'
+    coupon?: boolean
+    agency?: boolean
+    reservations?: boolean
+    rooms?: boolean
+    locations?: boolean
+    hotels?: boolean
+    room?: number
+  }
 }
 
 export type HotelCategory = 'fiveStar' | 'fourStar' | 'chalet'
@@ -110,6 +125,12 @@ export const hotelPreviews: HotelPreview[] = [
     locationKey: 'home.hotels.edenselva.location',
     descriptionKey: 'home.hotels.edenselva.description',
     featuresKey: 'home.hotels.edenselva.features',
+    bookingExpert: {
+      searchbox: 'newwidget',
+      hotel: 41512,
+      layout: 12224,
+      guests: 'types',
+    },
   },
   {
     id: 'alpenroyal',
@@ -223,7 +244,12 @@ export const hotelPreviews: HotelPreview[] = [
   {
     id: 'luxury-chalet-p',
     category: 'chalet',
-    images: ['/luxury-chalet-p/luxury-chalet-p1.jpg', '/luxury-chalet-p/luxury-chalet-p2.jpeg', '/luxury-chalet-p/luxury-chalet-p3.jpeg', '/luxury-chalet-p/luxury-chalet-p4.jpeg'],
+    images: [
+      '/luxury-chalet-p/luxury-chalet-p1.jpg',
+      '/luxury-chalet-p/luxury-chalet-p2.jpeg',
+      '/luxury-chalet-p/luxury-chalet-p3.jpeg',
+      '/luxury-chalet-p/luxury-chalet-p4.jpeg',
+    ],
     promoCode: 'REPLACE_LUXURY_CHALET_P',
     bookingUrl: 'https://example.com/luxury-chalet-p/booking',
     bookingParams: {
