@@ -118,4 +118,25 @@ export const guestReviews: GuestReview[] = [
       it: 'Gennaio 2026',
     },
   },
+  {
+    id: 6,
+    text: 'Очень приятная женщина, с любыми вопросами — поможет сразу, всё расскажет, всегда на связи. Сотрудничает напрямую с прокатом и школой, цена на сайтах и цена через нее — не отличается, но она всегда поможет в случае возникновения каких-либо проблем. Рекомендую 👍',
+    translations: {
+      ru: 'Очень приятная женщина, с любыми вопросами — поможет сразу, всё расскажет, всегда на связи. Сотрудничает напрямую с прокатом и школой, цена на сайтах и цена через нее — не отличается, но она всегда поможет в случае возникновения каких-либо проблем. Рекомендую 👍',
+      en: 'A very pleasant woman. Whatever questions you have, she helps right away, explains everything and is always in touch. She works directly with the rental shop and ski school. The price on the websites and the price through her are the same, but she will always help if any problems come up. I recommend her 👍',
+      it: 'Una donna molto piacevole. Per qualsiasi domanda aiuta subito, spiega tutto ed è sempre disponibile. Collabora direttamente con il noleggio e la scuola sci. Il prezzo sui siti e il prezzo tramite lei non cambia, ma lei aiuta sempre se dovesse sorgere qualche problema. La consiglio 👍',
+    },
+    source: 'google',
+    author: 'Гога',
+    location: {
+      ru: 'Россия',
+      en: 'Russia',
+      it: 'Russia',
+    },
+    date: {
+      ru: 'Январь 2026',
+      en: 'January 2026',
+      it: 'Gennaio 2026',
+    },
+  },
 ]
