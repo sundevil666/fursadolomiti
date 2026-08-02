@@ -97,4 +97,25 @@ export const guestReviews: GuestReview[] = [
       it: 'Gennaio 2026',
     },
   },
+  {
+    id: 5,
+    text: 'Спасибо большое Татьяне за наш отдых! Татьяна помогает решать любые вопросы, очень внимательный, отзывчивый человек.',
+    translations: {
+      ru: 'Спасибо большое Татьяне за наш отдых! Татьяна помогает решать любые вопросы, очень внимательный, отзывчивый человек.',
+      en: 'Many thanks to Tatiana for our holiday! Tatiana helps solve any questions and is a very attentive, responsive person.',
+      it: 'Grazie mille a Tatiana per la nostra vacanza! Tatiana aiuta a risolvere qualsiasi domanda ed è una persona molto attenta e disponibile.',
+    },
+    source: 'google',
+    author: 'Анна',
+    location: {
+      ru: 'Россия',
+      en: 'Russia',
+      it: 'Russia',
+    },
+    date: {
+      ru: 'Январь 2026',
+      en: 'January 2026',
+      it: 'Gennaio 2026',
+    },
+  },
 ]
