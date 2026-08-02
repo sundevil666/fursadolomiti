@@ -316,35 +316,7 @@
       "fullReview": "Recensione completa",
       "close": "Chiudi la recensione",
       "previous": "Recensione precedente",
-      "next": "Recensione successiva",
-      "items": [
-        {
-          "id": 1,
-          "text": "Any recommendations you have suggested to us was 1000000 🔥🔥🔥🔥",
-          "translations": {
-            "ru": "Все рекомендации, которые вы нам дали, были на миллион 🔥🔥🔥🔥",
-            "en": "Any recommendations you have suggested to us was 1000000 🔥🔥🔥🔥",
-            "it": "Tutti i consigli che ci hai dato sono stati da un milione 🔥🔥🔥🔥"
-          },
-          "source": "instagram",
-          "author": "Mor",
-          "location": "Israele",
-          "date": "Luglio 2026"
-        },
-        {
-          "id": 2,
-          "text": "One week of pure bliss in the Dolomites. I came across @fursadolomiti on Insta and she gave me discount codes for accommodation and ski rental. I would highly recommend saving her profile if you plan to visit the Val Gardena region. 🤍",
-          "translations": {
-            "ru": "Неделя настоящего блаженства в Доломитах. Я случайно нашла @fursadolomiti в Instagram, и она дала мне скидочные коды на проживание и аренду лыж. Очень рекомендую сохранить ее профиль, если вы планируете поездку в регион Валь-Гардена. 🤍",
-            "en": "One week of pure bliss in the Dolomites. I came across @fursadolomiti on Insta and she gave me discount codes for accommodation and ski rental. I would highly recommend saving her profile if you plan to visit the Val Gardena region. 🤍",
-            "it": "Una settimana di puro benessere nelle Dolomiti. Ho scoperto @fursadolomiti su Instagram e mi ha dato codici sconto per l'alloggio e il noleggio sci. Consiglio davvero di salvare il suo profilo se avete in programma di visitare la Val Gardena. 🤍"
-          },
-          "source": "instagram",
-          "author": "Allen",
-          "location": "Irlanda",
-          "date": "Marzo 2026"
-        }
-      ]
+      "next": "Recensione successiva"
     },
     "dolomitesExpert": {
       "title": "Oltre 20 anni nelle Dolomiti",

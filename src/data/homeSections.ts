@@ -49,16 +49,6 @@ export type InstructorFeature = {
   text: string
 }
 
-export type Review = {
-  id: number
-  text: string
-  translations?: Partial<Record<'ru' | 'en' | 'it', string>>
-  author: string
-  location: string
-  date: string
-  source: 'instagram' | 'google'
-}
-
 export const heroSlides: HeroSlide[] = [
   {
     id: 1,

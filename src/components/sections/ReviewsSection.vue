@@ -3,18 +3,18 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import AnimatedText from '@/components/AnimatedText.vue'
-import type { Review } from '@/data/homeSections'
+import { guestReviews, type GuestReview } from '@/data/reviews'
 import type { AppLocale } from '@/i18n'
 
-const { locale, t, tm } = useI18n()
+const { locale, t } = useI18n()
 
 const reviewTouchStartX = ref<number | null>(null)
 const activeReviewIndex = ref(0)
 const isReviewAutoplayPaused = ref(false)
-const selectedReview = ref<Review | null>(null)
+const selectedReview = ref<GuestReview | null>(null)
 const previouslyFocusedElement = ref<HTMLElement | null>(null)
 const translatedReviewIds = ref<Record<number, boolean>>({})
-const reviews = computed(() => tm('home.reviews.items') as Review[])
+const reviews = computed(() => guestReviews)
 const currentLocale = computed(() => locale.value as AppLocale)
 const reviewsPerSlide = 2
 const totalReviewSlides = computed(() => Math.ceil(reviews.value.length / reviewsPerSlide))
@@ -85,17 +85,17 @@ const handleReviewTouchEnd = (event: TouchEvent) => {
   reviewTouchStartX.value = null
 }
 
-const getReviewTranslation = (review: Review) => review.translations?.[currentLocale.value]?.trim()
+const getReviewTranslation = (review: GuestReview) => review.translations?.[currentLocale.value]?.trim()
 
-const hasReviewTranslation = (review: Review) => Boolean(getReviewTranslation(review))
+const hasReviewTranslation = (review: GuestReview) => Boolean(getReviewTranslation(review))
 
-const isReviewTranslated = (review: Review) =>
+const isReviewTranslated = (review: GuestReview) =>
   Boolean(translatedReviewIds.value[review.id] && hasReviewTranslation(review))
 
-const getDisplayReviewText = (review: Review) =>
+const getDisplayReviewText = (review: GuestReview) =>
   isReviewTranslated(review) ? (getReviewTranslation(review) ?? review.text) : review.text
 
-const toggleReviewTranslation = (review: Review) => {
+const toggleReviewTranslation = (review: GuestReview) => {
   if (!hasReviewTranslation(review)) return
 
   translatedReviewIds.value = {
@@ -104,9 +104,9 @@ const toggleReviewTranslation = (review: Review) => {
   }
 }
 
-const isLongReview = (review: Review) => getDisplayReviewText(review).length > reviewPreviewLength
+const isLongReview = (review: GuestReview) => getDisplayReviewText(review).length > reviewPreviewLength
 
-const getReviewText = (review: Review) => {
+const getReviewText = (review: GuestReview) => {
   const text = getDisplayReviewText(review)
 
   if (!isLongReview(review)) return text
@@ -114,7 +114,11 @@ const getReviewText = (review: Review) => {
   return `${text.slice(0, reviewPreviewLength).trim()}...`
 }
 
-const openReviewModal = (review: Review) => {
+const getReviewLocation = (review: GuestReview) => review.location[currentLocale.value]
+
+const getReviewDate = (review: GuestReview) => review.date[currentLocale.value]
+
+const openReviewModal = (review: GuestReview) => {
   previouslyFocusedElement.value = document.activeElement instanceof HTMLElement ? document.activeElement : null
   selectedReview.value = review
   pauseReviewAutoplay()
@@ -134,7 +138,7 @@ const closeReviewModal = () => {
   })
 }
 
-const handleReviewKeydown = (event: KeyboardEvent, review: Review) => {
+const handleReviewKeydown = (event: KeyboardEvent, review: GuestReview) => {
   if (event.target instanceof HTMLButtonElement) return
 
   if (event.key === 'Enter' || event.key === ' ') {
@@ -201,7 +205,7 @@ onBeforeUnmount(() => {
               class="reviews-section__card"
               role="button"
               tabindex="0"
-              :aria-label="`${t('home.reviews.openReview')}: ${review.author}, ${review.location}`"
+              :aria-label="`${t('home.reviews.openReview')}: ${review.author}, ${getReviewLocation(review)}`"
               @click="openReviewModal(review)"
               @keydown="handleReviewKeydown($event, review)"
             >
@@ -226,10 +230,10 @@ onBeforeUnmount(() => {
                   </span>
                   <span class="reviews-section__author-copy">
                     <strong>
-                      <AnimatedText :text="`${review.author}, ${review.location}`" tag="span" />
+                      <AnimatedText :text="`${review.author}, ${getReviewLocation(review)}`" tag="span" />
                     </strong>
                     <span>
-                      <AnimatedText :text="review.date" tag="span" />
+                      <AnimatedText :text="getReviewDate(review)" tag="span" />
                     </span>
                   </span>
                 </span>
@@ -323,8 +327,8 @@ onBeforeUnmount(() => {
                   <span v-else>G</span>
                 </span>
                 <span class="reviews-section__author-copy">
-                  <strong>{{ selectedReview.author }}, {{ selectedReview.location }}</strong>
-                  <span>{{ selectedReview.date }}</span>
+                  <strong>{{ selectedReview.author }}, {{ getReviewLocation(selectedReview) }}</strong>
+                  <span>{{ getReviewDate(selectedReview) }}</span>
                 </span>
               </span>
               <button
