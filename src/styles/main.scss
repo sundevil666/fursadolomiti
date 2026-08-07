@@ -1378,12 +1378,13 @@
   background: var(--sand);
   color: var(--green-deep);
   font-family: 'Manrope', sans-serif;
+  height: 100%;
 
   &__inner {
     position: relative;
     display: grid;
     width: var(--container-safe);
-    min-height: 799px;
+    height: 100%;
     margin: 0 auto;
     grid-template-columns: repeat(2, minmax(0, 604px));
 
@@ -1404,7 +1405,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 99px 0 119px;
+    padding: 99px 0 0;
+    height: 100%;
     background: var(--sand);
   }
 
@@ -1439,7 +1441,8 @@
 
   &__help {
     width: min(564px, 100%);
-    margin-top: 166px;
+    margin-top: auto;
+    margin-bottom: 78px;
 
     p {
       margin: 0;
@@ -1521,6 +1524,7 @@
     font-weight: 700;
     line-height: 1;
     letter-spacing: 0;
+    z-index: 20;
 
     .animated-text,
     .animated-text__content {
@@ -1533,7 +1537,7 @@
   }
 
   &__step-line {
-    height: 1px;
+    height: 2px;
     background: #5a4634;
     transform: translateY(14px) translateX(-5px);
   }
