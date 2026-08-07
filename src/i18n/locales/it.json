@@ -143,32 +143,6 @@
           "Spaziosa area spa per un riposo completo e rigenerante"
         ]
       },
-      "dolomitesChalet": {
-        "name": "Chalet nelle Dolomiti",
-        "location": "Selezione su richiesta individuale",
-        "description": "Seleziono chalet su richiesta individuale, per chi apprezza privacy e spazio privato.",
-        "featuresLabel": "Perche scegliere uno chalet:",
-        "features": [
-          "Privacy completa",
-          "Per famiglia o gruppo di amici",
-          "Spa privata e viste panoramiche",
-          "Interni e architettura premium"
-        ],
-        "stats": [
-          {
-            "icon": "groups",
-            "value": "fino a 8"
-          },
-          {
-            "icon": "bed",
-            "value": "3"
-          },
-          {
-            "icon": "shower",
-            "value": "2"
-          }
-        ]
-      },
       "luxuryChaletP": {
         "name": "Luxury Chalet P",
         "location": "Ortisei",

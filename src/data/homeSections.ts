@@ -223,25 +223,6 @@ export const hotelPreviews: HotelPreview[] = [
     featuresKey: 'home.hotels.lunaMondschein.features',
   },
   {
-    id: 'dolomites-chalet',
-    category: 'chalet',
-    images: ['/mockup-assets/image7.png', '/mockup-assets/image8.png'],
-    promoCode: 'REPLACE_DOLOMITES_CHALET',
-    bookingUrl: 'https://example.com/dolomites-chalet/booking',
-    bookingParams: {
-      firstName: 'contact_first_name',
-      lastName: 'contact_last_name',
-      email: 'contact_email',
-      promoCode: 'referral_code',
-    },
-    nameKey: 'home.hotels.dolomitesChalet.name',
-    locationKey: 'home.hotels.dolomitesChalet.location',
-    descriptionKey: 'home.hotels.dolomitesChalet.description',
-    featuresKey: 'home.hotels.dolomitesChalet.features',
-    featuresLabelKey: 'home.hotels.dolomitesChalet.featuresLabel',
-    statsKey: 'home.hotels.dolomitesChalet.stats',
-  },
-  {
     id: 'luxury-chalet-p',
     category: 'chalet',
     images: [
