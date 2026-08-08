@@ -682,6 +682,7 @@ onBeforeUnmount(() => {
             :class="{
               'booking-modal__panel--widget': isWidgetHotel,
               'booking-modal__panel--expert': isBookingExpertHotel,
+              'booking-modal__panel--success': formStatus === 'redirecting',
             }"
           >
             <button
@@ -727,7 +728,9 @@ onBeforeUnmount(() => {
             </div>
 
             <div v-if="formStatus === 'redirecting'" class="booking-modal__redirect">
-              <q-icon name="check_circle" class="booking-modal__success-icon" />
+              <span class="booking-modal__success-mark" aria-hidden="true">
+                <q-icon name="check" />
+              </span>
               <h2 class="booking-modal__redirect-title">
                 {{ t('home.hotels.bookingModal.redirectTitle') }}
               </h2>
@@ -845,3 +848,62 @@ onBeforeUnmount(() => {
     </Teleport>
   </section>
 </template>
+
+<style scoped>
+.booking-modal__panel--success {
+  width: min(100%, 560px);
+  min-height: 0;
+  grid-template-columns: 1fr;
+  border-radius: 14px;
+}
+
+.booking-modal__panel--success .booking-modal__redirect {
+  min-height: 0;
+  padding: 52px 48px 46px;
+}
+
+.booking-modal__success-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgb(23 84 69 / 18%);
+  border-radius: 50%;
+  background: rgb(23 84 69 / 8%);
+  color: #175445;
+  font-size: 28px;
+}
+
+.booking-modal__panel--success .booking-modal__redirect-title {
+  max-width: 420px;
+  margin: 22px 0 12px;
+  font-size: 32px;
+}
+
+.booking-modal__panel--success .booking-modal__redirect-text {
+  max-width: 420px;
+  margin-bottom: 30px;
+}
+
+.booking-modal__panel--success .booking-modal__primary {
+  width: auto;
+  min-width: 154px;
+  min-height: 46px;
+  padding: 10px 30px;
+}
+
+@media (max-width: 620px) {
+  .booking-modal__panel--success {
+    width: min(100%, 420px);
+  }
+
+  .booking-modal__panel--success .booking-modal__redirect {
+    padding: 42px 24px 34px;
+  }
+
+  .booking-modal__panel--success .booking-modal__redirect-title {
+    font-size: 28px;
+  }
+}
+</style>
