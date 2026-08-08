@@ -61,6 +61,7 @@
         "sending": "Sending your request...",
         "redirectTitle": "Request sent",
         "redirectText": "The official booking page will open in a new tab. You can return to the hotels or close this window here.",
+        "ok": "OK",
         "errors": {
           "required": "Please complete all fields",
           "email": "Enter a valid email address",

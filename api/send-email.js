@@ -200,6 +200,47 @@ export default async function handler(request, response) {
     `City: ${city}`,
     `Location timezone: ${locationTimezone}`,
   ].join('\n')
+  const customerSubject = `FursaDolomiti - ${normalizedHotel} booking request received`
+  const customerHtmlMessage = `
+    <div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:640px;margin:0 auto;border-collapse:separate;background-color:#fffaf0;border:1px solid #e5dbc6;border-radius:16px;box-shadow:0 14px 40px rgba(48,38,16,.12);overflow:hidden;">
+        <tr>
+          <td style="padding:28px 32px 30px;background-color:#175445;color:#fffaf0;">
+            <div style="color:#d7e3d9;font-size:11px;line-height:16px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">FursaDolomiti</div>
+            <div style="margin-top:13px;color:#fffaf0;font-size:26px;line-height:34px;font-weight:700;">Your request has been received</div>
+            <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;">Thank you, <strong style="color:#ffffff;">${safe.firstName}</strong>. We have received your request for <strong style="color:#ffffff;">${safe.hotel}</strong>.</div>
+          </td>
+        </tr>
+        ${
+          safe.hotelImage
+            ? `<tr><td style="background-color:#e8dfcc;"><img src="${safe.hotelImage}" width="640" alt="${safe.hotel}" style="display:block;width:100%;max-width:640px;height:auto;max-height:280px;object-fit:cover;border:0;"></td></tr>`
+            : ''
+        }
+        <tr>
+          <td style="padding:28px 32px 32px;">
+            <p style="margin:0 0 16px;color:#3d342c;font-size:15px;line-height:23px;">Please complete your reservation on the hotel's official booking page. If requested, use this promo code:</p>
+            <div style="display:inline-block;margin-bottom:20px;padding:10px 14px;background-color:#175445;border-radius:999px;color:#fffaf0;font-size:14px;line-height:18px;font-weight:700;">${safe.promoCode}</div>
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">
+              ${row('Name', safe.fullName)}
+              ${row('Hotel', safe.hotel, true)}
+              ${row('Request date', safe.localDateTime, true)}
+            </table>
+            <p style="margin:18px 0 0;color:#796e5f;font-size:13px;line-height:20px;">The hotel or its booking system will send a separate confirmation after you finish the reservation there.</p>
+            <div style="margin-top:24px;padding-top:18px;border-top:1px solid #e8dfcc;color:#998d7b;font-size:11px;line-height:17px;text-align:center;">fursadolomiti.com</div>
+          </td>
+        </tr>
+      </table>
+    </div>`
+  const customerMessage = [
+    'Your FursaDolomiti request has been received.',
+    '',
+    `Name: ${fullName}`,
+    `Hotel: ${normalizedHotel}`,
+    `Promo code: ${normalizedPromoCode}`,
+    '',
+    'Please complete your reservation on the official hotel booking page.',
+    'The hotel or booking system will send a separate confirmation after the booking is completed.',
+  ].join('\n')
 
   try {
     const emailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
@@ -244,6 +285,49 @@ export default async function handler(request, response) {
     if (!emailResponse.ok) {
       console.error('EmailJS error:', emailResponse.status, await emailResponse.text())
       return response.status(502).json({ error: 'Email delivery failed' })
+    }
+
+    const customerEmailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_id: serviceId,
+        template_id: templateId,
+        user_id: publicKey,
+        accessToken: privateKey,
+        template_params: {
+          to_email: normalizedEmail,
+          subject: customerSubject,
+          title: customerSubject,
+          sender_name: 'FursaDolomiti',
+          time: normalizedLocalDateTime,
+          html_message: customerHtmlMessage,
+          hotel_image: normalizedHotelImage,
+          first_name: normalizedFirstName,
+          last_name: normalizedLastName,
+          full_name: fullName,
+          user_email: normalizedEmail,
+          hotel: normalizedHotel,
+          promo_code: normalizedPromoCode,
+          website_language: normalizedLocale,
+          local_date_time: normalizedLocalDateTime,
+          user_timezone: normalizedTimezone,
+          submitted_at: normalizedSubmittedAt,
+          from_name: 'FursaDolomiti',
+          name: fullName,
+          email: normalizedEmail,
+          reply_to: recipients[0],
+          message: customerMessage,
+        },
+      }),
+    })
+
+    if (!customerEmailResponse.ok) {
+      console.error(
+        'Customer EmailJS error:',
+        customerEmailResponse.status,
+        await customerEmailResponse.text(),
+      )
     }
 
     return response.status(200).json({ ok: true, promoCode: normalizedPromoCode })

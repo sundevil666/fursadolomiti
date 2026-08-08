@@ -61,6 +61,7 @@
         "sending": "Invio della richiesta...",
         "redirectTitle": "Richiesta inviata",
         "redirectText": "La pagina ufficiale di prenotazione si aprira in una nuova scheda. Qui puoi tornare agli hotel o chiudere questa finestra.",
+        "ok": "OK",
         "errors": {
           "required": "Compila tutti i campi",
           "email": "Inserisci un indirizzo email valido",

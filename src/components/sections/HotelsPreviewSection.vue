@@ -241,7 +241,7 @@ const openBookingModal = (hotelId: string) => {
 }
 
 const closeBookingModal = () => {
-  if (formStatus.value !== 'idle') return
+  if (formStatus.value === 'sending') return
 
   bookingHotelId.value = null
 }
@@ -727,13 +727,16 @@ onBeforeUnmount(() => {
             </div>
 
             <div v-if="formStatus === 'redirecting'" class="booking-modal__redirect">
-              <span class="booking-modal__loader" aria-hidden="true"></span>
+              <q-icon name="check_circle" class="booking-modal__success-icon" />
               <h2 class="booking-modal__redirect-title">
                 {{ t('home.hotels.bookingModal.redirectTitle') }}
               </h2>
               <p class="booking-modal__redirect-text">
                 {{ t('home.hotels.bookingModal.redirectText') }}
               </p>
+              <button class="booking-modal__primary" type="button" @click="closeBookingModal">
+                {{ t('home.hotels.bookingModal.ok') }}
+              </button>
             </div>
 
             <div
@@ -773,7 +776,7 @@ onBeforeUnmount(() => {
             </div>
 
             <form
-              v-else
+              v-else-if="formStatus !== 'redirecting'"
               class="booking-modal__form"
               novalidate
               @submit.prevent="submitBookingRequest"
