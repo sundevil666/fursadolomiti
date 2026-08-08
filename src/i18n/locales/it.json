@@ -58,9 +58,9 @@
         "email": "Email",
         "emailPlaceholder": "your{'@'}email.com",
         "required": "Tutti i campi sono obbligatori",
-        "sending": "Preparazione della prenotazione...",
-        "redirectTitle": "È tutto pronto",
-        "redirectText": "Ora verrai reindirizzato al sito dell’hotel per confermare la prenotazione.",
+        "sending": "Invio della richiesta...",
+        "redirectTitle": "Richiesta inviata",
+        "redirectText": "La pagina ufficiale di prenotazione si aprira in una nuova scheda. Qui puoi tornare agli hotel o chiudere questa finestra.",
         "errors": {
           "required": "Compila tutti i campi",
           "email": "Inserisci un indirizzo email valido",
