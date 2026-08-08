@@ -328,6 +328,14 @@ const getLocalizedBookingUrl = (hotel: HotelPreview, appLocale: string) => {
   return hotel.bookingUrl[normalizedLocale as keyof typeof hotel.bookingUrl] ?? hotel.bookingUrl.default
 }
 
+const isPlaceholderBookingUrl = (bookingUrl: string) => {
+  try {
+    return new URL(bookingUrl).hostname === 'example.com'
+  } catch {
+    return true
+  }
+}
+
 const setBooleanAttribute = (element: HTMLElement, name: string, value?: boolean) => {
   if (value === undefined) return
 
@@ -453,7 +461,13 @@ const submitBookingRequest = async () => {
     const { promoCode } = (await response.json()) as { promoCode: string }
 
     if (hotel) {
-      const bookingUrl = new URL(getLocalizedBookingUrl(hotel, locale.value))
+      const localizedBookingUrl = getLocalizedBookingUrl(hotel, locale.value)
+
+      if (isPlaceholderBookingUrl(localizedBookingUrl)) {
+        throw new Error(`Booking URL is not configured for ${hotel.id}`)
+      }
+
+      const bookingUrl = new URL(localizedBookingUrl)
 
       if (hotel.bookingParams.firstName) {
         bookingUrl.searchParams.set(hotel.bookingParams.firstName, firstName.value.trim())
