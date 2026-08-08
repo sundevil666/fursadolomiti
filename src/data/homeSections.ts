@@ -10,13 +10,22 @@ export type HotelPreview = {
   category: HotelCategory
   images: string[]
   promoCode: string
-  bookingUrl: string
+  bookingUrl:
+    | string
+    | {
+        default: string
+        en?: string
+        it?: string
+        ru?: string
+        de?: string
+      }
   bookingParams: {
-    firstName: string
-    lastName: string
-    email: string
+    firstName?: string
+    lastName?: string
+    email?: string
     promoCode: string
   }
+  bookingHiddenParams?: Record<string, string>
   nameKey: string
   locationKey: string
   descriptionKey: string
@@ -209,13 +218,18 @@ export const hotelPreviews: HotelPreview[] = [
       'hotel-luna/luna3.jpg',
       'hotel-luna/luna4.jpg',
     ],
-    promoCode: 'REPLACE_LUNA_MONDSCHEIN',
-    bookingUrl: 'https://example.com/luna-mondschein/booking',
+    promoCode: 'FURSADOLOMITI',
+    bookingUrl: {
+      default: 'https://booking.hotel-luna.com/be/en/luna-mondschein-ortisei/',
+      en: 'https://booking.hotel-luna.com/be/en/luna-mondschein-ortisei/',
+      it: 'https://booking.hotel-luna.com/be/it/luna-mondschein-ortisei/',
+      de: 'https://booking.hotel-luna.com/be/de/luna-mondschein-ortisei/',
+    },
     bookingParams: {
-      firstName: 'firstname',
-      lastName: 'lastname',
-      email: 'email',
-      promoCode: 'voucher',
+      promoCode: 'codiceSconto',
+    },
+    bookingHiddenParams: {
+      idHotel: '1694',
     },
     nameKey: 'home.hotels.lunaMondschein.name',
     locationKey: 'home.hotels.lunaMondschein.location',

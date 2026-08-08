@@ -320,6 +320,14 @@ const loadBookingExpertScript = () => {
 const getBookingExpertLocale = (appLocale: string) =>
   getSupportedWidgetLocale(appLocale, bookingExpertLocales)
 
+const getLocalizedBookingUrl = (hotel: HotelPreview, appLocale: string) => {
+  if (typeof hotel.bookingUrl === 'string') return hotel.bookingUrl
+
+  const normalizedLocale = appLocale.toLowerCase().split('-')[0]
+
+  return hotel.bookingUrl[normalizedLocale as keyof typeof hotel.bookingUrl] ?? hotel.bookingUrl.default
+}
+
 const setBooleanAttribute = (element: HTMLElement, name: string, value?: boolean) => {
   if (value === undefined) return
 
@@ -445,11 +453,25 @@ const submitBookingRequest = async () => {
     const { promoCode } = (await response.json()) as { promoCode: string }
 
     if (hotel) {
-      const bookingUrl = new URL(hotel.bookingUrl)
-      bookingUrl.searchParams.set(hotel.bookingParams.firstName, firstName.value.trim())
-      bookingUrl.searchParams.set(hotel.bookingParams.lastName, lastName.value.trim())
-      bookingUrl.searchParams.set(hotel.bookingParams.email, email.value.trim())
+      const bookingUrl = new URL(getLocalizedBookingUrl(hotel, locale.value))
+
+      if (hotel.bookingParams.firstName) {
+        bookingUrl.searchParams.set(hotel.bookingParams.firstName, firstName.value.trim())
+      }
+
+      if (hotel.bookingParams.lastName) {
+        bookingUrl.searchParams.set(hotel.bookingParams.lastName, lastName.value.trim())
+      }
+
+      if (hotel.bookingParams.email) {
+        bookingUrl.searchParams.set(hotel.bookingParams.email, email.value.trim())
+      }
+
       bookingUrl.searchParams.set(hotel.bookingParams.promoCode, promoCode)
+
+      Object.entries(hotel.bookingHiddenParams ?? {}).forEach(([paramName, paramValue]) => {
+        bookingUrl.searchParams.set(paramName, paramValue)
+      })
 
       formStatus.value = 'redirecting'
       window.setTimeout(() => {
