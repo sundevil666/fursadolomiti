@@ -17,13 +17,6 @@ type FooterCamera = {
   url: string
 }
 
-type FooterLogo = {
-  id: string
-  title: string
-  text?: string
-  image?: string
-}
-
 const { locale, t } = useI18n()
 const footerMenuIds = ['hotels', 'rental']
 const menuItems = (menuItemsMock as MenuItem[]).filter((item) => footerMenuIds.includes(item.id))
@@ -55,22 +48,6 @@ const footerCameras: FooterCamera[] = [
     label: 'Dantercapies',
     previewUrl: 'https://valgardena.panomax.com/dantercepies',
     url: 'https://valgardena.panomax.com/dantercepies',
-  },
-]
-const footerLogos: FooterLogo[] = [
-  {
-    id: 'dolomiti-supersummer',
-    title: 'DOLOMITI',
-    text: 'SUPERSUMMER',
-  },
-  {
-    id: 'active',
-    title: 'ACTIVE',
-  },
-  {
-    id: 'dolomites-unesco',
-    title: 'Dolomiti',
-    image: '/mockup-assets/image0.png',
   },
 ]
 
@@ -200,17 +177,14 @@ const scrollToTop = () => {
         </div>
 
         <div class="app-footer__partners" :aria-label="t('footer.partners')">
-          <div
-            v-for="logo in footerLogos"
-            :key="logo.id"
-            class="app-footer__partner"
-            :class="`app-footer__partner--${logo.id}`"
-          >
-            <img v-if="logo.image" :src="logo.image" :alt="logo.title" loading="lazy" />
-            <span v-else class="app-footer__partner-copy">
-              <strong>{{ logo.title }}</strong>
-              <span v-if="logo.text">{{ logo.text }}</span>
-            </span>
+          <div class="app-footer__partner">
+            <img src="/partners/partner1.png" alt="partner1" loading="lazy" />
+          </div>
+          <div class="app-footer__partner">
+            <img src="/partners/partner2.png" alt="partner2" loading="lazy" />
+          </div>
+          <div class="app-footer__partner">
+            <img src="/partners/partner3.png" alt="partner3" loading="lazy" />
           </div>
         </div>
       </div>
