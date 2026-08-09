@@ -2048,8 +2048,8 @@
 
   &__quote {
     position: relative;
-    width: min(520px, 100%);
-    margin: 42px 0 0;
+    max-width: 480px;
+    margin: 42px 0 0 83px;
     padding-left: 50px;
     color: #08211f;
     font-family: Manrope, sans-serif;
@@ -2178,7 +2178,7 @@
     width: var(--container-wide-safe);
     margin: 0 auto;
     padding-top: 100px;
-    padding-bottom: 120px;
+    padding-bottom: 90px;
   }
 
   &__title {
@@ -2194,7 +2194,7 @@
   &__stage {
     position: relative;
     overflow: visible;
-    padding: 0 64px 62px;
+    padding: 0 64px 24px;
   }
 
   &__cards {
