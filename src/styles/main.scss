@@ -1302,11 +1302,11 @@
     display: grid;
     width: 100%;
     max-width: 544px;
-    gap: 16px;
+    gap: 2px;
   }
 
   &__features-label {
-    color: var(--green);
+    color: #08211F;
     font-size: 24px;
     font-weight: 500;
     line-height: 1.1;
@@ -2379,7 +2379,7 @@
 }
   &__nav {
     position: absolute;
-    top: 50%;
+    top: calc(50% - 14px);
     z-index: 4;
     display: inline-grid;
     align-items: center;
