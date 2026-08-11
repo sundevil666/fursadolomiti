@@ -1538,7 +1538,7 @@
   }
 
   &__step-line {
-    height: 2px;
+    height: 1px;
     background: #5a4634;
     transform: translateY(14px) translateX(-5px);
   }
@@ -2778,13 +2778,8 @@ body.is-booking-modal-open {
 }
 
 .booking-modal__widget-shell {
-  display: grid;
-  gap: 18px;
-  max-height: calc(min(860px, 100vh - 48px) - 173px);
-  min-height: 0;
-  overflow-y: auto;
   padding: 20px 34px 28px;
-  overscroll-behavior: contain;
+  overflow-y: auto;
 }
 
 .booking-modal__widget-shell--expert {
@@ -2803,14 +2798,9 @@ body.is-booking-modal-open {
 }
 
 .booking-modal__widget {
-  overflow: visible;
   border: 1px solid #cbbfb5;
   border-radius: 8px;
   background: #fff;
-}
-
-.booking-modal__widget--suedtirol {
-  min-height: 840px;
 }
 
 .booking-modal__widget--expert {
@@ -3010,7 +3000,7 @@ body.is-booking-modal-open {
 
   .booking-modal__panel--widget {
     width: min(100%, calc(100vw - 36px));
-    max-height: calc(100vh - 48px);
+    height: calc(100vh - 48px);
 
     .booking-modal__intro {
       grid-template-columns: 1fr;
@@ -3039,19 +3029,10 @@ body.is-booking-modal-open {
     padding: 28px;
   }
 
-  .booking-modal__widget-shell {
-    max-height: calc(100vh - 250px);
-    padding: 18px 24px 24px;
-  }
-
   .booking-modal__widget-shell--expert {
     max-height: none;
     overflow: visible;
     padding-bottom: 360px;
-  }
-
-  .booking-modal__widget {
-    min-height: 520px;
   }
 
   .booking-modal__widget--expert {
