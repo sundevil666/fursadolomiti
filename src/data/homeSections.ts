@@ -258,6 +258,11 @@ export const hotelPreviews: HotelPreview[] = [
     descriptionKey: 'home.hotels.luxuryChaletP.description',
     featuresKey: 'home.hotels.luxuryChaletP.features',
     featuresLabelKey: 'home.hotels.luxuryChaletP.featuresLabel',
+    bookingSuedtirol: {
+      id: '1840bd82-bfd7-40fc-8914-5c2f4a732c42',
+      propertyId: 13493,
+      promotion: ['affiliate', 'fursadolomiti.com', 'luxury_chalet_p_13493'],
+    },
   },
   {
     id: 'villa-carolina',
