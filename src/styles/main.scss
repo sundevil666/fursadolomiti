@@ -695,9 +695,7 @@
     }
 
     &:hover {
-      height: 6px;
       background: rgb(255 255 255 / 52%);
-      transform: translateY(-1px);
     }
 
     &--active {
@@ -1204,7 +1202,7 @@
     &:focus-visible {
       background: #fff9ea;
       box-shadow: 0 10px 24px rgb(8 33 31 / 15%);
-      transform: translateY(-50%) scale(1.08);
+      transform: translateY(-50%);
     }
   }
 
@@ -2277,7 +2275,6 @@
     &:hover,
     &:focus-visible {
       color: #08211f;
-      transform: translateY(-1px);
     }
   }
 
@@ -2320,7 +2317,6 @@
     &:focus-visible {
       color: #08211f;
       outline: 0;
-      transform: translateY(-1px);
     }
   }
 
@@ -2885,7 +2881,6 @@ body.is-booking-modal-open {
 
   &:hover,
   &:focus-visible {
-    transform: translateY(-2px);
     outline: 0;
   }
 }
@@ -3205,7 +3200,6 @@ body.is-booking-modal-open {
   &:focus-visible {
     color: #08211f;
     outline: 0;
-    transform: translateY(-1px);
   }
 }
 
@@ -3367,7 +3361,6 @@ body.is-booking-modal-open {
       &:hover,
       &:focus-visible {
         color: #efe4c9;
-        transform: translateX(2px);
       }
     }
   }
@@ -3465,7 +3458,6 @@ body.is-booking-modal-open {
     &:focus-visible {
       background: #cbbfb5;
       color: #175445;
-      transform: translateY(-2px);
     }
   }
 
@@ -4820,7 +4812,6 @@ body.is-booking-modal-open {
       &:hover,
       &:focus-visible {
         color: #083f36;
-        transform: translateY(-1px) scale(1.03);
 
         &::before {
           opacity: 1;
@@ -4899,7 +4890,6 @@ body.is-booking-modal-open {
       &:focus-visible {
         background: rgb(255 255 255 / 48%);
         color: #083f36;
-        transform: translateX(4px);
       }
 
       &--active {
