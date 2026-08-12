@@ -71,6 +71,10 @@ watch([locale, languageChangeCounter], () => {
     :is="tag"
     class="animated-text"
     :class="{ 'animated-text--animating': isAnimating }"
+    data-aos="text-rise"
+    data-aos-once="true"
+    data-aos-duration="900"
+    data-aos-offset="0"
   >
     <Transition name="animated-text">
       <span :key="currentText" class="animated-text__content">
@@ -119,22 +123,22 @@ watch([locale, languageChangeCounter], () => {
 @keyframes textTransformIn {
   0% {
     opacity: 0;
-    filter: blur(4px);
+    transform: translate3d(0, 0.18em, 0);
   }
   100% {
     opacity: 1;
-    filter: blur(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes textTransformOut {
   0% {
     opacity: 1;
-    filter: blur(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
     opacity: 0;
-    filter: blur(4px);
+    transform: translate3d(0, -0.16em, 0);
   }
 }
 </style>

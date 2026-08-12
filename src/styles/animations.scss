@@ -1,3 +1,35 @@
+body:not(.aos-disabled) [data-aos='text-rise'] {
+  opacity: 0;
+  transform: translate3d(0, 34px, 0);
+  transition-property: opacity, transform;
+  transition-timing-function: ease-out, cubic-bezier(0.16, 1, 0.3, 1);
+
+  &.aos-animate {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+body:not(.aos-disabled) button [data-aos='text-rise'],
+body:not(.aos-disabled) .q-btn [data-aos='text-rise'],
+body:not(.aos-disabled) a[class*='button'] [data-aos='text-rise'] {
+  transform: none;
+  transition-property: opacity;
+  transition-timing-function: ease-out;
+
+  &.aos-animate {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body:not(.aos-disabled) [data-aos='text-rise'] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 @keyframes bookingModalSpin {
   to {
     transform: rotate(360deg);
