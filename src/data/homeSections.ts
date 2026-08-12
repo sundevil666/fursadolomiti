@@ -32,6 +32,7 @@ export type HotelPreview = {
   featuresKey: string
   featuresLabelKey?: string
   statsKey?: string
+  bookingModalLowerMaxHeight?: string
   bookingSuedtirol?: {
     id: string
     propertyId: number
@@ -140,6 +141,7 @@ export const hotelPreviews: HotelPreview[] = [
       layout: 12224,
       guests: 'types',
     },
+    bookingModalLowerMaxHeight: '280px',
   },
   {
     id: 'alpenroyal',
@@ -164,6 +166,11 @@ export const hotelPreviews: HotelPreview[] = [
     locationKey: 'home.hotels.alpenroyal.location',
     descriptionKey: 'home.hotels.alpenroyal.description',
     featuresKey: 'home.hotels.alpenroyal.features',
+    bookingSuedtirol: {
+      id: '23b144fc-3c5e-45cb-b8d3-50137461646a',
+      propertyId: 9772,
+      promotion: ['affiliate', 'fursadolomiti.com', 'alpenroyal_9772'],
+    },
   },
   {
     id: 'posta',

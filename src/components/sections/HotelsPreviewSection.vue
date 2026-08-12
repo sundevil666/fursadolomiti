@@ -93,6 +93,11 @@ const activeBookingHotelName = computed(() => {
 
   return hotel ? t(hotel.nameKey) : ''
 })
+const bookingModalPanelStyle = computed(() => {
+  const lowerMaxHeight = activeBookingHotel.value?.bookingModalLowerMaxHeight
+
+  return lowerMaxHeight ? { '--booking-modal-lower-max-height': lowerMaxHeight } : undefined
+})
 
 const getFilterCount = (filter: HotelFilter) => {
   if (filter === 'all') return hotelPreviews.length
@@ -682,8 +687,10 @@ onBeforeUnmount(() => {
             :class="{
               'booking-modal__panel--widget': isWidgetHotel,
               'booking-modal__panel--expert': isBookingExpertHotel,
+              'booking-modal__panel--limited-lower': activeBookingHotel?.bookingModalLowerMaxHeight,
               'booking-modal__panel--success': formStatus === 'redirecting',
             }"
+            :style="bookingModalPanelStyle"
           >
             <button
               v-if="formStatus === 'idle'"

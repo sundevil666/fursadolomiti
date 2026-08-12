@@ -22,6 +22,14 @@ body:not(.aos-disabled) a[class*='button'] [data-aos='text-rise'] {
   }
 }
 
+body:not(.aos-disabled) .language-switcher__menu [data-aos='text-rise'],
+body:not(.aos-disabled) .app-header__contact-menu [data-aos='text-rise'],
+body:not(.aos-disabled) .app-header__mobile-menu [data-aos='text-rise'] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body:not(.aos-disabled) [data-aos='text-rise'] {
     opacity: 1;

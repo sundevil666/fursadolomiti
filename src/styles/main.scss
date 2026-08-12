@@ -214,15 +214,13 @@
 
 .contact-menu-enter-active,
 .contact-menu-leave-active {
-  transition:
-    opacity 160ms ease,
-    transform 180ms ease;
+  transition: none;
 }
 
 .contact-menu-enter-from,
 .contact-menu-leave-to {
-  opacity: 0;
-  transform: translate(-50%, -5px);
+  opacity: 1;
+  transform: translateX(-50%);
 }
 
 .main-layout--footer-visible .app-header {
@@ -2616,8 +2614,8 @@ body.is-booking-modal-open {
   inset: 0;
   display: grid;
   place-items: center;
-  overflow-y: auto;
-  padding: 46px 50px 54px;
+  overflow: hidden;
+  padding: clamp(12px, 3vw, 32px);
   background: rgb(8 33 31 / 38%);
   color: #08211f;
 }
@@ -2635,20 +2633,20 @@ body.is-booking-modal-open {
 }
 
 .booking-modal__panel--widget {
-  width: min(1180px, calc(100vw - 48px));
-  max-height: min(860px, calc(100vh - 48px));
+  width: min(100%, 1180px);
+  height: min(100%, calc(100dvh - clamp(24px, 6vw, 64px)));
   min-height: 0;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   overflow: hidden;
 
   .booking-modal__intro {
-    position: sticky;
     z-index: 1;
-    top: 0;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     align-items: start;
-    padding: 28px 76px 22px 34px;
+    padding: clamp(22px, 3vw, 34px) clamp(64px, 7vw, 92px) clamp(18px, 2.4vw, 26px)
+      clamp(22px, 3vw, 34px);
     border-right: 0;
     border-bottom: 1px solid #cbbfb5;
     background: #fff6e1;
@@ -2677,7 +2675,12 @@ body.is-booking-modal-open {
 }
 
 .booking-modal__panel--expert {
-  overflow: visible;
+  overflow: hidden;
+}
+
+.booking-modal__panel--limited-lower {
+  height: auto;
+  max-height: min(100%, calc(100dvh - clamp(24px, 6vw, 64px)));
 }
 
 .booking-modal__close {
@@ -2771,16 +2774,19 @@ body.is-booking-modal-open {
 
 .booking-modal__form {
   padding: 62px 59px 58px 60px;
-}
-
-.booking-modal__widget-shell {
-  padding: 20px 34px 28px;
   overflow-y: auto;
 }
 
+.booking-modal__widget-shell {
+  min-height: 0;
+  max-height: var(--booking-modal-lower-max-height, none);
+  padding: clamp(16px, 2.4vw, 28px) clamp(18px, 3vw, 34px) clamp(18px, 3vw, 34px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 .booking-modal__widget-shell--expert {
-  max-height: none;
-  overflow: visible;
+  overflow-y: auto;
 }
 
 .booking-modal__widget-status {
@@ -2985,7 +2991,7 @@ body.is-booking-modal-open {
 @media (max-width: 900px) {
   .booking-modal {
     place-items: start center;
-    padding: 24px 18px;
+    padding: clamp(12px, 4vw, 24px);
   }
 
   .booking-modal__panel {
@@ -2994,18 +3000,23 @@ body.is-booking-modal-open {
   }
 
   .booking-modal__panel--widget {
-    width: min(100%, calc(100vw - 36px));
-    height: calc(100vh - 48px);
+    width: min(100%, 1180px);
+    height: calc(100dvh - clamp(24px, 8vw, 48px));
 
     .booking-modal__intro {
       grid-template-columns: 1fr;
       gap: 16px;
-      padding: 42px 24px 20px;
+      padding: 42px clamp(20px, 5vw, 28px) 20px;
     }
 
     .booking-modal__title {
       font-size: 28px;
     }
+  }
+
+  .booking-modal__panel--limited-lower {
+    height: auto;
+    max-height: calc(100dvh - clamp(24px, 8vw, 48px));
   }
 
   .booking-modal__intro {
@@ -3025,9 +3036,7 @@ body.is-booking-modal-open {
   }
 
   .booking-modal__widget-shell--expert {
-    max-height: none;
-    overflow: visible;
-    padding-bottom: 360px;
+    overflow-y: auto;
   }
 
   .booking-modal__widget--expert {
@@ -3053,16 +3062,17 @@ body.is-booking-modal-open {
   }
 
   .booking-modal__panel--widget {
-    width: calc(100vw - 24px);
-    max-height: calc(100vh - 24px);
+    width: 100%;
+    height: calc(100dvh - 24px);
 
     .booking-modal__intro {
       padding-top: 42px;
     }
   }
 
-  .booking-modal__widget-shell {
-    max-height: calc(100vh - 265px);
+  .booking-modal__panel--limited-lower {
+    height: auto;
+    max-height: calc(100dvh - 24px);
   }
 
   .booking-modal__actions {
@@ -3678,67 +3688,44 @@ body.is-booking-modal-open {
 }
 
 .language-menu-enter-active {
-  transition:
-    clip-path 520ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 420ms ease,
-    transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: none;
 
   .language-switcher__option {
-    animation: languageOptionRise 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
-
-    &:nth-child(2) {
-      animation-delay: 55ms;
-    }
-
-    &:nth-child(3) {
-      animation-delay: 110ms;
-    }
+    animation: none;
   }
 }
 
 .language-menu-leave-active {
-  transition:
-    clip-path 240ms ease,
-    opacity 220ms ease,
-    transform 240ms ease;
+  transition: none;
 }
 
 .language-menu-enter-from,
 .language-menu-leave-to {
-  clip-path: inset(0 0 100% 0 round 8px);
-  opacity: 0;
-  transform: translateY(-8px) scale(0.92);
+  clip-path: none;
+  opacity: 1;
+  transform: none;
 }
 
 .header-menu-enter-active {
   transform-origin: top right;
-  transition:
-    clip-path 620ms cubic-bezier(0.16, 1, 0.3, 1),
-    filter 520ms ease,
-    opacity 420ms ease,
-    transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: none;
 
   .app-header__mobile-link {
-    animation: headerMenuItemRise 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(70ms + var(--item-index, 0) * 54ms);
+    animation: none;
   }
 }
 
 .header-menu-leave-active {
   transform-origin: top right;
-  transition:
-    clip-path 240ms ease,
-    filter 220ms ease,
-    opacity 220ms ease,
-    transform 260ms ease;
+  transition: none;
 }
 
 .header-menu-enter-from,
 .header-menu-leave-to {
-  clip-path: inset(0 0 100% 74% round 18px);
-  filter: blur(12px);
-  opacity: 0;
-  transform: translate3d(0, -16px, 0) scale(0.9);
+  clip-path: none;
+  filter: none;
+  opacity: 1;
+  transform: none;
 }
 
 .footer-to-top-enter-active,
