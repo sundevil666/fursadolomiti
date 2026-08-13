@@ -16,10 +16,32 @@ import { router } from '@/router'
 
 createApp(App).use(Quasar).use(router).use(i18n).mount('#app')
 
+const revealVisibleAosItems = () => {
+  if (document.body.classList.contains('aos-disabled')) {
+    return
+  }
+
+  const viewportWidth = window.innerWidth || document.documentElement.clientWidth
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+
+  document.querySelectorAll<HTMLElement>('[data-aos]').forEach((element) => {
+    const rect = element.getBoundingClientRect()
+    const isVisible =
+      rect.bottom >= 0 && rect.right >= 0 && rect.top <= viewportHeight && rect.left <= viewportWidth
+
+    if (isVisible) {
+      element.classList.add('aos-animate')
+    }
+  })
+}
+
 const refreshAos = () => {
   nextTick(() => {
     requestAnimationFrame(() => {
       AOS.refreshHard()
+      revealVisibleAosItems()
+      window.setTimeout(revealVisibleAosItems, 120)
+      window.setTimeout(revealVisibleAosItems, 420)
     })
   })
 }

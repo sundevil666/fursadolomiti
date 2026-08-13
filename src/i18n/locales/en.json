@@ -170,15 +170,15 @@
         "stats": [
           {
             "icon": "groups",
-            "value": "10 guests"
+            "value": "10"
           },
           {
             "icon": "bed",
-            "value": "5 bedrooms"
+            "value": "5"
           },
           {
             "icon": "shower",
-            "value": "6 showers"
+            "value": "6"
           }
         ]
       }

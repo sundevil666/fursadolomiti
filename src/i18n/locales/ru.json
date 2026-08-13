@@ -170,15 +170,15 @@
         "stats": [
           {
             "icon": "groups",
-            "value": "10 чел"
+            "value": "10"
           },
           {
             "icon": "bed",
-            "value": "5 спальни"
+            "value": "5"
           },
           {
             "icon": "shower",
-            "value": "6 душевых"
+            "value": "6"
           }
         ]
       }
