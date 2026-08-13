@@ -3,6 +3,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 import AppFooter from '@/components/AppFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
+import CookieConsent from '@/components/CookieConsent.vue'
 
 const isFooterVisible = ref(false)
 let footerObserver: IntersectionObserver | null = null
@@ -49,5 +50,6 @@ onBeforeUnmount(() => {
     </q-page-container>
 
     <AppFooter />
+    <CookieConsent />
   </q-layout>
 </template>

@@ -324,6 +324,12 @@
   "page": {
     "eyebrow": "FursaDolomiti"
   },
+  "cookies": {
+    "title": "Avviso sui cookie",
+    "text": "Utilizziamo i cookie per offrirti la migliore esperienza possibile sul nostro sito web. Continuando a usare questo sito, accetti il nostro utilizzo dei cookie.",
+    "accept": "Accetta",
+    "close": "Chiudi avviso sui cookie"
+  },
   "footer": {
     "tagline": "Non una piattaforma. Una persona.",
     "contacts": "Contatti",
