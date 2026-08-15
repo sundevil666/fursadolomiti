@@ -12,6 +12,7 @@
   border: 1px solid var(--fd-btn-border);
   border-radius: 999px;
   background: var(--fd-btn-bg);
+  background-color: var(--fd-btn-bg);
   color: var(--fd-btn-color);
   font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
   font-size: 17px;
@@ -21,14 +22,13 @@
   text-transform: none;
   box-shadow: none;
   transition:
-    background-color 240ms ease,
+    background 400ms ease-out,
     border-color 240ms ease,
     color 240ms ease,
     transform 240ms cubic-bezier(0.2, 0.9, 0.2, 1);
 }
 
-.q-btn.fd-btn::before,
-.q-btn.fd-btn::after {
+.q-btn.fd-btn::before {
   display: none;
 }
 
@@ -45,6 +45,7 @@
 .q-btn.fd-btn:hover,
 .q-btn.fd-btn:focus-visible {
   background: var(--fd-btn-bg-hover);
+  background-color: var(--fd-btn-bg-hover);
   border-color: var(--fd-btn-border-hover);
   color: var(--fd-btn-color-hover);
 }
@@ -53,8 +54,8 @@
   --fd-btn-bg: var(--green, #175445);
   --fd-btn-border: var(--green, #175445);
   --fd-btn-color: var(--page-warm, #fff9ea);
-  --fd-btn-bg-hover: #3a6e61;
-  --fd-btn-border-hover: #3a6e61;
+  --fd-btn-bg-hover: #174136;
+  --fd-btn-border-hover: #174136;
   --fd-btn-color-hover: var(--page-warm, #fff9ea);
 }
 
@@ -62,9 +63,33 @@
   --fd-btn-bg: transparent;
   --fd-btn-border: var(--green, #175445);
   --fd-btn-color: var(--green, #175445);
-  --fd-btn-bg-hover: rgb(23 84 69 / 10%);
+  --fd-btn-bg-hover: #3a6e61;
   --fd-btn-border-hover: var(--green, #175445);
-  --fd-btn-color-hover: var(--green, #175445);
+  --fd-btn-color-hover: var(--page-warm, #fff9ea);
+
+  background: transparent;
+  background-color: transparent;
+}
+
+.q-btn.fd-btn--outline::before {
+  display: block;
+  border-color: var(--fd-btn-border);
+  background: transparent;
+  transition:
+    background 400ms ease-out,
+    border-color 240ms ease;
+}
+
+.q-btn.fd-btn.fd-btn--outline:hover,
+.q-btn.fd-btn.fd-btn--outline:focus-visible {
+  background: #3a6e61;
+  background-color: #3a6e61;
+}
+
+.q-btn.fd-btn.fd-btn--outline:hover::before,
+.q-btn.fd-btn.fd-btn--outline:focus-visible::before {
+  background: #3a6e61;
+  border-color: var(--fd-btn-border-hover);
 }
 
 .q-btn.fd-btn.disabled,
