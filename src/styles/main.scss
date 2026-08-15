@@ -1369,10 +1369,12 @@
     }
   }
 }
-
+.main-page .how-it-works{
+  background: var(--sand);
+}
 .how-it-works {
   overflow: hidden;
-  background: var(--sand);
+  background: var(--page-sweet);
   color: var(--green-deep);
   font-family: 'Manrope', sans-serif;
   height: 100%;
@@ -1404,7 +1406,6 @@
     justify-content: flex-start;
     padding: 99px 0 0;
     height: 100%;
-    background: var(--sand);
   }
 
   &__title {
