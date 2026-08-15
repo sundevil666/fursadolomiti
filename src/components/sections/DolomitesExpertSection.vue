@@ -15,9 +15,18 @@ const locations = computed(() => tm('home.dolomitesExpert.locations') as Locatio
 </script>
 
 <template>
-  <section id="dolomites-expert" class="dolomites-expert" aria-labelledby="dolomites-expert-title">
+  <section
+    id="dolomites-expert"
+    class="dolomites-expert"
+    aria-labelledby="dolomites-expert-title"
+  >
     <div class="dolomites-expert__inner">
-      <div class="dolomites-expert__portrait-side">
+      <div
+        class="dolomites-expert__portrait-side"
+        data-aos="block-slide-right"
+        data-aos-duration="1000"
+        data-aos-offset="140"
+      >
         <h2 id="dolomites-expert-title" class="dolomites-expert__title">
           <AnimatedText :text="t('home.dolomitesExpert.title')" tag="span" />
         </h2>
@@ -39,8 +48,18 @@ const locations = computed(() => tm('home.dolomitesExpert.locations') as Locatio
         />
       </div>
 
-      <div class="dolomites-expert__copy-side">
-        <div class="dolomites-expert__copy">
+      <div
+        class="dolomites-expert__copy-side"
+        data-aos="block-slide-left"
+        data-aos-duration="1000"
+        data-aos-offset="140"
+      >
+        <div
+          class="dolomites-expert__copy"
+          data-aos="block-slide-left"
+          data-aos-duration="900"
+          data-aos-offset="100"
+        >
           <h3>
             <AnimatedText :text="t('home.dolomitesExpert.stayTitle')" tag="span" />
           </h3>
@@ -49,7 +68,12 @@ const locations = computed(() => tm('home.dolomitesExpert.locations') as Locatio
           </p>
         </div>
 
-        <div class="dolomites-expert__copy">
+        <div
+          class="dolomites-expert__copy"
+          data-aos="block-slide-left"
+          data-aos-duration="900"
+          data-aos-offset="100"
+        >
           <h3>
             <AnimatedText :text="t('home.dolomitesExpert.yearRoundTitle')" tag="span" />
           </h3>
@@ -58,7 +82,12 @@ const locations = computed(() => tm('home.dolomitesExpert.locations') as Locatio
           </p>
         </div>
 
-        <div class="dolomites-expert__copy">
+        <div
+          class="dolomites-expert__copy"
+          data-aos="block-slide-left"
+          data-aos-duration="900"
+          data-aos-offset="100"
+        >
           <h3>
             <AnimatedText :text="t('home.dolomitesExpert.locationsTitle')" tag="span" />
           </h3>
@@ -69,7 +98,12 @@ const locations = computed(() => tm('home.dolomitesExpert.locations') as Locatio
           </ul>
         </div>
 
-        <div class="dolomites-expert__footer">
+        <div
+          class="dolomites-expert__footer"
+          data-aos="block-slide-left"
+          data-aos-duration="900"
+          data-aos-offset="100"
+        >
           <p>
             <AnimatedText :text="t('home.dolomitesExpert.help')" tag="span" />
           </p>

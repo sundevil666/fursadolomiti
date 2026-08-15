@@ -19,7 +19,12 @@ const instructorFeatures = computed(() => tm('home.instructor.features') as Inst
   >
     <div class="w-1336 position-relative">
       <img src="/mockup-assets/image11.png" alt="mockup" class="instructor-section__mockup">
-      <div class="instructor-section__content">
+      <div
+        class="instructor-section__content"
+        data-aos="block-slide-left"
+        data-aos-duration="1000"
+        data-aos-offset="140"
+      >
         <h2 v-if="instructorTitle" id="instructor-title" class="instructor-section__title">
           <AnimatedText :text="instructorTitle" tag="span" />
         </h2>

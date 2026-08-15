@@ -577,7 +577,14 @@ onBeforeUnmount(() => {
       class="hotels-section__list"
       :class="{ 'hotels-section__list--filtering': isFilterAnimating }"
     >
-      <article v-for="hotel in displayedHotels" :key="hotel.id" class="hotel-preview">
+      <article
+        v-for="(hotel, index) in displayedHotels"
+        :key="hotel.id"
+        class="hotel-preview"
+        :data-aos="index % 2 === 0 ? 'block-slide-right' : 'block-slide-left'"
+        data-aos-duration="1000"
+        data-aos-offset="140"
+      >
         <div class="hotel-preview__media">
           <img
             v-for="(image, index) in hotel.images"

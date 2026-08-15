@@ -21,7 +21,12 @@ const stepTitlePromo = (step: HowItWorksStep) =>
 <template>
   <section class="how-it-works" aria-labelledby="how-it-works-title">
     <div class="how-it-works__inner">
-      <div class="how-it-works__intro">
+      <div
+        class="how-it-works__intro"
+        data-aos="block-slide-right"
+        data-aos-duration="1000"
+        data-aos-offset="140"
+      >
         <h2 id="how-it-works-title" class="how-it-works__title">
           <AnimatedText :text="t('home.howItWorks.title')" tag="span" />
         </h2>
@@ -50,7 +55,14 @@ const stepTitlePromo = (step: HowItWorksStep) =>
       </div>
 
       <div class="how-it-works__steps">
-        <article v-for="step in howItWorksSteps" :key="step.id" class="how-it-works__step">
+        <article
+          v-for="step in howItWorksSteps"
+          :key="step.id"
+          class="how-it-works__step"
+          :data-aos="step.id % 2 === 0 ? 'block-slide-left' : 'block-slide-right'"
+          data-aos-duration="1000"
+          data-aos-offset="140"
+        >
           <div class="how-it-works__step-header">
             <span class="how-it-works__step-number">
               <AnimatedText :text="String(step.id)" tag="span" />

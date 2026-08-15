@@ -17,7 +17,12 @@ const { t } = useI18n()
   <q-page class="home-page">
     <HeroSliderSection />
     <section class="hotels-section">
-      <div class="hotels-section__header">
+      <div
+        class="hotels-section__header"
+        data-aos="block-slide-right"
+        data-aos-duration="1000"
+        data-aos-offset="140"
+      >
         <h2 class="hotels-section__title">
           <AnimatedText :text="t('home.hotels.title')" tag="span" />
         </h2>

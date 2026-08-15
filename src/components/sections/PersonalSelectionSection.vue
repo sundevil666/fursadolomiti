@@ -9,7 +9,12 @@ const { t } = useI18n()
 <template>
   <section class="personal-selection" aria-labelledby="personal-selection-title">
     <div class="personal-selection__content">
-      <div class="personal-selection__copy">
+      <div
+        class="personal-selection__copy"
+        data-aos="block-slide-right"
+        data-aos-duration="1000"
+        data-aos-offset="140"
+      >
         <h2 id="personal-selection-title" class="personal-selection__title">
           <AnimatedText :text="t('home.personalSelection.title')" tag="span" />
         </h2>
@@ -21,14 +26,25 @@ const { t } = useI18n()
         </div>
       </div>
 
-      <div class="personal-selection__visual" aria-hidden="true">
+      <div
+        class="personal-selection__visual"
+        aria-hidden="true"
+        data-aos="block-slide-left"
+        data-aos-duration="1000"
+        data-aos-offset="140"
+      >
         <div class="personal-selection__phone">
           <img src="/mockup-assets/image5.png" alt="" loading="lazy" />
         </div>
         <div class="personal-selection__dots" />
       </div>
 
-      <aside class="personal-selection__video">
+      <aside
+        class="personal-selection__video"
+        data-aos="block-slide-left"
+        data-aos-duration="1000"
+        data-aos-offset="140"
+      >
         <p>
           <AnimatedText :text="t('home.personalSelection.videoTitle')" tag="span" />
         </p>
@@ -59,7 +75,12 @@ const { t } = useI18n()
         </q-btn>
       </aside>
 
-      <div class="personal-selection__footer">
+      <div
+        class="personal-selection__footer"
+        data-aos="block-slide-right"
+        data-aos-duration="1000"
+        data-aos-offset="100"
+      >
         <p>
           <AnimatedText :text="t('home.personalSelection.help')" tag="span" />
         </p>

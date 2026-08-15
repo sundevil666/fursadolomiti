@@ -216,9 +216,12 @@ onBeforeUnmount(() => {
         <Transition name="review-slide" mode="out-in">
           <div :key="activeReviewIndex" class="reviews-section__cards">
             <article
-              v-for="review in visibleReviews"
+              v-for="(review, index) in visibleReviews"
               :key="review.id"
               class="reviews-section__card"
+              :data-aos="index % 2 === 0 ? 'block-slide-right' : 'block-slide-left'"
+              data-aos-duration="1000"
+              data-aos-offset="140"
               role="button"
               tabindex="0"
               :aria-label="`${t('home.reviews.openReview')}: ${review.author}, ${getReviewLocation(review)}`"

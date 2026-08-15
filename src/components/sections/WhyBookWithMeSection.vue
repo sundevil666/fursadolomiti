@@ -12,7 +12,12 @@ const whyMeReasons = computed(() => tm('home.whyMe.reasons') as WhyMeReason[])
 
 <template>
   <section class="why-me" aria-labelledby="why-me-title">
-    <header class="why-me__header">
+    <header
+      class="why-me__header"
+      data-aos="block-slide-right"
+      data-aos-duration="1000"
+      data-aos-offset="140"
+    >
       <h2 id="why-me-title" class="why-me__title">
         <AnimatedText :text="t('home.whyMe.title')" tag="span" />
       </h2>
@@ -27,9 +32,21 @@ const whyMeReasons = computed(() => tm('home.whyMe.reasons') as WhyMeReason[])
       />
       <div class="why-me__shade" />
 
-      <article class="why-me__panel">
+      <article
+        class="why-me__panel"
+        data-aos="block-slide-left"
+        data-aos-duration="1000"
+        data-aos-offset="140"
+      >
         <ul class="why-me__list">
-          <li v-for="reason in whyMeReasons" :key="reason.id" class="why-me__item">
+          <li
+            v-for="reason in whyMeReasons"
+            :key="reason.id"
+            class="why-me__item"
+            :data-aos="reason.id % 2 === 0 ? 'block-slide-left' : 'block-slide-right'"
+            data-aos-duration="900"
+            data-aos-offset="100"
+          >
             <span class="why-me__item-number">
               <AnimatedText :text="String(reason.id)" tag="span" />
             </span>

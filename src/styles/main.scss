@@ -742,7 +742,19 @@
   overflow: hidden;
 
   &__photo {
-    background: url('../assets/my-foto.png') center / cover;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      position: absolute;
+      inset: 0;
+      background: url('../assets/my-foto.png') center / cover no-repeat;
+      content: '';
+      transform: scale(1.16);
+      transform-origin: center;
+      transition: transform 2000ms ease-out;
+      will-change: transform;
+    }
   }
 
   &__quote {
@@ -1769,6 +1781,7 @@
 
   &__visual {
     position: relative;
+    z-index: 5;
     display: flex;
     grid-column: 2;
     align-items: flex-start;
@@ -1780,7 +1793,7 @@
 
   &__phone {
     position: relative;
-    z-index: 2;
+    z-index: 5;
     width: 272px;
     height: 500px;
     overflow: hidden;
@@ -6564,5 +6577,65 @@ body.is-booking-modal-open {
       font-size: clamp(14px, 3.7vw, 18px);
       line-height: 1.35;
     }
+  }
+}
+
+.hero-slider,
+.hotel-preview__media,
+.why-me__body,
+.dolomites-expert__portrait-side,
+.personal-selection__phone,
+.instructor-section,
+.app-footer__partner {
+  overflow: hidden;
+}
+
+.hero-slider__image,
+.hotel-preview__image,
+.why-me__image,
+.dolomites-expert__photo,
+.personal-selection__phone img,
+.instructor-section__mockup,
+.app-footer__partner img {
+  animation: none;
+  transform: scale(1.16);
+  transform-origin: center;
+  transition:
+    opacity 720ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 2000ms ease-out;
+  will-change: transform;
+}
+
+.hero-slider .hero-slider__slide--active .hero-slider__image {
+  animation: none;
+}
+
+.hero-slider:hover .hero-slider__slide--active .hero-slider__image,
+.hotel-preview__media:hover .hotel-preview__image--active,
+.why-me__body:hover .why-me__image,
+.dolomites-expert__portrait-side:hover .dolomites-expert__photo,
+.personal-selection__phone:hover img,
+.instructor-section:hover .instructor-section__mockup,
+.app-footer__partner:hover img {
+  transform: scale(1);
+}
+
+.hero-card:hover .hero-card__photo::before {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slider__image,
+  .hotel-preview__image,
+  .why-me__image,
+  .dolomites-expert__photo,
+  .personal-selection__phone img,
+  .instructor-section__mockup,
+  .app-footer__partner img,
+  .hero-card__photo,
+  .hero-card__photo::before {
+    transform: none;
+    transition: none;
+    will-change: auto;
   }
 }
