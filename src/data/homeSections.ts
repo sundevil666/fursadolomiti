@@ -296,3 +296,7 @@ export const hotelPreviews: HotelPreview[] = [
     statsKey: 'home.hotels.villaCarolina.stats',
   },
 ]
+
+export const bookableHotelPreviews = hotelPreviews.filter(
+  (hotel) => hotel.bookingSuedtirol || hotel.bookingExpert,
+)

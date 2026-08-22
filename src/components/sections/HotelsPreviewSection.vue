@@ -3,7 +3,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import AnimatedText from '@/components/AnimatedText.vue'
-import { hotelPreviews, type HotelCategory, type HotelPreview } from '@/data/homeSections'
+import { bookableHotelPreviews, type HotelCategory, type HotelPreview } from '@/data/homeSections'
 
 declare global {
   interface Window {
@@ -48,7 +48,7 @@ const homeShownHotelsCookie = 'fd_home_shown_hotels'
 const homeShownHotelsCookieMaxAge = 60 * 60 * 24 * 180
 
 const activeHotelSlides = ref<Record<string, number>>(
-  Object.fromEntries(hotelPreviews.map((hotel) => [hotel.id, 0])),
+  Object.fromEntries(bookableHotelPreviews.map((hotel) => [hotel.id, 0])),
 )
 const hotelAutoplayDelay = 5200
 let hotelAutoplayTimer: number | undefined
@@ -64,19 +64,19 @@ const hasLimit = computed(() => Boolean(props.limit && props.limit > 0))
 const displayedHotels = computed(() => {
   if (hasLimit.value) {
     const selectedHotels = homeDisplayedHotelIds.value
-      .map((id) => hotelPreviews.find((hotel) => hotel.id === id))
+      .map((id) => bookableHotelPreviews.find((hotel) => hotel.id === id))
       .filter((hotel): hotel is HotelPreview => Boolean(hotel))
 
-    return selectedHotels.length ? selectedHotels : hotelPreviews.slice(0, props.limit ?? 0)
+    return selectedHotels.length ? selectedHotels : bookableHotelPreviews.slice(0, props.limit ?? 0)
   }
 
-  if (activeFilter.value === 'all') return hotelPreviews
+  if (activeFilter.value === 'all') return bookableHotelPreviews
 
-  return hotelPreviews.filter((hotel) => hotel.category === activeFilter.value)
+  return bookableHotelPreviews.filter((hotel) => hotel.category === activeFilter.value)
 })
 
 const activeBookingHotel = computed(() =>
-  hotelPreviews.find((hotel) => hotel.id === bookingHotelId.value),
+  bookableHotelPreviews.find((hotel) => hotel.id === bookingHotelId.value),
 )
 
 const isBookingSuedtirolHotel = computed(() => Boolean(activeBookingHotel.value?.bookingSuedtirol))
@@ -100,9 +100,9 @@ const bookingModalPanelStyle = computed(() => {
 })
 
 const getFilterCount = (filter: HotelFilter) => {
-  if (filter === 'all') return hotelPreviews.length
+  if (filter === 'all') return bookableHotelPreviews.length
 
-  return hotelPreviews.filter((hotel) => hotel.category === filter).length
+  return bookableHotelPreviews.filter((hotel) => hotel.category === filter).length
 }
 
 const isFilterDisabled = (filter: HotelFilter) => !hasLimit.value && getFilterCount(filter) === 0
@@ -152,7 +152,7 @@ const getRandomHotels = (hotelIds: string[], limit: number, excludedHotelIds: st
 
 const selectHomePreviewHotels = () => {
   const limit = props.limit ?? 0
-  const hotelIds = hotelPreviews.map((hotel) => hotel.id)
+  const hotelIds = bookableHotelPreviews.map((hotel) => hotel.id)
 
   if (!hasLimit.value || limit <= 0 || hotelIds.length === 0) return
 
@@ -199,7 +199,7 @@ const setActiveFilter = (filter: HotelFilter) => {
 }
 
 const setHotelSlide = (hotelId: string, index: number, shouldRestartAutoplay = true) => {
-  const hotel = hotelPreviews.find((item) => item.id === hotelId)
+  const hotel = bookableHotelPreviews.find((item) => item.id === hotelId)
 
   if (!hotel) return
 
@@ -433,7 +433,7 @@ const submitBookingRequest = async () => {
     return
   }
 
-  const hotel = hotelPreviews.find((item) => item.id === bookingHotelId.value)
+  const hotel = bookableHotelPreviews.find((item) => item.id === bookingHotelId.value)
   const hotelName = hotel ? t(hotel.nameKey) : bookingHotelId.value
   formStatus.value = 'sending'
 
