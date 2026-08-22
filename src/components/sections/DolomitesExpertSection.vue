@@ -42,7 +42,7 @@ const locations = computed(() => tm('home.dolomitesExpert.locations') as Locatio
 
         <img
           class="dolomites-expert__photo"
-          src="/public/my-foto2.png"
+          src="/my-foto2.png"
           :alt="t('home.dolomitesExpert.photoAlt')"
           loading="lazy"
         />
