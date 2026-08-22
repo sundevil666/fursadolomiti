@@ -297,6 +297,17 @@ export const hotelPreviews: HotelPreview[] = [
   },
 ]
 
+const getDefaultBookingUrl = (hotel: HotelPreview) =>
+  typeof hotel.bookingUrl === 'string' ? hotel.bookingUrl : hotel.bookingUrl.default
+
+const hasConfiguredBookingUrl = (hotel: HotelPreview) => {
+  try {
+    return new URL(getDefaultBookingUrl(hotel)).hostname !== 'example.com'
+  } catch {
+    return false
+  }
+}
+
 export const bookableHotelPreviews = hotelPreviews.filter(
-  (hotel) => hotel.bookingSuedtirol || hotel.bookingExpert,
+  (hotel) => hotel.bookingSuedtirol || hotel.bookingExpert || hasConfiguredBookingUrl(hotel),
 )
