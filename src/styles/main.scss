@@ -6750,7 +6750,7 @@ body.is-booking-modal-open {
 .instructor-section__mockup,
 .app-footer__partner img {
   animation: none;
-  transform: scale(1.16);
+  transform: scale(1);
   transform-origin: center;
   transition:
     opacity 720ms cubic-bezier(0.19, 1, 0.22, 1),
@@ -6769,7 +6769,7 @@ body.is-booking-modal-open {
 .personal-selection__phone:hover img,
 .instructor-section:hover .instructor-section__mockup,
 .app-footer__partner:hover img {
-  transform: scale(1);
+  transform: scale(1.1);
 }
 
 .hero-card:hover .hero-card__photo::before {
