@@ -10,6 +10,14 @@ body:not(.aos-disabled) [data-aos='text-rise'] {
   }
 }
 
+body.aos-first-render:not(.aos-disabled) [data-aos='text-rise'],
+body.aos-first-render:not(.aos-disabled) [data-aos='block-slide-left'],
+body.aos-first-render:not(.aos-disabled) [data-aos='block-slide-right'] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
 body:not(.aos-disabled) [data-aos='block-slide-left'],
 body:not(.aos-disabled) [data-aos='block-slide-right'] {
   opacity: 0;

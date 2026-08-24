@@ -14,6 +14,8 @@ import App from '@/App.vue'
 import { i18n } from '@/i18n'
 import { router } from '@/router'
 
+document.body.classList.add('aos-first-render')
+
 createApp(App).use(Quasar).use(router).use(i18n).mount('#app')
 
 const revealVisibleAosItems = () => {
@@ -32,6 +34,12 @@ const revealVisibleAosItems = () => {
     if (isVisible) {
       element.classList.add('aos-animate')
     }
+  })
+}
+
+const finishInitialAosRender = () => {
+  requestAnimationFrame(() => {
+    document.body.classList.remove('aos-first-render')
   })
 }
 
@@ -56,6 +64,7 @@ AOS.init({
 })
 
 refreshAos()
+finishInitialAosRender()
 window.addEventListener('load', refreshAos, { once: true })
 
 router.afterEach(() => {
