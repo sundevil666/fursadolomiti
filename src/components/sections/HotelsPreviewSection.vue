@@ -364,15 +364,20 @@ const mountBookingSuedtirolWidget = async (hotel: HotelPreview) => {
     }
 
     bookingSuedtirolContainer.value.innerHTML = ''
-    bookingWidget(bookingSuedtirolContainer.value, {
+    const bookingWidgetConfig: Record<string, unknown> = {
       id: widgetConfig.id,
       propertyId: widgetConfig.propertyId,
       lang: getBookingSuedtirolLocale(locale.value),
       privacyURL: `${window.location.origin}/privacy-policy`,
       termsURL: `${window.location.origin}/privacy-policy`,
-      promotion: widgetConfig.promotion,
       source: 'fursadolomiti.com',
-    })
+    }
+
+    if (widgetConfig.promotion) {
+      bookingWidgetConfig.promotion = widgetConfig.promotion
+    }
+
+    bookingWidget(bookingSuedtirolContainer.value, bookingWidgetConfig)
 
     bookingSuedtirolStatus.value = 'ready'
   } catch (error) {

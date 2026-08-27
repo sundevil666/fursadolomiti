@@ -181,6 +181,32 @@
             "value": "6"
           }
         ]
+      },
+      "chaletZenit": {
+        "name": "Chalet Zenit",
+        "location": "Selva",
+        "description": "Chalet moderno di alto livello in elegante stile alpino con ampio uso di legno naturale",
+        "featuresLabel": "Caratteristiche:",
+        "features": [
+          "3 appartamenti esclusivi, ideali per un grande gruppo fino a 12 persone",
+          "Transfer mattutino agli impianti, a soli 500 m dalle piste della Sellaronda",
+          "Accesso ski-in, con lo chalet a 100 m dalla pista in buone condizioni di neve",
+          "Zona spa privata direttamente negli appartamenti"
+        ],
+        "stats": [
+          {
+            "icon": "groups",
+            "value": "13"
+          },
+          {
+            "icon": "bed",
+            "value": "6"
+          },
+          {
+            "icon": "shower",
+            "value": "8"
+          }
+        ]
       }
     },
     "howItWorks": {

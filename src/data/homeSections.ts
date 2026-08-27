@@ -36,7 +36,7 @@ export type HotelPreview = {
   bookingSuedtirol?: {
     id: string
     propertyId: number
-    promotion: [string, string, string]
+    promotion?: [string, string, string]
   }
   bookingExpert?: {
     searchbox: string
@@ -294,6 +294,34 @@ export const hotelPreviews: HotelPreview[] = [
     featuresKey: 'home.hotels.villaCarolina.features',
     featuresLabelKey: 'home.hotels.villaCarolina.featuresLabel',
     statsKey: 'home.hotels.villaCarolina.stats',
+  },
+  {
+    id: 'chalet-zenit',
+    category: 'chalet',
+    images: [
+      '/chalet-zenit/chalet-zenit1.png',
+      '/chalet-zenit/chalet-zenit2.png',
+      '/chalet-zenit/chalet-zenit3.png',
+      '/chalet-zenit/chalet-zenit4.png',
+    ],
+    promoCode: 'REPLACE_CHALET_ZENIT',
+    bookingUrl: 'https://example.com/chalet-zenit/booking',
+    bookingParams: {
+      firstName: 'contact_first_name',
+      lastName: 'contact_last_name',
+      email: 'contact_email',
+      promoCode: 'referral_code',
+    },
+    nameKey: 'home.hotels.chaletZenit.name',
+    locationKey: 'home.hotels.chaletZenit.location',
+    descriptionKey: 'home.hotels.chaletZenit.description',
+    featuresKey: 'home.hotels.chaletZenit.features',
+    featuresLabelKey: 'home.hotels.chaletZenit.featuresLabel',
+    statsKey: 'home.hotels.chaletZenit.stats',
+    bookingSuedtirol: {
+      id: '46f72afb-7807-4d15-af6f-50bfe01de476',
+      propertyId: 13459,
+    },
   },
 ]
 
