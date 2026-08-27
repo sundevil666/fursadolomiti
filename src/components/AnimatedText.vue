@@ -40,7 +40,7 @@ const textParts = computed(() => {
 watch(
   () => props.text,
   (newText, oldText) => {
-    if (newText !== oldText) {
+    if (oldText !== undefined && newText !== oldText) {
       isAnimating.value = true
       animationKey.value += 1
       setTimeout(() => {
@@ -51,7 +51,6 @@ watch(
       }, 300)
     }
   },
-  { immediate: true }
 )
 
 watch([locale, languageChangeCounter], () => {
