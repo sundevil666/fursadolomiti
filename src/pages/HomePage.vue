@@ -5,6 +5,7 @@ import HowItWorksSection from '@/components/sections/HowItWorksSection.vue'
 import InstructorSection from '@/components/sections/InstructorSection.vue'
 import DolomitesExpertSection from '@/components/sections/DolomitesExpertSection.vue'
 import PersonalSelectionSection from '@/components/sections/PersonalSelectionSection.vue'
+import GrowingSelectionSection from '@/components/sections/GrowingSelectionSection.vue'
 import ReviewsSection from '@/components/sections/ReviewsSection.vue'
 import WhyBookWithMeSection from '@/components/sections/WhyBookWithMeSection.vue'
 import AnimatedText from '@/components/AnimatedText.vue'
@@ -32,6 +33,7 @@ const { t } = useI18n()
       </div>
     </section>
     <HotelsPreviewSection :limit="2" />
+    <GrowingSelectionSection />
     <HowItWorksSection />
     <WhyBookWithMeSection />
     <PersonalSelectionSection />

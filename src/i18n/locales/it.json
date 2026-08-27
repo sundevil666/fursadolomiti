@@ -209,6 +209,12 @@
         ]
       }
     },
+    "growingSelection": {
+      "eyebrow": "In continuo aggiornamento",
+      "title": "La collezione cresce costantemente",
+      "language": "Italiano",
+      "text": "La selezione di hotel, chalet e appartamenti è in continua crescita — nuove strutture vengono aggiunte regolarmente."
+    },
     "howItWorks": {
       "title": "Come prenotare e ricevere il bonus",
       "note": "Prenotare tramite FursaDolomiti non è solo un modo comodo per trovare l'hotel giusto per il soggiorno. Ti dà accesso a bonus non disponibili con una prenotazione diretta.",

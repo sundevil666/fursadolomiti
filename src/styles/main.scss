@@ -1785,6 +1785,108 @@
   }
 }
 
+.growing-selection {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgb(23 84 69 / 0.14), transparent 28%),
+    linear-gradient(180deg, #fff6e1 0%, #efe4c9 100%);
+  color: #08211f;
+
+  &::before {
+    position: absolute;
+    inset: 34px auto auto calc(50% - 110px);
+    width: 220px;
+    height: 220px;
+    border: 1px solid rgb(23 84 69 / 0.14);
+    border-radius: 50%;
+    content: '';
+    pointer-events: none;
+  }
+
+  &__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    width: var(--container-safe);
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 96px 0 108px;
+    grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+    gap: 42px;
+    align-items: start;
+  }
+
+  &__eyebrow {
+    margin: 0 0 16px;
+    color: #175445;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    max-width: 360px;
+    margin: 0;
+    font-size: 46px;
+    font-weight: 700;
+    line-height: 0.96;
+  }
+
+  &__card {
+    position: relative;
+    overflow: hidden;
+    padding: 26px 28px 28px 96px;
+    border: 1px solid rgb(23 84 69 / 0.12);
+    border-radius: 20px;
+    background: rgb(255 249 236 / 0.82);
+    box-shadow: 0 26px 60px rgb(8 33 31 / 0.08);
+
+    &::before {
+      position: absolute;
+      top: 24px;
+      left: 28px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: #175445;
+      content: '';
+    }
+
+    &::after {
+      position: absolute;
+      top: 39px;
+      left: 44px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff9ea;
+      content: '';
+    }
+  }
+
+  &__language {
+    margin: 0 0 10px;
+    color: #175445;
+    font-family: 'Playfair Display', serif;
+    font-size: 29px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  &__text {
+    max-width: 720px;
+    margin: 0;
+    color: #173f38;
+    font-family: 'Manrope', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+}
+
 .personal-selection {
   position: relative;
   overflow: hidden;
@@ -6141,6 +6243,18 @@ body.is-booking-modal-open {
   margin-top: 24px;
 }
 @media (max-width: 1360px) {
+  .growing-selection {
+    &__inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 84px 0 92px;
+    }
+
+    &__title {
+      max-width: 520px;
+    }
+  }
+
   .personal-selection__video::before {
     position: absolute;
     top: 16px;
