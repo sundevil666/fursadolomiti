@@ -55,6 +55,10 @@ let hotelAutoplayTimer: number | undefined
 let filterAnimationTimer: number | undefined
 let bookingSuedtirolScriptPromise: Promise<void> | undefined
 let bookingExpertScriptPromise: Promise<void> | undefined
+let restoreWindowOpen: (() => void) | undefined
+let widgetTrackingCleanup: (() => void) | undefined
+let lastWidgetTrackingSignature = ''
+let lastWidgetTrackingAt = 0
 const bookingSuedtirolLocales = new Set(['en', 'it'])
 const bookingExpertLocales = new Set(['en', 'it', 'fr', 'de'])
 const homeDisplayedHotelIds = ref<string[]>([])
@@ -429,6 +433,150 @@ const bookingEmailEndpoint =
   import.meta.env.VITE_BOOKING_EMAIL_ENDPOINT ||
   (window.location.hostname.endsWith('.vercel.app') ? '/api/send-email' : '/php/send-email.php')
 
+const getWidgetContainer = () =>
+  (isBookingExpertHotel.value ? bookingExpertContainer.value : bookingSuedtirolContainer.value) ?? null
+
+const getWidgetProvider = () => (isBookingExpertHotel.value ? 'BookingExpert' : 'Booking Südtirol')
+
+const collectWidgetFields = (root: ParentNode, bucket: Array<{ label: string; value: string }>) => {
+  root.querySelectorAll('input, select, textarea').forEach((field) => {
+    const element = field as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    const rawValue =
+      element instanceof HTMLInputElement && (element.type === 'checkbox' || element.type === 'radio')
+        ? element.checked
+          ? element.value || 'checked'
+          : ''
+        : element.value
+    const value = String(rawValue || '').trim()
+
+    if (!value) return
+
+    const label =
+      element.getAttribute('aria-label') ||
+      element.getAttribute('placeholder') ||
+      element.name ||
+      element.id ||
+      'field'
+
+    bucket.push({ label, value })
+  })
+
+  root.querySelectorAll<HTMLElement>('*').forEach((element) => {
+    if (element.shadowRoot) collectWidgetFields(element.shadowRoot, bucket)
+  })
+}
+
+const collectWidgetSelection = () => {
+  const container = getWidgetContainer()
+  if (!container) return []
+
+  const values: Array<{ label: string; value: string }> = []
+  collectWidgetFields(container, values)
+
+  return values.filter(
+    (entry, index, array) =>
+      array.findIndex((candidate) => candidate.label === entry.label && candidate.value === entry.value) ===
+      index,
+  )
+}
+
+const reportWidgetTracking = async (widgetAction: string, redirectUrl = '') => {
+  const hotel = activeBookingHotel.value
+  if (!hotel) return
+
+  const widgetSelection = collectWidgetSelection()
+  const signature = JSON.stringify({
+    hotelId: hotel.id,
+    widgetAction,
+    redirectUrl,
+    widgetSelection,
+  })
+  const now = Date.now()
+
+  if (signature === lastWidgetTrackingSignature && now - lastWidgetTrackingAt < 4000) return
+
+  lastWidgetTrackingSignature = signature
+  lastWidgetTrackingAt = now
+
+  const submittedAt = new Date()
+
+  try {
+    await fetch(bookingEmailEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        eventType: 'widget_redirect',
+        widgetProvider: getWidgetProvider(),
+        widgetAction,
+        widgetSelection,
+        redirectUrl,
+        hotelId: hotel.id,
+        hotel: t(hotel.nameKey),
+        promoCode: hotel.promoCode,
+        hotelImage: hotel.images[0] ? new URL(hotel.images[0], window.location.origin).href : '',
+        locale: locale.value,
+        localDateTime: new Intl.DateTimeFormat(locale.value, {
+          dateStyle: 'full',
+          timeStyle: 'long',
+        }).format(submittedAt),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        submittedAt: submittedAt.toISOString(),
+      }),
+      keepalive: true,
+    })
+  } catch (error) {
+    console.error('Widget tracking failed', error)
+  }
+}
+
+const installWidgetTracking = () => {
+  widgetTrackingCleanup?.()
+  const container = getWidgetContainer()
+  if (!container) return
+
+  const handleClick = (event: Event) => {
+    const target = event.target as HTMLElement | null
+    if (!target) return
+    const clickable = target.closest<HTMLElement>('button, a, [role="button"]')
+    if (!clickable) return
+    const action = (clickable.textContent || clickable.getAttribute('aria-label') || '').trim()
+    if (!action) return
+    void reportWidgetTracking(`click:${action.slice(0, 80)}`)
+  }
+
+  const handleSubmit = () => {
+    void reportWidgetTracking('submit')
+  }
+
+  container.addEventListener('click', handleClick, true)
+  container.addEventListener('submit', handleSubmit, true)
+
+  widgetTrackingCleanup = () => {
+    container.removeEventListener('click', handleClick, true)
+    container.removeEventListener('submit', handleSubmit, true)
+    widgetTrackingCleanup = undefined
+  }
+}
+
+const installWindowOpenTracking = () => {
+  restoreWindowOpen?.()
+  const originalWindowOpen = window.open.bind(window)
+
+  window.open = ((...args: Parameters<typeof window.open>) => {
+    const [url] = args
+    if (bookingHotelId.value && isWidgetHotel.value) {
+      void reportWidgetTracking('window.open', typeof url === 'string' ? url : '')
+    }
+
+    return originalWindowOpen(...args)
+  }) as typeof window.open
+
+  restoreWindowOpen = () => {
+    window.open = originalWindowOpen
+    restoreWindowOpen = undefined
+  }
+}
+
 const submitBookingRequest = async () => {
   formError.value = ''
 
@@ -522,12 +670,14 @@ watch(bookingHotelId, async (hotelId) => {
 
     if (hotel?.bookingSuedtirol) {
       await mountBookingSuedtirolWidget(hotel)
+      installWidgetTracking()
       bookingModal.value?.querySelector<HTMLElement>('.booking-modal__close')?.focus()
       return
     }
 
     if (hotel?.bookingExpert) {
       await mountBookingExpertWidget(hotel)
+      installWidgetTracking()
       bookingModal.value?.querySelector<HTMLElement>('.booking-modal__close')?.focus()
       return
     }
@@ -539,10 +689,13 @@ watch(bookingHotelId, async (hotelId) => {
 onMounted(() => {
   selectHomePreviewHotels()
   startHotelAutoplay()
+  installWindowOpenTracking()
 })
 onBeforeUnmount(() => {
   stopHotelAutoplay()
   document.body.classList.remove('is-booking-modal-open')
+  restoreWindowOpen?.()
+  widgetTrackingCleanup?.()
 
   if (filterAnimationTimer) {
     window.clearTimeout(filterAnimationTimer)

@@ -40,6 +40,11 @@ export default async function handler(request, response) {
   }
 
   const {
+    eventType,
+    widgetProvider,
+    widgetAction,
+    widgetSelection,
+    redirectUrl,
     firstName,
     lastName,
     email,
@@ -52,6 +57,11 @@ export default async function handler(request, response) {
     timezone,
     submittedAt,
   } = request.body || {}
+  const normalizedEventType = String(eventType || '').trim()
+  const normalizedWidgetProvider = String(widgetProvider || '').trim()
+  const normalizedWidgetAction = String(widgetAction || '').trim()
+  const normalizedWidgetSelection = Array.isArray(widgetSelection) ? widgetSelection : []
+  const normalizedRedirectUrl = String(redirectUrl || '').trim()
   const normalizedFirstName = String(firstName || '').trim()
   const normalizedLastName = String(lastName || '').trim()
   const normalizedEmail = String(email || '').trim()
@@ -64,23 +74,31 @@ export default async function handler(request, response) {
   const normalizedTimezone = String(timezone || '').trim() || 'Not available'
   const normalizedSubmittedAt = String(submittedAt || '').trim() || new Date().toISOString()
 
-  if (
-    !normalizedFirstName ||
-    !normalizedLastName ||
-    !normalizedEmail ||
-    !normalizedHotelId ||
-    !normalizedHotel ||
-    !normalizedPromoCode
-  ) {
-    return response.status(400).json({ error: 'All fields are required' })
-  }
-
-  if (!emailPattern.test(normalizedEmail)) {
-    return response.status(400).json({ error: 'Invalid email' })
-  }
-
   if (!serviceId || !templateId || !publicKey || !privateKey || recipients.length === 0) {
     return response.status(500).json({ error: 'Email service is not configured' })
+  }
+
+  const isWidgetTrackingEvent = normalizedEventType === 'widget_redirect'
+
+  if (isWidgetTrackingEvent) {
+    if (!normalizedHotelId || !normalizedHotel || !normalizedWidgetProvider) {
+      return response.status(400).json({ error: 'Tracking payload is incomplete' })
+    }
+  } else {
+    if (
+      !normalizedFirstName ||
+      !normalizedLastName ||
+      !normalizedEmail ||
+      !normalizedHotelId ||
+      !normalizedHotel ||
+      !normalizedPromoCode
+    ) {
+      return response.status(400).json({ error: 'All fields are required' })
+    }
+
+    if (!emailPattern.test(normalizedEmail)) {
+      return response.status(400).json({ error: 'Invalid email' })
+    }
   }
 
   const fullName = `${normalizedFirstName} ${normalizedLastName}`
@@ -107,12 +125,62 @@ export default async function handler(request, response) {
     city: escapeHtml(city),
     locationTimezone: escapeHtml(locationTimezone),
   }
+  const widgetSelectionText = normalizedWidgetSelection
+    .map((entry) => {
+      const label = String(entry?.label || '').trim()
+      const value = String(entry?.value || '').trim()
+      return label && value ? `${label}: ${value}` : ''
+    })
+    .filter(Boolean)
+  const safeWidgetSelection = widgetSelectionText.map((entry) => escapeHtml(entry))
   const row = (label, value, highlighted = false) => `
     <tr>
       <td width="38%" valign="top" style="padding:13px 16px;border-bottom:1px solid #e8dfcc;color:#756b5c;font-size:12px;line-height:18px;text-transform:uppercase;letter-spacing:.4px;">${label}</td>
       <td valign="top" style="padding:13px 16px;border-bottom:1px solid #e8dfcc;color:#08211f;font-size:14px;line-height:20px;font-weight:${highlighted ? '700' : '500'};">${value}</td>
     </tr>`
-  const htmlMessage = `
+  const htmlMessage = isWidgetTrackingEvent
+    ? `
+    <div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:680px;margin:0 auto;border-collapse:separate;background-color:#fffaf0;border:1px solid #e5dbc6;border-radius:16px;box-shadow:0 14px 40px rgba(48,38,16,.12);overflow:hidden;">
+        <tr>
+          <td style="padding:28px 32px 30px;background-color:#175445;color:#fffaf0;">
+            <div style="color:#d7e3d9;font-size:11px;line-height:16px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">FursaDolomiti · Widget Tracking</div>
+            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">Пользователь ушел в бронирование</div>
+            <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;"><strong style="color:#ffffff;">${safe.hotel}</strong> · ${escapeHtml(normalizedWidgetProvider)}</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:28px 32px 8px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">
+              ${row('Отель', safe.hotel, true)}
+              ${row('Провайдер', escapeHtml(normalizedWidgetProvider), true)}
+              ${row('Действие', escapeHtml(normalizedWidgetAction || 'Not available'))}
+              ${row('Дата заявки', safe.localDateTime, true)}
+              ${row('URL перехода', escapeHtml(normalizedRedirectUrl || 'Not available'))}
+            </table>
+          </td>
+        </tr>
+        ${
+          safeWidgetSelection.length
+            ? `<tr><td style="padding:18px 32px 8px;"><div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">Что выбрал пользователь</div><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">${safeWidgetSelection
+                .map((entry) => row('Выбор', entry))
+                .join('')}</table></td></tr>`
+            : ''
+        }
+        <tr>
+          <td style="padding:18px 32px 32px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">
+              ${row('Язык сайта', safe.locale)}
+              ${row('Часовой пояс пользователя', safe.timezone)}
+              ${row('Время UTC', safe.submittedAt)}
+              ${row('Страна', safe.country)}
+              ${row('Город', safe.city)}
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>`
+    : `
     <div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
       <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${safe.fullName} — ${safe.hotel} — ${safe.localDateTime}</div>
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:680px;margin:0 auto;border-collapse:separate;background-color:#fffaf0;border:1px solid #e5dbc6;border-radius:16px;box-shadow:0 14px 40px rgba(48,38,16,.12);overflow:hidden;">
@@ -179,7 +247,25 @@ export default async function handler(request, response) {
         </tr>
       </table>
     </div>`
-  const message = [
+  const message = isWidgetTrackingEvent
+    ? [
+        'Widget booking redirect detected from fursadolomiti.com',
+        '',
+        `Hotel: ${normalizedHotel}`,
+        `Provider: ${normalizedWidgetProvider || 'Not available'}`,
+        `Action: ${normalizedWidgetAction || 'Not available'}`,
+        `Redirect URL: ${normalizedRedirectUrl || 'Not available'}`,
+        '',
+        ...(widgetSelectionText.length ? ['Selected values:', ...widgetSelectionText, ''] : []),
+        `Website language: ${normalizedLocale}`,
+        `User timezone: ${normalizedTimezone}`,
+        `Submitted at (UTC): ${normalizedSubmittedAt}`,
+        `Country: ${country}`,
+        `Region: ${region}`,
+        `City: ${city}`,
+        `Location timezone: ${locationTimezone}`,
+      ].join('\n')
+    : [
     'New booking request from fursadolomiti.com',
     '',
     `First name: ${normalizedFirstName}`,
@@ -285,6 +371,10 @@ export default async function handler(request, response) {
     if (!emailResponse.ok) {
       console.error('EmailJS error:', emailResponse.status, await emailResponse.text())
       return response.status(502).json({ error: 'Email delivery failed' })
+    }
+
+    if (isWidgetTrackingEvent) {
+      return response.status(200).json({ ok: true })
     }
 
     const customerEmailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {

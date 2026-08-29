@@ -139,6 +139,11 @@ $privateKey = getEnvValue('EMAILJS_PRIVATE_KEY');
 $recipientsValue = getEnvValue('EMAIL_RECIPIENTS', 'sundevildi@gmail.com') ?? 'sundevildi@gmail.com';
 $recipients = array_values(array_filter(array_map('trim', explode(',', $recipientsValue))));
 
+$normalizedEventType = trim((string) ($requestBody['eventType'] ?? ''));
+$normalizedWidgetProvider = trim((string) ($requestBody['widgetProvider'] ?? ''));
+$normalizedWidgetAction = trim((string) ($requestBody['widgetAction'] ?? ''));
+$normalizedWidgetSelection = is_array($requestBody['widgetSelection'] ?? null) ? $requestBody['widgetSelection'] : [];
+$normalizedRedirectUrl = trim((string) ($requestBody['redirectUrl'] ?? ''));
 $normalizedFirstName = trim((string) ($requestBody['firstName'] ?? ''));
 $normalizedLastName = trim((string) ($requestBody['lastName'] ?? ''));
 $normalizedEmail = trim((string) ($requestBody['email'] ?? ''));
@@ -151,23 +156,31 @@ $normalizedLocalDateTime = trim((string) ($requestBody['localDateTime'] ?? '')) 
 $normalizedTimezone = trim((string) ($requestBody['timezone'] ?? '')) ?: 'Not available';
 $normalizedSubmittedAt = trim((string) ($requestBody['submittedAt'] ?? '')) ?: gmdate('c');
 
-if (
-    $normalizedFirstName === '' ||
-    $normalizedLastName === '' ||
-    $normalizedEmail === '' ||
-    $normalizedHotelId === '' ||
-    $normalizedHotel === '' ||
-    $normalizedPromoCode === ''
-) {
-    jsonResponse(400, ['error' => 'All fields are required']);
-}
-
-if (preg_match($emailPattern, $normalizedEmail) !== 1) {
-    jsonResponse(400, ['error' => 'Invalid email']);
-}
-
 if (!$serviceId || !$templateId || !$publicKey || !$privateKey || count($recipients) === 0) {
     jsonResponse(500, ['error' => 'Email service is not configured']);
+}
+
+$isWidgetTrackingEvent = $normalizedEventType === 'widget_redirect';
+
+if ($isWidgetTrackingEvent) {
+    if ($normalizedHotelId === '' || $normalizedHotel === '' || $normalizedWidgetProvider === '') {
+        jsonResponse(400, ['error' => 'Tracking payload is incomplete']);
+    }
+} else {
+    if (
+        $normalizedFirstName === '' ||
+        $normalizedLastName === '' ||
+        $normalizedEmail === '' ||
+        $normalizedHotelId === '' ||
+        $normalizedHotel === '' ||
+        $normalizedPromoCode === ''
+    ) {
+        jsonResponse(400, ['error' => 'All fields are required']);
+    }
+
+    if (preg_match($emailPattern, $normalizedEmail) !== 1) {
+        jsonResponse(400, ['error' => 'Invalid email']);
+    }
 }
 
 $headers = getRequestHeadersMap();
@@ -206,11 +219,65 @@ $safe = [
     'city' => escapeHtmlValue($city),
     'locationTimezone' => escapeHtmlValue($locationTimezone),
 ];
+$widgetSelectionText = [];
+foreach ($normalizedWidgetSelection as $entry) {
+    if (!is_array($entry)) {
+        continue;
+    }
+
+    $label = trim((string) ($entry['label'] ?? ''));
+    $value = trim((string) ($entry['value'] ?? ''));
+
+    if ($label !== '' && $value !== '') {
+        $widgetSelectionText[] = $label . ': ' . $value;
+    }
+}
+$safeWidgetSelection = array_map('escapeHtmlValue', $widgetSelectionText);
 
 $replySubject = rawurlencode('FursaDolomiti - ' . $normalizedHotel);
 $localeUpper = escapeHtmlValue(strtoupper($normalizedLocale));
 
-$htmlMessage = '
+$htmlMessage = $isWidgetTrackingEvent
+    ? '
+    <div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:680px;margin:0 auto;border-collapse:separate;background-color:#fffaf0;border:1px solid #e5dbc6;border-radius:16px;box-shadow:0 14px 40px rgba(48,38,16,.12);overflow:hidden;">
+        <tr>
+          <td style="padding:28px 32px 30px;background-color:#175445;color:#fffaf0;">
+            <div style="color:#d7e3d9;font-size:11px;line-height:16px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">FursaDolomiti · Widget Tracking</div>
+            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">Пользователь ушел в бронирование</div>
+            <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;"><strong style="color:#ffffff;">' . $safe['hotel'] . '</strong> · ' . escapeHtmlValue($normalizedWidgetProvider) . '</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:28px 32px 8px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
+              renderRow('Отель', $safe['hotel'], true) .
+              renderRow('Провайдер', escapeHtmlValue($normalizedWidgetProvider), true) .
+              renderRow('Действие', escapeHtmlValue($normalizedWidgetAction !== '' ? $normalizedWidgetAction : 'Not available')) .
+              renderRow('Дата заявки', $safe['localDateTime'], true) .
+              renderRow('URL перехода', escapeHtmlValue($normalizedRedirectUrl !== '' ? $normalizedRedirectUrl : 'Not available')) .
+            '</table>
+          </td>
+        </tr>' .
+        (!empty($safeWidgetSelection)
+            ? '<tr><td style="padding:18px 32px 8px;"><div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">Что выбрал пользователь</div><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
+                implode('', array_map(static fn (string $entry): string => renderRow('Выбор', $entry), $safeWidgetSelection)) .
+                '</table></td></tr>'
+            : '') .
+        '<tr>
+          <td style="padding:18px 32px 32px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
+              renderRow('Язык сайта', $safe['locale']) .
+              renderRow('Часовой пояс пользователя', $safe['timezone']) .
+              renderRow('Время UTC', $safe['submittedAt']) .
+              renderRow('Страна', $safe['country']) .
+              renderRow('Город', $safe['city']) .
+            '</table>
+          </td>
+        </tr>
+      </table>
+    </div>'
+    : '
     <div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
       <div style="display:none;max-height:0;overflow:hidden;opacity:0;">' . $safe['fullName'] . ' - ' . $safe['hotel'] . ' - ' . $safe['localDateTime'] . '</div>
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:680px;margin:0 auto;border-collapse:separate;background-color:#fffaf0;border:1px solid #e5dbc6;border-radius:16px;box-shadow:0 14px 40px rgba(48,38,16,.12);overflow:hidden;">
@@ -276,7 +343,25 @@ $htmlMessage = '
       </table>
     </div>';
 
-$message = implode("\n", [
+$message = $isWidgetTrackingEvent
+    ? implode("\n", [
+        'Widget booking redirect detected from fursadolomiti.com',
+        '',
+        'Hotel: ' . $normalizedHotel,
+        'Provider: ' . ($normalizedWidgetProvider !== '' ? $normalizedWidgetProvider : 'Not available'),
+        'Action: ' . ($normalizedWidgetAction !== '' ? $normalizedWidgetAction : 'Not available'),
+        'Redirect URL: ' . ($normalizedRedirectUrl !== '' ? $normalizedRedirectUrl : 'Not available'),
+        '',
+        ...(!empty($widgetSelectionText) ? array_merge(['Selected values:'], $widgetSelectionText, ['']) : []),
+        'Website language: ' . $normalizedLocale,
+        'User timezone: ' . $normalizedTimezone,
+        'Submitted at (UTC): ' . $normalizedSubmittedAt,
+        'Country: ' . $country,
+        'Region: ' . $region,
+        'City: ' . $city,
+        'Location timezone: ' . $locationTimezone,
+    ])
+    : implode("\n", [
     'New booking request from fursadolomiti.com',
     '',
     'First name: ' . $normalizedFirstName,
@@ -380,6 +465,10 @@ $emailResponse = sendEmailJsRequest($emailPayloadBase + [
 if (!$emailResponse['ok']) {
     error_log('EmailJS error: ' . $emailResponse['status'] . ' ' . $emailResponse['body']);
     jsonResponse(502, ['error' => 'Email delivery failed']);
+}
+
+if ($isWidgetTrackingEvent) {
+    jsonResponse(200, ['ok' => true]);
 }
 
 $customerEmailResponse = sendEmailJsRequest($emailPayloadBase + [
