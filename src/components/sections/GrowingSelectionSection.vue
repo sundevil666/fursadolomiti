@@ -29,9 +29,6 @@ const { t } = useI18n()
         data-aos-duration="1000"
         data-aos-offset="120"
       >
-        <p class="growing-selection__language">
-          <AnimatedText :text="t('home.growingSelection.language')" tag="span" />
-        </p>
         <p class="growing-selection__text">
           <AnimatedText :text="t('home.growingSelection.text')" tag="span" />
         </p>
