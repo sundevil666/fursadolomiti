@@ -425,6 +425,10 @@ const mountBookingExpertWidget = async (hotel: HotelPreview) => {
   }
 }
 
+const bookingEmailEndpoint =
+  import.meta.env.VITE_BOOKING_EMAIL_ENDPOINT ||
+  (window.location.hostname.endsWith('.vercel.app') ? '/api/send-email' : '/api/send-email.php')
+
 const submitBookingRequest = async () => {
   formError.value = ''
 
@@ -445,7 +449,7 @@ const submitBookingRequest = async () => {
   try {
     const submittedAt = new Date()
 
-    const response = await fetch('/api/send-email.php', {
+    const response = await fetch(bookingEmailEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
