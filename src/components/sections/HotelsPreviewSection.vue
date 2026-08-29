@@ -59,6 +59,7 @@ let restoreWindowOpen: (() => void) | undefined
 let widgetTrackingCleanup: (() => void) | undefined
 let lastWidgetTrackingSignature = ''
 let lastWidgetTrackingAt = 0
+let widgetTrackingSentForSession = false
 const bookingSuedtirolLocales = new Set(['en', 'it'])
 const bookingExpertLocales = new Set(['en', 'it', 'fr', 'de'])
 const homeDisplayedHotelIds = ref<string[]>([])
@@ -240,6 +241,7 @@ const restartHotelAutoplay = () => {
 
 const openBookingModal = (hotelId: string) => {
   bookingHotelId.value = hotelId
+  widgetTrackingSentForSession = false
   firstName.value = ''
   lastName.value = ''
   email.value = ''
@@ -253,6 +255,7 @@ const closeBookingModal = () => {
   if (formStatus.value === 'sending') return
 
   bookingHotelId.value = null
+  widgetTrackingSentForSession = false
 }
 
 const handleModalKeydown = (event: KeyboardEvent) => {
@@ -437,6 +440,124 @@ const getWidgetContainer = () =>
   (isBookingExpertHotel.value ? bookingExpertContainer.value : bookingSuedtirolContainer.value) ?? null
 
 const getWidgetProvider = () => (isBookingExpertHotel.value ? 'BookingExpert' : 'Booking Südtirol')
+const widgetTrackingActionPatterns = [
+  'book',
+  'booking',
+  'reserve',
+  'reservation',
+  'room',
+  'continue',
+  'next',
+  'checkout',
+  'go to',
+  'check availability',
+  'book now',
+  'prenota',
+  'continua',
+  'camera',
+  'buchen',
+  'zimmer',
+  'weiter',
+]
+
+const widgetLabelDictionary = {
+  checkIn: ['check in', 'check-in', 'arrival', 'arrive', 'from', 'start date', 'anreise', 'arrivo'],
+  checkOut: [
+    'check out',
+    'check-out',
+    'departure',
+    'depart',
+    'to',
+    'end date',
+    'abreise',
+    'partenza',
+  ],
+  guests: ['guests', 'guest', 'adults', 'adult', 'children', 'child', 'babies', 'rooms', 'ospiti'],
+  email: ['email', 'e-mail', 'mail'],
+  firstName: ['first name', 'firstname', 'name', 'nome', 'vorname'],
+  lastName: ['last name', 'lastname', 'surname', 'cognome', 'nachname'],
+  promoCode: ['promo', 'coupon', 'discount', 'code', 'voucher', 'promotion'],
+} as const
+
+const normalizeFieldToken = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+const findNearestTextLabel = (element: HTMLElement) => {
+  const htmlElement = element as HTMLElement
+  const labelById = htmlElement.id
+    ? document.querySelector<HTMLLabelElement>(`label[for="${CSS.escape(htmlElement.id)}"]`)
+    : null
+  const labelledBy = htmlElement
+    .getAttribute('aria-labelledby')
+    ?.split(/\s+/)
+    .map((id) => document.getElementById(id)?.textContent?.trim() || '')
+    .filter(Boolean)
+    .join(' ')
+
+  const nearbyText = [
+    labelById?.textContent?.trim(),
+    htmlElement.closest('label')?.textContent?.trim(),
+    htmlElement.closest('[data-field], [data-testid], [data-name]')?.textContent?.trim(),
+    htmlElement.parentElement?.querySelector('label, legend, [aria-label]')?.textContent?.trim(),
+    labelledBy,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .trim()
+
+  return nearbyText
+}
+
+const inferWidgetFieldLabel = (element: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement) => {
+  const candidates = [
+    element.getAttribute('aria-label'),
+    element.getAttribute('placeholder'),
+    element.getAttribute('name'),
+    element.getAttribute('id'),
+    element.getAttribute('data-testid'),
+    element.getAttribute('data-name'),
+    element.getAttribute('autocomplete'),
+    findNearestTextLabel(element),
+  ]
+    .filter(Boolean)
+    .map((value) => String(value))
+
+  const normalizedCandidateText = normalizeFieldToken(candidates.join(' '))
+  const matches = (terms: readonly string[]) =>
+    terms.some((term) => normalizedCandidateText.includes(normalizeFieldToken(term)))
+
+  if (matches(widgetLabelDictionary.checkIn)) return 'Check-in'
+  if (matches(widgetLabelDictionary.checkOut)) return 'Check-out'
+  if (matches(widgetLabelDictionary.guests)) return 'Guests'
+  if (matches(widgetLabelDictionary.email)) return 'Email'
+  if (matches(widgetLabelDictionary.firstName)) return 'First name'
+  if (matches(widgetLabelDictionary.lastName)) return 'Last name'
+  if (matches(widgetLabelDictionary.promoCode)) return 'Promo code'
+
+  const value = String(
+    element instanceof HTMLInputElement && (element.type === 'checkbox' || element.type === 'radio')
+      ? element.checked
+        ? element.value || 'checked'
+        : ''
+      : element.value,
+  ).trim()
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const lowerCandidates = candidates.map((candidate) => candidate.toLowerCase())
+    const existingDateFields = lowerCandidates.filter((candidate) => /\d{4}-\d{2}-\d{2}/.test(candidate))
+    return existingDateFields.length === 0 ? 'Date' : 'Check-in'
+  }
+
+  const cleaned = candidates
+    .map((candidate) => candidate.replace(/[A-Za-z0-9]{8,}/g, '').trim())
+    .find(Boolean)
+
+  return cleaned || element.name || element.id || 'Field'
+}
 
 const collectWidgetFields = (root: ParentNode, bucket: Array<{ label: string; value: string }>) => {
   root.querySelectorAll('input, select, textarea').forEach((field) => {
@@ -451,12 +572,7 @@ const collectWidgetFields = (root: ParentNode, bucket: Array<{ label: string; va
 
     if (!value) return
 
-    const label =
-      element.getAttribute('aria-label') ||
-      element.getAttribute('placeholder') ||
-      element.name ||
-      element.id ||
-      'field'
+    const label = inferWidgetFieldLabel(element)
 
     bucket.push({ label, value })
   })
@@ -473,16 +589,25 @@ const collectWidgetSelection = () => {
   const values: Array<{ label: string; value: string }> = []
   collectWidgetFields(container, values)
 
-  return values.filter(
+  const dedupedValues = values.filter(
     (entry, index, array) =>
       array.findIndex((candidate) => candidate.label === entry.label && candidate.value === entry.value) ===
       index,
   )
+
+  const dateEntries = dedupedValues.filter((entry) => entry.label === 'Date')
+  if (dateEntries.length >= 2) {
+    dateEntries[0].label = 'Check-in'
+    dateEntries[1].label = 'Check-out'
+  }
+
+  return dedupedValues
 }
 
 const reportWidgetTracking = async (widgetAction: string, redirectUrl = '') => {
   const hotel = activeBookingHotel.value
   if (!hotel) return
+  if (widgetTrackingSentForSession) return
 
   const widgetSelection = collectWidgetSelection()
   const signature = JSON.stringify({
@@ -497,6 +622,7 @@ const reportWidgetTracking = async (widgetAction: string, redirectUrl = '') => {
 
   lastWidgetTrackingSignature = signature
   lastWidgetTrackingAt = now
+  widgetTrackingSentForSession = true
 
   const submittedAt = new Date()
 
@@ -541,6 +667,11 @@ const installWidgetTracking = () => {
     if (!clickable) return
     const action = (clickable.textContent || clickable.getAttribute('aria-label') || '').trim()
     if (!action) return
+    const normalizedAction = action.toLowerCase()
+    const isLikelyBookingAction = widgetTrackingActionPatterns.some((pattern) =>
+      normalizedAction.includes(pattern),
+    )
+    if (!isLikelyBookingAction) return
     void reportWidgetTracking(`click:${action.slice(0, 80)}`)
   }
 
