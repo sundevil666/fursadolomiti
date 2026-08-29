@@ -2916,7 +2916,6 @@ body.is-booking-modal-open {
   min-height: 0;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
-  overflow: hidden;
 
   .booking-modal__intro {
     z-index: 1;
@@ -2950,15 +2949,6 @@ body.is-booking-modal-open {
     font-size: 14px;
     line-height: 1.4;
   }
-}
-
-.booking-modal__panel--expert {
-  overflow: hidden;
-}
-
-.booking-modal__panel--limited-lower {
-  height: auto;
-  max-height: min(100%, calc(100dvh - clamp(24px, 6vw, 64px)));
 }
 
 .booking-modal__close {
