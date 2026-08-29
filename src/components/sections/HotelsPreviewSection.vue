@@ -445,7 +445,7 @@ const submitBookingRequest = async () => {
   try {
     const submittedAt = new Date()
 
-    const response = await fetch('/api/send-email', {
+    const response = await fetch('/api/send-email.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
