@@ -427,7 +427,7 @@ const mountBookingExpertWidget = async (hotel: HotelPreview) => {
 
 const bookingEmailEndpoint =
   import.meta.env.VITE_BOOKING_EMAIL_ENDPOINT ||
-  (window.location.hostname.endsWith('.vercel.app') ? '/api/send-email' : '/api/send-email.php')
+  (window.location.hostname.endsWith('.vercel.app') ? '/api/send-email' : '/php/send-email.php')
 
 const submitBookingRequest = async () => {
   formError.value = ''
