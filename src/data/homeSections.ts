@@ -215,6 +215,10 @@ export const hotelPreviews: HotelPreview[] = [
     locationKey: 'home.hotels.continental.location',
     descriptionKey: 'home.hotels.continental.description',
     featuresKey: 'home.hotels.continental.features',
+    bookingSuedtirol: {
+      id: '55ed9565-19f5-439a-8d8e-77cffe44444c',
+      propertyId: 11034,
+    },
   },
   {
     id: 'luna-mondschein',
