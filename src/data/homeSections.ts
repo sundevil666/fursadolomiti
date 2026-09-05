@@ -307,6 +307,8 @@ export const hotelPreviews: HotelPreview[] = [
       '/chalet-zenit/chalet-zenit2.png',
       '/chalet-zenit/chalet-zenit3.png',
       '/chalet-zenit/chalet-zenit4.png',
+      '/chalet-zenit/chalet-zenit5.jpg',
+      '/chalet-zenit/chalet-zenit6.png',
     ],
     promoCode: 'REPLACE_CHALET_ZENIT',
     bookingUrl: 'https://example.com/chalet-zenit/booking',
