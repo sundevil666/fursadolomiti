@@ -835,7 +835,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="hotels-section">
+  <section class="hotels-section" data-selection-notice-anchor>
     <div
       v-if="!hasLimit"
       class="hotels-section__filters"

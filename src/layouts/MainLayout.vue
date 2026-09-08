@@ -4,6 +4,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue'
 import AppFooter from '@/components/AppFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
 import CookieConsent from '@/components/CookieConsent.vue'
+import SelectionNotice from '@/components/SelectionNotice.vue'
 
 const isFooterVisible = ref(false)
 let footerObserver: IntersectionObserver | null = null
@@ -51,5 +52,6 @@ onBeforeUnmount(() => {
 
     <AppFooter />
     <CookieConsent />
+    <SelectionNotice />
   </q-layout>
 </template>

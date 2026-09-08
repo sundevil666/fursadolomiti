@@ -355,6 +355,11 @@
   "page": {
     "eyebrow": "FursaDolomiti"
   },
+  "selectionNotice": {
+    "label": "Informazioni sulla selezione",
+    "text": "La selezione di hotel, chalet e appartamenti è in continuo aggiornamento: vengono aggiunte regolarmente nuove proposte per il tuo soggiorno.",
+    "close": "Chiudi la notifica"
+  },
   "cookies": {
     "title": "Avviso sui cookie",
     "text": "Utilizziamo i cookie per offrirti la migliore esperienza possibile sul nostro sito web. Continuando a usare questo sito, accetti il nostro utilizzo dei cookie.",
