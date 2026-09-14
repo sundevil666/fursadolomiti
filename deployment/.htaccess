@@ -1,0 +1,32 @@
+# FursaDolomiti: standalone document-root configuration.
+# Upload fursa-release first, then replace the root .htaccess with this file.
+# Requires Apache 2.4 + mod_rewrite and AllowOverride All.
+Options -Indexes -MultiViews
+DirectoryIndex index.html index.php
+ErrorDocument 404 default
+RewriteEngine On
+
+# Redirect the www host to the canonical HTTPS domain, preserving path and query.
+RewriteCond %{HTTP_HOST} ^www\.fursadolomiti\.com(?::[0-9]+)?$ [NC]
+RewriteRule ^ https://fursadolomiti.com%{REQUEST_URI} [R=301,END,NE]
+
+RewriteCond %{DOCUMENT_ROOT}/fursa-release/index.html -f
+RewriteRule ^(?:home(?:-2)?\.php|index\.(?:php|html))$ / [R=302,END]
+
+RewriteCond %{DOCUMENT_ROOT}/fursa-release/index.html -f
+RewriteRule ^hotel-booking\.php$ /hotels [R=302,END]
+
+RewriteCond %{DOCUMENT_ROOT}/fursa-release/index.html -f
+RewriteRule ^ski-rental\.php$ /rental [R=302,END]
+
+RewriteCond %{DOCUMENT_ROOT}/fursa-release/index.html -f
+RewriteRule ^(?:hotels/?|rental/?|privacy-policy/?)?$ fursa-release/index.html [END]
+
+# Serve release assets and the PHP endpoint from the isolated folder.
+RewriteCond %{DOCUMENT_ROOT}/fursa-release/index.html -f
+RewriteCond %{DOCUMENT_ROOT}/fursa-release/$1 -f
+RewriteRule ^((?!fursa-release/|\.well-known/).+)$ fursa-release/$1 [END]
+# Existing legacy files remain accessible. Unknown URLs return a real 404.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ - [R=404,END]

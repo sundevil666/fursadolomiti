@@ -1,0 +1,78 @@
+{
+  "checked_at": "2026-09-13T08:27:49.966087+00:00",
+  "origin": "https://www.fursadolomiti.com",
+  "results": [
+    {
+      "hotel": "alpenroyal",
+      "url": "https://api.widgets.bookingsuedtirol.com/v6/widgets?id=23b144fc-3c5e-45cb-b8d3-50137461646a",
+      "status": 200,
+      "final_url": "https://api.widgets.bookingsuedtirol.com/v6/widgets?id=23b144fc-3c5e-45cb-b8d3-50137461646a",
+      "cors": "*",
+      "content_type": "application/json",
+      "body_excerpt": "{\"id\":\"23b144fc-3c5e-45cb-b8d3-50137461646a\",\"type\":\"booking\",\"colors\":{\"main\":{\"text\":\"#494d50ff\",\"separator\":null,\"background\":\"#ffffff00\",\"title\":\"#98520eff\"},\"primary\":{\"background\":\"#98520eff\",\"text\":\"#ffffffff\"},\"secondary\":{\"background\":\"#98520eff\",\"text\":\"#ffffffff\"}},\"settings\":{\"layout\":\"one_pager\",\"license\":\"extended\",\"max_adults\":4,\"enquiry_type\":\"non_bookable_items\",\"max_children\":3,\"field_settings\":{\"city\":\"disabled\",\"note\":\"optional\",\"phone\":\"optional\",\"gender\":\"optional\",\"street\":\"disabled\",\"country\":\"optional\",\"zipcode\":\"disabled\"},\"show_discounts\":true,\"show_invoice_option\":t"
+    },
+    {
+      "hotel": "posta",
+      "url": "https://api.widgets.bookingsuedtirol.com/v6/widgets?id=cb10173a-7255-4e60-99c5-6cfb42c2f5b4",
+      "status": 200,
+      "final_url": "https://api.widgets.bookingsuedtirol.com/v6/widgets?id=cb10173a-7255-4e60-99c5-6cfb42c2f5b4",
+      "cors": "*",
+      "content_type": "application/json",
+      "body_excerpt": "{\"id\":\"cb10173a-7255-4e60-99c5-6cfb42c2f5b4\",\"type\":\"booking\",\"colors\":{\"main\":{\"text\":\"#494d50ff\",\"separator\":null,\"background\":\"#ffffff00\",\"title\":\"#533528ff\"},\"primary\":{\"background\":\"#533528ff\",\"text\":\"#ffffffff\"},\"secondary\":{\"background\":\"#7d685eff\",\"text\":\"#ffffffff\"}},\"settings\":{\"layout\":\"four_steps\",\"license\":\"extended\",\"max_adults\":4,\"enquiry_type\":\"non_bookable_items\",\"max_children\":3,\"field_settings\":{\"city\":\"disabled\",\"note\":\"optional\",\"phone\":\"optional\",\"gender\":\"optional\",\"street\":\"disabled\",\"country\":\"optional\",\"zipcode\":\"disabled\"},\"show_discounts\":false,\"show_invoice_option\""
+    },
+    {
+      "hotel": "continental",
+      "url": "https://api.widgets.bookingsuedtirol.com/v6/widgets?id=55ed9565-19f5-439a-8d8e-77cffe44444c",
+      "status": 200,
+      "final_url": "https://api.widgets.bookingsuedtirol.com/v6/widgets?id=55ed9565-19f5-439a-8d8e-77cffe44444c",
+      "cors": "*",
+      "content_type": "application/json",
+      "body_excerpt": "{\"id\":\"55ed9565-19f5-439a-8d8e-77cffe44444c\",\"type\":\"booking\",\"colors\":{\"main\":{\"text\":\"#494d50ff\",\"separator\":null,\"background\":\"#ffffff00\",\"title\":\"#6b6c6eff\"},\"primary\":{\"background\":\"#6b6c6eff\",\"text\":\"#ffffffff\"},\"secondary\":{\"background\":\"#b38600ff\",\"text\":\"#ffffffff\"}},\"settings\":{\"layout\":\"one_pager\",\"license\":\"extended\",\"max_adults\":4,\"enquiry_type\":\"non_bookable_items\",\"max_children\":3,\"field_settings\":{\"city\":\"disabled\",\"note\":\"optional\",\"phone\":\"optional\",\"gender\":\"optional\",\"street\":\"disabled\",\"country\":\"optional\",\"zipcode\":\"disabled\"},\"show_discounts\":true,\"show_invoice_option\":t"
+    },
+    {
+      "hotel": "luxury-chalet-p",
+      "url": "https://api.widgets.bookingsuedtirol.com/v6/widgets?id=1840bd82-bfd7-40fc-8914-5c2f4a732c42",
+      "status": 200,
+      "final_url": "https://api.widgets.bookingsuedtirol.com/v6/widgets?id=1840bd82-bfd7-40fc-8914-5c2f4a732c42",
+      "cors": "*",
+      "content_type": "application/json",
+      "body_excerpt": "{\"id\":\"1840bd82-bfd7-40fc-8914-5c2f4a732c42\",\"type\":\"booking\",\"colors\":{\"main\":{\"text\":\"#494d50ff\",\"separator\":null,\"background\":\"#ffffff00\",\"title\":\"#595958ff\"},\"primary\":{\"background\":\"#595958ff\",\"text\":\"#ffffffff\"},\"secondary\":{\"background\":\"#595958ff\",\"text\":\"#ffffffff\"}},\"settings\":{\"layout\":\"four_steps\",\"license\":\"extended\",\"max_adults\":12,\"enquiry_type\":\"non_bookable_items\",\"max_children\":10,\"field_settings\":{\"city\":\"disabled\",\"note\":\"optional\",\"phone\":\"required\",\"gender\":\"optional\",\"street\":\"disabled\",\"country\":\"optional\",\"zipcode\":\"disabled\"},\"show_discounts\":false,\"show_invoice_optio"
+    },
+    {
+      "hotel": "chalet-zenit",
+      "url": "https://api.widgets.bookingsuedtirol.com/v6/widgets?id=46f72afb-7807-4d15-af6f-50bfe01de476",
+      "status": 200,
+      "final_url": "https://api.widgets.bookingsuedtirol.com/v6/widgets?id=46f72afb-7807-4d15-af6f-50bfe01de476",
+      "cors": "*",
+      "content_type": "application/json",
+      "body_excerpt": "{\"id\":\"46f72afb-7807-4d15-af6f-50bfe01de476\",\"type\":\"booking\",\"colors\":{\"main\":{\"text\":\"#494d50ff\",\"separator\":null,\"background\":\"#ffffff00\",\"title\":\"#545454ff\"},\"primary\":{\"background\":\"#545454ff\",\"text\":\"#ffffffff\"},\"secondary\":{\"background\":\"#545454ff\",\"text\":\"#ffffffff\"}},\"settings\":{\"layout\":\"four_steps\",\"license\":\"standard\",\"max_adults\":4,\"enquiry_type\":\"non_bookable_items\",\"max_children\":3,\"field_settings\":{\"city\":\"disabled\",\"note\":\"optional\",\"phone\":\"optional\",\"gender\":\"optional\",\"street\":\"disabled\",\"country\":\"optional\",\"zipcode\":\"disabled\"},\"show_discounts\":false,\"show_invoice_option\""
+    },
+    {
+      "hotel": "edenselva-api",
+      "url": "https://be.bookingexpert.it/book/websites/newsearchbox?lang=en&hotel=41512&layout=12224&searchbox=newwidget",
+      "status": 200,
+      "final_url": "https://be.bookingexpert.it/book/websites/newsearchbox?lang=en&hotel=41512&layout=12224&searchbox=newwidget",
+      "cors": "*",
+      "content_type": "application/json;charset=utf-8",
+      "body_excerpt": "{\"hotel\":41512,\"domain\":null,\"layout\":12224,\"language\":\"en\",\"ga4\":\"G-1711DFG91D\",\"host\":\"https:\\/\\/be.bookingexpert.it\",\"guests\":[{\"id\":164091,\"code\":\"2 Adulto+1 Bambino (9-12)+1 Ragazzo (13-17)\",\"name\":{\"de\":\"2 Erwachsene + 1 Kind (9-12) + 1 Teenager (13-17)\",\"en\":\"2 Adults + 1 Child (9-12) + 1 Teenager (13-17)\",\"it\":\"2 Adulti + 1 Bambino (9-12) + 1 Ragazzo (13-17)\"},\"favorite\":false},{\"id\":164092,\"code\":\"1 Adulto+2 Bambino (9-12)+1 Ragazzo (13-17)\",\"name\":{\"de\":\"1 Erwachsener + 2 Kinder (9-12) + 1 Teenager (13-17)\",\"en\":\"1 Adult + 2 Children (9-12) + 1 Teenager (13-17)\",\"it\":\"1 Adulto + 2 Ba"
+    },
+    {
+      "hotel": "edenselva-script",
+      "url": "https://ber-js.my-cdn.cloud/widget/v0/searchbox.js",
+      "status": 200,
+      "final_url": "https://ber-js.my-cdn.cloud/widget/v0/searchbox.js",
+      "cors": "*",
+      "content_type": "text/javascript",
+      "body_excerpt": "var Nc=Object.defineProperty;var zc=(e,t,r)=>t in e?Nc(e,t,{enumerable:!0,configurable:!0,writable:!0,value:r}):e[t]=r;var de=(e,t,r)=>(zc(e,typeof t!=\"symbol\"?t+\"\":t,r),r);(function(){const t=document.createElement(\"link\").relList;if(t&&t.supports&&t.supports(\"modulepreload\"))return;for(const i of document.querySelectorAll('link[rel=\"modulepreload\"]'))n(i);new MutationObserver(i=>{for(const o of i)if(o.type===\"childList\")for(const l of o.addedNodes)l.tagName===\"LINK\"&&l.rel===\"modulepreload\"&&n(l)}).observe(document,{childList:!0,subtree:!0});function r(i){const o={};return i.integrity&&(o.in"
+    },
+    {
+      "hotel": "luna-mondschein",
+      "url": "https://booking.hotel-luna.com/be/en/luna-mondschein-ortisei/",
+      "status": 403,
+      "final_url": "https://booking.hotel-luna.com/be/en/luna-mondschein-ortisei/",
+      "cors": null,
+      "content_type": "text/html; charset=UTF-8",
+      "body_excerpt": "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta http-equiv=\"content-security-policy\" content=\"default-src &#39;none&#39;; script-src &#39;nonce-ApJdAFQLj0A1vz2DUfJgfF&#39; &#39;unsafe-eval&#39; https://challenges.cloudflare.com; script-src-attr &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src &#39;self&#39; https://challenges"
+    }
+  ]
+}
