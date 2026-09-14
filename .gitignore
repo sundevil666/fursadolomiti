@@ -13,3 +13,4 @@ dist/
 .vscode/
 
 dist-ftp/
+php/email-config.php

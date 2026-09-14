@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+$emailConfigPath = __DIR__ . '/email-config.php';
+$emailConfig = is_file($emailConfigPath) ? require $emailConfigPath : [];
+
 $emailPattern = '/^[^\s@]+@[^\s@]+\.[^\s@]+$/';
 
 function jsonResponse(int $statusCode, array $payload, array $extraHeaders = []): void
@@ -19,6 +22,8 @@ function jsonResponse(int $statusCode, array $payload, array $extraHeaders = [])
 
 function getEnvValue(string $name, ?string $default = null): ?string
 {
+    global $emailConfig;
+
     $value = getenv($name);
     if ($value !== false && $value !== '') {
         return $value;
@@ -26,6 +31,10 @@ function getEnvValue(string $name, ?string $default = null): ?string
 
     if (isset($_ENV[$name]) && $_ENV[$name] !== '') {
         return (string) $_ENV[$name];
+    }
+
+    if (isset($emailConfig[$name]) && $emailConfig[$name] !== '') {
+        return (string) $emailConfig[$name];
     }
 
     return $default;
