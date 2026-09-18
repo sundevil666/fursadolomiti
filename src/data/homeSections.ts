@@ -218,6 +218,7 @@ export const hotelPreviews: HotelPreview[] = [
     bookingSuedtirol: {
       id: '55ed9565-19f5-439a-8d8e-77cffe44444c',
       propertyId: 11034,
+      promotion: ['affiliate', 'fursadolomiti.com', 'continental_11034'],
     },
   },
   {
@@ -326,6 +327,7 @@ export const hotelPreviews: HotelPreview[] = [
     bookingSuedtirol: {
       id: '46f72afb-7807-4d15-af6f-50bfe01de476',
       propertyId: 13459,
+      promotion: ['affiliate', 'fursadolomiti.com', 'chalet_zenit_13459'],
     },
   },
 ]
