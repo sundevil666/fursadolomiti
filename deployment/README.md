@@ -42,13 +42,13 @@ Apache 2.4 + mod_rewrite (или совместимый сервер), разр�
 Node нужен только для локальной сборки. База данных не нужна.
 Для отправки писем используется локальный `php/email-config.php`. При первом
 запуске скопировать `php/email-config.example.php` в `php/email-config.php`
-и заполнить ключи EmailJS и EMAIL_RECIPIENTS. Реальный конфиг исключён из Git.
+и заполнить SMTP_PASSWORD и EMAIL_RECIPIENTS. Реальный конфиг исключён из Git.
 `npm run build:ftp` копирует его в `dist-ftp/fursa-release/php/email-config.php`.
 FTP-пакет содержит секреты: не публиковать его в Git и не пересылать посторонним.
 Загрузить папку php целиком, включая скрытый `.htaccess`: он запрещает
 HTTP-доступ к конфигу. Переменные окружения сервера имеют приоритет над файлом.
 PHP не читает .env автоматически. Нужны PHP с поддержкой синтаксиса 7.4+,
-OpenSSL, allow_url_fopen и исходящий HTTPS к api.emailjs.com.
+OpenSSL и исходящее SMTP-соединение к mail.fursadolomiti.com:465.
 GET /php/send-email.php должен возвращать 405 JSON; доставку это не проверяет.
 После настройки нужна отдельная тестовая заявка с проверкой писем.
 

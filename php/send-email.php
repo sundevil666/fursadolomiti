@@ -98,36 +98,144 @@ function renderRow(string $label, string $value, bool $highlighted = false): str
     </tr>';
 }
 
-function sendEmailJsRequest(array $payload): array
+function readSmtpResponse($socket, array $expectedCodes): array
 {
-    $body = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    if ($body === false) {
-        return ['ok' => false, 'status' => 0, 'body' => 'Failed to encode request body'];
+    $response = '';
+    while (($line = fgets($socket, 2048)) !== false) {
+        $response .= $line;
+        if (strlen($line) >= 4 && $line[3] === ' ') {
+            break;
+        }
+    }
+    $code = (int) substr($response, 0, 3);
+    return ['ok' => in_array($code, $expectedCodes, true), 'response' => trim($response)];
+}
+
+function sendSmtpCommand($socket, string $command, array $expectedCodes): array
+{
+    if (fwrite($socket, $command . "\r\n") === false) {
+        return ['ok' => false, 'response' => 'Failed to write to SMTP connection'];
+    }
+    return readSmtpResponse($socket, $expectedCodes);
+}
+
+function encodeEmailHeader(string $value): string
+{
+    return '=?UTF-8?B?' . base64_encode($value) . '?=';
+}
+
+function normalizeEmailBody(string $value): string
+{
+    return preg_replace("/\r\n|\r|\n/", "\r\n", $value) ?? $value;
+}
+
+function sendSmtpEmail(array $smtpConfig, array $recipients, string $subject, string $textMessage, string $htmlMessage, ?string $replyTo = null): array
+{
+    $host = $smtpConfig['host'];
+    $connectionHost = $smtpConfig['encryption'] === 'ssl' ? 'ssl://' . $host : $host;
+    $context = stream_context_create(['ssl' => [
+        'verify_peer' => true,
+        'verify_peer_name' => true,
+        'peer_name' => $host,
+    ]]);
+    $socket = @stream_socket_client(
+        $connectionHost . ':' . $smtpConfig['port'],
+        $errorCode,
+        $errorMessage,
+        20,
+        STREAM_CLIENT_CONNECT,
+        $context
+    );
+
+    if (!is_resource($socket)) {
+        return ['ok' => false, 'message' => 'SMTP connection failed: ' . $errorCode . ' ' . $errorMessage];
     }
 
-    $context = stream_context_create([
-        'http' => [
-            'method' => 'POST',
-            'header' => "Content-Type: application/json\r\n",
-            'content' => $body,
-            'ignore_errors' => true,
-            'timeout' => 20,
-        ],
-    ]);
-
-    $responseBody = @file_get_contents('https://api.emailjs.com/api/v1.0/email/send', false, $context);
-    $responseHeaders = $http_response_header ?? [];
-    $statusCode = 0;
-
-    if (isset($responseHeaders[0]) && preg_match('/\s(\d{3})\s/', $responseHeaders[0], $matches) === 1) {
-        $statusCode = (int) $matches[1];
+    stream_set_timeout($socket, 20);
+    $response = readSmtpResponse($socket, [220]);
+    if (!$response['ok']) {
+        fclose($socket);
+        return ['ok' => false, 'message' => $response['response']];
     }
 
-    return [
-        'ok' => $statusCode >= 200 && $statusCode < 300,
-        'status' => $statusCode,
-        'body' => is_string($responseBody) ? $responseBody : '',
+    $hostname = preg_replace('/[^a-z0-9.-]/i', '', $_SERVER['SERVER_NAME'] ?? 'fursadolomiti.com');
+    $response = sendSmtpCommand($socket, 'EHLO ' . $hostname, [250]);
+    if (!$response['ok']) {
+        fclose($socket);
+        return ['ok' => false, 'message' => $response['response']];
+    }
+
+    if ($smtpConfig['encryption'] === 'tls') {
+        $response = sendSmtpCommand($socket, 'STARTTLS', [220]);
+        if (!$response['ok'] || stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT) !== true) {
+            fclose($socket);
+            return ['ok' => false, 'message' => 'SMTP STARTTLS failed'];
+        }
+        $response = sendSmtpCommand($socket, 'EHLO ' . $hostname, [250]);
+        if (!$response['ok']) {
+            fclose($socket);
+            return ['ok' => false, 'message' => $response['response']];
+        }
+    }
+
+    foreach ([
+        ['AUTH LOGIN', [334]],
+        [base64_encode($smtpConfig['username']), [334]],
+        [base64_encode($smtpConfig['password']), [235]],
+        ['MAIL FROM:<' . $smtpConfig['fromEmail'] . '>', [250]],
+    ] as [$command, $expectedCodes]) {
+        $response = sendSmtpCommand($socket, $command, $expectedCodes);
+        if (!$response['ok']) {
+            fclose($socket);
+            return ['ok' => false, 'message' => $response['response']];
+        }
+    }
+
+    foreach ($recipients as $recipient) {
+        $response = sendSmtpCommand($socket, 'RCPT TO:<' . $recipient . '>', [250, 251]);
+        if (!$response['ok']) {
+            fclose($socket);
+            return ['ok' => false, 'message' => $response['response']];
+        }
+    }
+
+    $response = sendSmtpCommand($socket, 'DATA', [354]);
+    if (!$response['ok']) {
+        fclose($socket);
+        return ['ok' => false, 'message' => $response['response']];
+    }
+
+    $boundary = '=_FursaDolomiti_' . bin2hex(random_bytes(12));
+    $headers = [
+        'Date: ' . date(DATE_RFC2822),
+        'From: FursaDolomiti <' . $smtpConfig['fromEmail'] . '>',
+        'To: ' . implode(', ', $recipients),
+        'Subject: ' . encodeEmailHeader($subject),
+        'Message-ID: <' . bin2hex(random_bytes(12)) . '@fursadolomiti.com>',
+        'MIME-Version: 1.0',
+        'Content-Type: multipart/alternative; boundary="' . $boundary . '"',
     ];
+    if ($replyTo !== null) {
+        $headers[] = 'Reply-To: ' . $replyTo;
+    }
+
+    $body = implode("\r\n", $headers) . "\r\n\r\n" .
+        '--' . $boundary . "\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" .
+        chunk_split(base64_encode(normalizeEmailBody($textMessage)), 76, "\r\n") . "\r\n" .
+        '--' . $boundary . "\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" .
+        chunk_split(base64_encode(normalizeEmailBody($htmlMessage)), 76, "\r\n") . "\r\n" .
+        '--' . $boundary . "--\r\n";
+    $body = preg_replace('/^\./m', '..', $body) ?? $body;
+
+    if (fwrite($socket, $body . ".\r\n") === false) {
+        fclose($socket);
+        return ['ok' => false, 'message' => 'Failed to write SMTP message'];
+    }
+
+    $response = readSmtpResponse($socket, [250]);
+    sendSmtpCommand($socket, 'QUIT', [221]);
+    fclose($socket);
+    return ['ok' => $response['ok'], 'message' => $response['response']];
 }
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
@@ -141,10 +249,12 @@ if (!is_array($requestBody)) {
     jsonResponse(400, ['error' => 'Invalid JSON body']);
 }
 
-$serviceId = getEnvValue('EMAILJS_SERVICE_ID');
-$templateId = getEnvValue('EMAILJS_TEMPLATE_ID');
-$publicKey = getEnvValue('EMAILJS_PUBLIC_KEY');
-$privateKey = getEnvValue('EMAILJS_PRIVATE_KEY');
+$smtpHost = getEnvValue('SMTP_HOST');
+$smtpPort = (int) (getEnvValue('SMTP_PORT', '465') ?? '465');
+$smtpEncryption = strtolower(getEnvValue('SMTP_ENCRYPTION', 'ssl') ?? 'ssl');
+$smtpUsername = getEnvValue('SMTP_USERNAME');
+$smtpPassword = getEnvValue('SMTP_PASSWORD');
+$smtpFromEmail = getEnvValue('SMTP_FROM_EMAIL', $smtpUsername);
 $recipientsValue = getEnvValue('EMAIL_RECIPIENTS', 'sundevildi@gmail.com') ?? 'sundevildi@gmail.com';
 $recipients = array_values(array_filter(array_map('trim', explode(',', $recipientsValue))));
 
@@ -165,9 +275,22 @@ $normalizedLocalDateTime = trim((string) ($requestBody['localDateTime'] ?? '')) 
 $normalizedTimezone = trim((string) ($requestBody['timezone'] ?? '')) ?: 'Not available';
 $normalizedSubmittedAt = trim((string) ($requestBody['submittedAt'] ?? '')) ?: gmdate('c');
 
-if (!$serviceId || !$templateId || !$publicKey || !$privateKey || count($recipients) === 0) {
+if (!$smtpHost || !$smtpUsername || !$smtpPassword || !$smtpFromEmail || $smtpPort < 1 ||
+    !in_array($smtpEncryption, ['ssl', 'tls', 'none'], true) ||
+    preg_match($emailPattern, $smtpFromEmail) !== 1 || count($recipients) === 0 ||
+    count(array_filter($recipients, static fn (string $recipient): bool => preg_match('/^[^\s@]+@[^\s@]+\.[^\s@]+$/', $recipient) !== 1)) > 0
+) {
     jsonResponse(500, ['error' => 'Email service is not configured']);
 }
+
+$smtpConfig = [
+    'host' => $smtpHost,
+    'port' => $smtpPort,
+    'encryption' => $smtpEncryption,
+    'username' => $smtpUsername,
+    'password' => $smtpPassword,
+    'fromEmail' => $smtpFromEmail,
+];
 
 $isWidgetTrackingEvent = $normalizedEventType === 'widget_redirect';
 
@@ -433,46 +556,10 @@ $customerMessage = implode("\n", [
     'The hotel or booking system will send a separate confirmation after the booking is completed.',
 ]);
 
-$emailPayloadBase = [
-    'service_id' => $serviceId,
-    'template_id' => $templateId,
-    'user_id' => $publicKey,
-    'accessToken' => $privateKey,
-];
-
-$emailResponse = sendEmailJsRequest($emailPayloadBase + [
-    'template_params' => [
-        'to_email' => implode(',', $recipients),
-        'subject' => $subject,
-        'title' => $subject,
-        'sender_name' => 'FursaDolomiti',
-        'time' => $normalizedLocalDateTime,
-        'html_message' => $htmlMessage,
-        'hotel_image' => $normalizedHotelImage,
-        'first_name' => $normalizedFirstName,
-        'last_name' => $normalizedLastName,
-        'full_name' => $fullName,
-        'user_email' => $normalizedEmail,
-        'hotel' => $normalizedHotel,
-        'promo_code' => $normalizedPromoCode,
-        'website_language' => $normalizedLocale,
-        'local_date_time' => $normalizedLocalDateTime,
-        'user_timezone' => $normalizedTimezone,
-        'submitted_at' => $normalizedSubmittedAt,
-        'country' => $country,
-        'region' => $region,
-        'city' => $city,
-        'location_timezone' => $locationTimezone,
-        'from_name' => 'FursaDolomiti',
-        'name' => $fullName,
-        'email' => $normalizedEmail,
-        'reply_to' => $normalizedEmail,
-        'message' => $message,
-    ],
-]);
+$emailResponse = sendSmtpEmail($smtpConfig, $recipients, $subject, $message, $htmlMessage, $normalizedEmail);
 
 if (!$emailResponse['ok']) {
-    error_log('EmailJS error: ' . $emailResponse['status'] . ' ' . $emailResponse['body']);
+    error_log('SMTP error: ' . $emailResponse['message']);
     jsonResponse(502, ['error' => 'Email delivery failed']);
 }
 
@@ -480,35 +567,17 @@ if ($isWidgetTrackingEvent) {
     jsonResponse(200, ['ok' => true]);
 }
 
-$customerEmailResponse = sendEmailJsRequest($emailPayloadBase + [
-    'template_params' => [
-        'to_email' => $normalizedEmail,
-        'subject' => $customerSubject,
-        'title' => $customerSubject,
-        'sender_name' => 'FursaDolomiti',
-        'time' => $normalizedLocalDateTime,
-        'html_message' => $customerHtmlMessage,
-        'hotel_image' => $normalizedHotelImage,
-        'first_name' => $normalizedFirstName,
-        'last_name' => $normalizedLastName,
-        'full_name' => $fullName,
-        'user_email' => $normalizedEmail,
-        'hotel' => $normalizedHotel,
-        'promo_code' => $normalizedPromoCode,
-        'website_language' => $normalizedLocale,
-        'local_date_time' => $normalizedLocalDateTime,
-        'user_timezone' => $normalizedTimezone,
-        'submitted_at' => $normalizedSubmittedAt,
-        'from_name' => 'FursaDolomiti',
-        'name' => $fullName,
-        'email' => $normalizedEmail,
-        'reply_to' => $recipients[0],
-        'message' => $customerMessage,
-    ],
-]);
+$customerEmailResponse = sendSmtpEmail(
+    $smtpConfig,
+    [$normalizedEmail],
+    $customerSubject,
+    $customerMessage,
+    $customerHtmlMessage,
+    $recipients[0]
+);
 
 if (!$customerEmailResponse['ok']) {
-    error_log('Customer EmailJS error: ' . $customerEmailResponse['status'] . ' ' . $customerEmailResponse['body']);
+    error_log('Customer SMTP error: ' . $customerEmailResponse['message']);
 }
 
 jsonResponse(200, ['ok' => true, 'promoCode' => $normalizedPromoCode]);

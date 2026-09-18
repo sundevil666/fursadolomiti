@@ -114,7 +114,7 @@ onMounted(() => {
             <li>
               Vercel, which hosts and delivers the website and provides related infrastructure;
             </li>
-            <li>EmailJS and its email delivery providers, which transmit booking notifications;</li>
+            <li>Our email hosting provider, which transmits booking notifications;</li>
             <li>
               technical, professional or public authorities where access is necessary to provide
               the service, protect legal rights or comply with the law.

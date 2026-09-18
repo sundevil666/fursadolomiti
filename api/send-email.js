@@ -1,3 +1,5 @@
+import nodemailer from 'nodemailer'
+
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const getHeader = (request, name) => {
@@ -24,10 +26,12 @@ const escapeHtml = (value) =>
     .replaceAll("'", '&#039;')
 
 export default async function handler(request, response) {
-  const serviceId = process.env.EMAILJS_SERVICE_ID
-  const templateId = process.env.EMAILJS_TEMPLATE_ID
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY
+  const smtpHost = process.env.SMTP_HOST
+  const smtpPort = Number(process.env.SMTP_PORT || 465)
+  const smtpEncryption = (process.env.SMTP_ENCRYPTION || 'ssl').toLowerCase()
+  const smtpUsername = process.env.SMTP_USERNAME
+  const smtpPassword = process.env.SMTP_PASSWORD
+  const smtpFromEmail = process.env.SMTP_FROM_EMAIL || smtpUsername
   const recipientsValue = process.env.EMAIL_RECIPIENTS || 'sundevildi@gmail.com'
   const recipients = recipientsValue
     .split(',')
@@ -74,7 +78,18 @@ export default async function handler(request, response) {
   const normalizedTimezone = String(timezone || '').trim() || 'Not available'
   const normalizedSubmittedAt = String(submittedAt || '').trim() || new Date().toISOString()
 
-  if (!serviceId || !templateId || !publicKey || !privateKey || recipients.length === 0) {
+  if (
+    !smtpHost ||
+    !smtpUsername ||
+    !smtpPassword ||
+    !smtpFromEmail ||
+    !Number.isInteger(smtpPort) ||
+    smtpPort < 1 ||
+    !['ssl', 'tls', 'none'].includes(smtpEncryption) ||
+    !emailPattern.test(smtpFromEmail) ||
+    recipients.length === 0 ||
+    recipients.some((recipient) => !emailPattern.test(recipient))
+  ) {
     return response.status(500).json({ error: 'Email service is not configured' })
   }
 
@@ -329,95 +344,38 @@ export default async function handler(request, response) {
   ].join('\n')
 
   try {
-    const emailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        service_id: serviceId,
-        template_id: templateId,
-        user_id: publicKey,
-        accessToken: privateKey,
-        template_params: {
-          to_email: recipients.join(','),
-          subject,
-          title: subject,
-          sender_name: 'FursaDolomiti',
-          time: normalizedLocalDateTime,
-          html_message: htmlMessage,
-          hotel_image: normalizedHotelImage,
-          first_name: normalizedFirstName,
-          last_name: normalizedLastName,
-          full_name: fullName,
-          user_email: normalizedEmail,
-          hotel: normalizedHotel,
-          promo_code: normalizedPromoCode,
-          website_language: normalizedLocale,
-          local_date_time: normalizedLocalDateTime,
-          user_timezone: normalizedTimezone,
-          submitted_at: normalizedSubmittedAt,
-          country,
-          region,
-          city,
-          location_timezone: locationTimezone,
-          from_name: 'FursaDolomiti',
-          name: fullName,
-          email: normalizedEmail,
-          reply_to: normalizedEmail,
-          message,
-        },
-      }),
+    const transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpEncryption === 'ssl',
+      requireTLS: smtpEncryption === 'tls',
+      auth: { user: smtpUsername, pass: smtpPassword },
     })
 
-    if (!emailResponse.ok) {
-      console.error('EmailJS error:', emailResponse.status, await emailResponse.text())
-      return response.status(502).json({ error: 'Email delivery failed' })
-    }
+    await transporter.sendMail({
+      from: `FursaDolomiti <${smtpFromEmail}>`,
+      to: recipients,
+      replyTo: normalizedEmail,
+      subject,
+      text: message,
+      html: htmlMessage,
+    })
 
     if (isWidgetTrackingEvent) {
       return response.status(200).json({ ok: true })
     }
 
-    const customerEmailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        service_id: serviceId,
-        template_id: templateId,
-        user_id: publicKey,
-        accessToken: privateKey,
-        template_params: {
-          to_email: normalizedEmail,
-          subject: customerSubject,
-          title: customerSubject,
-          sender_name: 'FursaDolomiti',
-          time: normalizedLocalDateTime,
-          html_message: customerHtmlMessage,
-          hotel_image: normalizedHotelImage,
-          first_name: normalizedFirstName,
-          last_name: normalizedLastName,
-          full_name: fullName,
-          user_email: normalizedEmail,
-          hotel: normalizedHotel,
-          promo_code: normalizedPromoCode,
-          website_language: normalizedLocale,
-          local_date_time: normalizedLocalDateTime,
-          user_timezone: normalizedTimezone,
-          submitted_at: normalizedSubmittedAt,
-          from_name: 'FursaDolomiti',
-          name: fullName,
-          email: normalizedEmail,
-          reply_to: recipients[0],
-          message: customerMessage,
-        },
-      }),
-    })
-
-    if (!customerEmailResponse.ok) {
-      console.error(
-        'Customer EmailJS error:',
-        customerEmailResponse.status,
-        await customerEmailResponse.text(),
-      )
+    try {
+      await transporter.sendMail({
+        from: `FursaDolomiti <${smtpFromEmail}>`,
+        to: normalizedEmail,
+        replyTo: recipients[0],
+        subject: customerSubject,
+        text: customerMessage,
+        html: customerHtmlMessage,
+      })
+    } catch (error) {
+      console.error('Customer SMTP error:', error)
     }
 
     return response.status(200).json({ ok: true, promoCode: normalizedPromoCode })
