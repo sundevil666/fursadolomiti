@@ -301,15 +301,49 @@ export default async function handler(request, response) {
     `City: ${city}`,
     `Location timezone: ${locationTimezone}`,
   ].join('\n')
-  const customerSubject = `FursaDolomiti - ${normalizedHotel} booking request received`
+  const customerLocale = ['ru', 'en', 'it'].includes(normalizedLocale.toLowerCase().split('-')[0])
+    ? normalizedLocale.toLowerCase().split('-')[0]
+    : 'en'
+  const customerCopy = {
+    ru: {
+      subject: 'Ваш запрос на бронирование отправлен',
+      paragraphs: [
+        'Спасибо, что решили отправить запрос на бронирование через мой сайт.',
+        'Отель получил Ваш запрос и должен ответить Вам в течение 1–2 дней, предложив доступные варианты для бронирования.',
+        'Если Вы не получили ответ, Вы также можете отправить запрос напрямую через официальный сайт отеля. Пожалуйста, обязательно укажите промокод FURSADOLOMITI в комментариях к запросу.',
+        'Если проблема сохраняется и Вы по-прежнему не получаете ответа, свяжитесь со мной напрямую. Я постараюсь решить вопрос и отправить вам подходящее предложение как можно скорее.',
+      ],
+    },
+    en: {
+      subject: 'Your booking request has been sent',
+      paragraphs: [
+        'Thank you for choosing to send your booking request through my website.',
+        'The hotel has received your request and should reply within 1–2 days with the available booking options.',
+        'If you do not receive a response, you can also send your request directly through the hotel’s official website. Please make sure to enter the promo code FURSADOLOMITI in the comments section of your request.',
+        'If you still experience any problems or do not receive a reply, please contact me directly. I will do my best to resolve the issue and send you a suitable proposal as soon as possible.',
+      ],
+    },
+    it: {
+      subject: 'La vostra richiesta di prenotazione è stata inviata',
+      paragraphs: [
+        'Grazie per aver scelto di inviare la vostra richiesta di prenotazione tramite il mio sito.',
+        'L’hotel ha ricevuto la vostra richiesta e dovrebbe rispondervi entro 1–2 giorni, inviandovi le opzioni disponibili per la prenotazione.',
+        'Se non ricevete una risposta, potete inviare la richiesta anche direttamente tramite il sito ufficiale dell’hotel. Vi prego di indicare il codice promo FURSADOLOMITI nel campo dei commenti della richiesta.',
+        'Se il problema persiste e non ricevete ancora una risposta, potete contattarmi direttamente. Cercherò di risolvere il problema e di inviarvi una proposta adatta alle vostre esigenze il prima possibile.',
+      ],
+    },
+  }[customerLocale]
+  const customerSubject = `FursaDolomiti - ${customerCopy.subject}`
+  const customerParagraphsHtml = customerCopy.paragraphs
+    .map((paragraph) => `<p style="margin:0 0 18px;color:#3d342c;font-size:15px;line-height:23px;">${escapeHtml(paragraph).replaceAll('FURSADOLOMITI', '<strong>FURSADOLOMITI</strong>')}</p>`)
+    .join('')
   const customerHtmlMessage = `
     <div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:640px;margin:0 auto;border-collapse:separate;background-color:#fffaf0;border:1px solid #e5dbc6;border-radius:16px;box-shadow:0 14px 40px rgba(48,38,16,.12);overflow:hidden;">
         <tr>
           <td style="padding:28px 32px 30px;background-color:#175445;color:#fffaf0;">
             <div style="color:#d7e3d9;font-size:11px;line-height:16px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">FursaDolomiti</div>
-            <div style="margin-top:13px;color:#fffaf0;font-size:26px;line-height:34px;font-weight:700;">Your request has been received</div>
-            <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;">Thank you, <strong style="color:#ffffff;">${safe.firstName}</strong>. We have received your request for <strong style="color:#ffffff;">${safe.hotel}</strong>.</div>
+            <div style="margin-top:13px;color:#fffaf0;font-size:26px;line-height:34px;font-weight:700;">${escapeHtml(customerCopy.subject)}</div>
           </td>
         </tr>
         ${
@@ -319,29 +353,13 @@ export default async function handler(request, response) {
         }
         <tr>
           <td style="padding:28px 32px 32px;">
-            <p style="margin:0 0 16px;color:#3d342c;font-size:15px;line-height:23px;">Please complete your reservation on the hotel's official booking page. If requested, use this promo code:</p>
-            <div style="display:inline-block;margin-bottom:20px;padding:10px 14px;background-color:#175445;border-radius:999px;color:#fffaf0;font-size:14px;line-height:18px;font-weight:700;">${safe.promoCode}</div>
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">
-              ${row('Name', safe.fullName)}
-              ${row('Hotel', safe.hotel, true)}
-              ${row('Request date', safe.localDateTime, true)}
-            </table>
-            <p style="margin:18px 0 0;color:#796e5f;font-size:13px;line-height:20px;">The hotel or its booking system will send a separate confirmation after you finish the reservation there.</p>
+            ${customerParagraphsHtml}
             <div style="margin-top:24px;padding-top:18px;border-top:1px solid #e8dfcc;color:#998d7b;font-size:11px;line-height:17px;text-align:center;">fursadolomiti.com</div>
           </td>
         </tr>
       </table>
     </div>`
-  const customerMessage = [
-    'Your FursaDolomiti request has been received.',
-    '',
-    `Name: ${fullName}`,
-    `Hotel: ${normalizedHotel}`,
-    `Promo code: ${normalizedPromoCode}`,
-    '',
-    'Please complete your reservation on the official hotel booking page.',
-    'The hotel or booking system will send a separate confirmation after the booking is completed.',
-  ].join('\n')
+  const customerMessage = customerCopy.paragraphs.join('\n\n')
 
   try {
     const transporter = nodemailer.createTransport({
