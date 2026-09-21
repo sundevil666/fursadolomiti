@@ -782,7 +782,7 @@ const submitBookingRequest = async () => {
 
       formStatus.value = 'redirecting'
       window.setTimeout(() => {
-        window.open(bookingUrl.href, '_blank', 'noopener,noreferrer')
+        window.location.assign(bookingUrl.href)
       }, 1400)
     }
   } catch (error) {
