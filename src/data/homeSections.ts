@@ -238,10 +238,7 @@ export const hotelPreviews: HotelPreview[] = [
       de: 'https://booking.hotel-luna.com/be/de/luna-mondschein-ortisei/',
     },
     bookingParams: {
-      promoCode: 'codiceSconto',
-    },
-    bookingHiddenParams: {
-      idHotel: '1694',
+      promoCode: 'canale',
     },
     nameKey: 'home.hotels.lunaMondschein.name',
     locationKey: 'home.hotels.lunaMondschein.location',
