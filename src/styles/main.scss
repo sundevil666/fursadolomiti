@@ -3315,7 +3315,7 @@ body.is-booking-modal-open {
 
 @media (max-width: 520px) {
   .booking-modal {
-    padding: 12px;
+    padding: 0;
   }
 
   .booking-modal__title {
@@ -3325,8 +3325,8 @@ body.is-booking-modal-open {
   .booking-modal__intro,
   .booking-modal__form,
   .booking-modal__widget-shell {
-    padding-right: 20px;
-    padding-left: 20px;
+    padding: 18px;
+    gap: 10px;
   }
 
   .booking-modal__panel--widget {
@@ -3345,6 +3345,11 @@ body.is-booking-modal-open {
 
   .booking-modal__actions {
     grid-template-columns: 1fr;
+  }
+
+  .booking-modal__field {
+    margin-bottom: 10px;
+    gap:5px;
   }
 }
 
