@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import KrossBookingWidget from '@/components/KrossBookingWidget.vue'
 import AnimatedText from '@/components/AnimatedText.vue'
 import { bookableHotelPreviews, type HotelCategory, type HotelPreview } from '@/data/homeSections'
 
@@ -36,6 +37,7 @@ const bookingModal = ref<HTMLElement | null>(null)
 const bookingSuedtirolContainer = ref<HTMLElement | null>(null)
 const bookingExpertContainer = ref<HTMLElement | null>(null)
 const bookingSuedtirolStatus = ref<'idle' | 'loading' | 'ready' | 'error'>('idle')
+const bookingKrossStatus = ref<'loading' | 'ready' | 'error'>('loading')
 const bookingExpertStatus = ref<'idle' | 'loading' | 'ready' | 'error'>('idle')
 const firstName = ref('')
 const lastName = ref('')
@@ -86,12 +88,13 @@ const activeBookingHotel = computed(() =>
 
 const isBookingSuedtirolHotel = computed(() => Boolean(activeBookingHotel.value?.bookingSuedtirol))
 const isBookingExpertHotel = computed(() => Boolean(activeBookingHotel.value?.bookingExpert))
-const isWidgetHotel = computed(() => isBookingSuedtirolHotel.value || isBookingExpertHotel.value)
+const isBookingKrossHotel = computed(() => Boolean(activeBookingHotel.value?.bookingKross))
+const isWidgetHotel = computed(() => isBookingSuedtirolHotel.value || isBookingExpertHotel.value || isBookingKrossHotel.value)
 const widgetStatus = computed(() =>
-  isBookingExpertHotel.value ? bookingExpertStatus.value : bookingSuedtirolStatus.value,
+  isBookingKrossHotel.value ? bookingKrossStatus.value : isBookingExpertHotel.value ? bookingExpertStatus.value : bookingSuedtirolStatus.value,
 )
 const widgetProviderName = computed(() =>
-  isBookingExpertHotel.value ? 'BookingExpert' : 'Booking Südtirol',
+  isBookingKrossHotel.value ? 'Krossbooking' : isBookingExpertHotel.value ? 'BookingExpert' : 'Booking Südtirol',
 )
 const activeBookingHotelName = computed(() => {
   const hotel = activeBookingHotel.value
@@ -799,6 +802,11 @@ watch(bookingHotelId, async (hotelId) => {
     await nextTick()
     const hotel = activeBookingHotel.value
 
+    if (hotel?.bookingKross) {
+      bookingModal.value?.querySelector<HTMLElement>('.booking-modal__close')?.focus()
+      return
+    }
+
     if (hotel?.bookingSuedtirol) {
       await mountBookingSuedtirolWidget(hotel)
       installWidgetTracking()
@@ -1079,10 +1087,11 @@ onBeforeUnmount(() => {
                 class="booking-modal__widget booking-modal__widget--suedtirol"
               ></div>
               <div
-                v-else
+                v-else-if="isBookingExpertHotel"
                 ref="bookingExpertContainer"
                 class="booking-modal__widget booking-modal__widget--expert"
               ></div>
+              <KrossBookingWidget v-else-if="isBookingKrossHotel" :locale="locale" :title="`Krossbooking — ${activeBookingHotelName}`" @status="bookingKrossStatus = $event" />
             </div>
 
             <form

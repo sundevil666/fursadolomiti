@@ -38,6 +38,7 @@ export type HotelPreview = {
     propertyId: number
     promotion?: [string, string, string]
   }
+  bookingKross?: boolean
   bookingExpert?: {
     searchbox: string
     hotel: number
@@ -275,6 +276,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'villa-carolina',
+    bookingKross: true,
     category: 'chalet',
     images: [
       'villa-carolina/villa-carolina1.jpg',
@@ -341,5 +343,5 @@ const hasConfiguredBookingUrl = (hotel: HotelPreview) => {
 }
 
 export const bookableHotelPreviews = hotelPreviews.filter(
-  (hotel) => hotel.bookingSuedtirol || hotel.bookingExpert || hasConfiguredBookingUrl(hotel),
+  (hotel) => hotel.bookingSuedtirol || hotel.bookingExpert || hotel.bookingKross || hasConfiguredBookingUrl(hotel),
 )
