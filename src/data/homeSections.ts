@@ -196,6 +196,30 @@ export const hotelPreviews: HotelPreview[] = [
     },
   },
   {
+    id: 'portillo-dolomites',
+    category: 'fourStar',
+    images: [
+      '/portillo-dolomites/portillo-dolomites1.jpg',
+      '/portillo-dolomites/portillo-dolomites2.jpg',
+      '/portillo-dolomites/portillo-dolomites3.jpg',
+      '/portillo-dolomites/portillo-dolomites4.jpg',
+    ],
+    promoCode: '',
+    bookingUrl: '',
+    bookingParams: {
+      promoCode: 'promo_code',
+    },
+    nameKey: 'home.hotels.portilloDolomites.name',
+    locationKey: 'home.hotels.portilloDolomites.location',
+    descriptionKey: 'home.hotels.portilloDolomites.description',
+    featuresKey: 'home.hotels.portilloDolomites.features',
+    bookingSuedtirol: {
+      id: '6003b01f-8706-4842-a461-041e640a6592',
+      propertyId: 10482,
+      promotion: ['affiliate', 'fursadolomiti.com', 'portillo_dolomites_10482'],
+    },
+  },
+  {
     id: 'continental',
     category: 'fourStar',
     images: [

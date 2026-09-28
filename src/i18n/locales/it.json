@@ -122,6 +122,17 @@
           "Gustosa cucina altoatesina e italiana con personale accogliente e attento"
         ]
       },
+      "portilloDolomites": {
+        "name": "Portillo Dolomites 1966’S 4★",
+        "location": "Selva",
+        "description": "Un elegante hotel con ampie aree spa e wellness, piscine e magnifiche viste sulle Dolomiti",
+        "features": [
+          "Posizione comoda: a due passi dal centro e a soli 2–3 minuti dalle piste da sci con la navetta dell’hotel",
+          "Accesso ski-in con un buon innevamento",
+          "Due aree sauna separate: una riservata agli adulti e una per famiglie accanto alla piscina",
+          "Formula B&B — pernottamento e prima colazione"
+        ]
+      },
       "continental": {
         "name": "Continental 4★",
         "location": "Selva",

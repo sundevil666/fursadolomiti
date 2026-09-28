@@ -122,6 +122,17 @@
           "Delicious South Tyrolean and Italian cuisine with welcoming and attentive staff"
         ]
       },
+      "portilloDolomites": {
+        "name": "Portillo Dolomites 1966’S 4★",
+        "location": "Selva",
+        "description": "An elegant hotel with spacious spa and wellness areas, swimming pools and magnificent views of the Dolomites",
+        "features": [
+          "Convenient location: just steps from the centre and a 2–3-minute ride to the ski slopes on the hotel shuttle",
+          "Ski-in access when snow conditions allow",
+          "Two separate sauna areas: an adults-only area and a family area by the pool",
+          "B&B — accommodation with breakfast"
+        ]
+      },
       "continental": {
         "name": "Continental 4★",
         "location": "Selva",
