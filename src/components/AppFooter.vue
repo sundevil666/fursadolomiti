@@ -123,6 +123,10 @@ const scrollToTop = () => {
         </div>
 
         <div class="app-footer__legal">
+          <RouterLink :to="{ name: 'terms', query: { lang: currentLocale } }">
+            <AnimatedText :text="t('footer.terms')" tag="span" />
+          </RouterLink>
+          <span aria-hidden="true" />
           <RouterLink :to="{ name: 'privacy-policy' }">
             <AnimatedText :text="t('footer.privacy')" tag="span" />
           </RouterLink>

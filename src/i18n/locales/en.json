@@ -378,6 +378,7 @@
     "close": "Close cookie notice"
   },
   "footer": {
+    "terms": "Terms of use",
     "tagline": "Not a platform. A person.",
     "contacts": "Contacts",
     "menu": "Menu",
@@ -393,5 +394,48 @@
       "ciampinoi": "Ciampinoi webcam",
       "dantercapies": "Dantercapies webcam"
     }
+  },
+  "terms": {
+    "title": "Terms of use",
+    "draft": "Draft for review · not legally reviewed",
+    "ownerTitle": "1. Website operator and contacts",
+    "owner": "FursaDolomiti is operated by Tatiana Fursa, Val Gardena, South Tyrol, Italy.",
+    "phone": "Telephone",
+    "vat": "VAT number (Partita IVA)",
+    "sections": [
+      {
+        "title": "2. About the service",
+        "paragraphs": [
+          "FursaDolomiti presents partner hotels and chalets in the Dolomites and helps you choose accommodation. You can explore the selection yourself or contact Tatiana for personal recommendations. Personal accommodation selection is available on individual request."
+        ]
+      },
+      {
+        "title": "3. Booking and hotel terms",
+        "paragraphs": [
+          "Bookings are made through the hotels’ official booking systems, either in a booking module on FursaDolomiti or on the selected hotel’s website. Submitting details through a FursaDolomiti form does not itself confirm a booking.",
+          "The accommodation contract is concluded with the selected hotel. Prices, payment terms and cancellation conditions are displayed during booking in the hotel’s system. Read them before completing your booking. For payment questions, changes or cancellations, contact the hotel using the details in its booking system or confirmation."
+        ]
+      },
+      {
+        "title": "4. FursaDolomiti bonuses",
+        "paragraphs": [
+          "The published service description links the bonus to booking through FursaDolomiti and receiving it at check-in. The details provided in the form help identify you as a FursaDolomiti guest. When booking independently on the hotel’s official website, enter the promotional code FURSADOLOMITI in the designated field or booking comments.",
+          "Tatiana agrees bonus terms personally with each hotel. The size and format of the bonus depend on the hotel and booking period. Bonuses are not guaranteed during high season. Contact FursaDolomiti using the details below to ask about the bonus for your chosen hotel and dates."
+        ]
+      },
+      {
+        "title": "5. Using the website",
+        "paragraphs": [
+          "Provide accurate contact details and information needed for your enquiry. Use the forms for accommodation selection and related questions; do not send spam or attempt to disrupt the website."
+        ]
+      },
+      {
+        "title": "6. Questions and personal data",
+        "paragraphs": [
+          "For questions about the website, personal accommodation selection or bonuses, contact FursaDolomiti by email or telephone below. Information about personal data processing is provided in the Privacy Policy."
+        ]
+      }
+    ],
+    "privacy": "Privacy Policy"
   }
 }

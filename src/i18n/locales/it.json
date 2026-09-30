@@ -378,6 +378,7 @@
     "close": "Chiudi avviso sui cookie"
   },
   "footer": {
+    "terms": "Condizioni di utilizzo",
     "tagline": "Non una piattaforma. Una persona.",
     "contacts": "Contatti",
     "menu": "Menu",
@@ -393,5 +394,48 @@
       "ciampinoi": "Webcam Ciampinoi",
       "dantercapies": "Webcam Dantercapies"
     }
+  },
+  "terms": {
+    "title": "Condizioni di utilizzo",
+    "draft": "Bozza da approvare · non sottoposta a verifica legale",
+    "ownerTitle": "1. Titolare del sito e contatti",
+    "owner": "Il sito FursaDolomiti è gestito da Tatiana Fursa, Val Gardena, Alto Adige, Italia.",
+    "phone": "Telefono",
+    "vat": "Partita IVA",
+    "sections": [
+      {
+        "title": "2. Il servizio",
+        "paragraphs": [
+          "FursaDolomiti presenta hotel partner e chalet nelle Dolomiti e aiuta a scegliere un alloggio. Puoi consultare la selezione in autonomia oppure contattare Tatiana per consigli personali. La selezione personalizzata dell’alloggio è disponibile su richiesta individuale."
+        ]
+      },
+      {
+        "title": "3. Prenotazione e condizioni dell’hotel",
+        "paragraphs": [
+          "Le prenotazioni vengono effettuate tramite i sistemi ufficiali degli hotel, nel modulo di prenotazione su FursaDolomiti oppure sul sito dell’hotel scelto. L’invio dei dati tramite un modulo FursaDolomiti non costituisce di per sé una conferma di prenotazione.",
+          "Il contratto di soggiorno viene concluso con l’hotel scelto. Prezzi, condizioni di pagamento e di cancellazione vengono mostrati durante la prenotazione nel sistema dell’hotel. Leggili prima di completare la prenotazione. Per domande sui pagamenti, modifiche o cancellazioni, contatta l’hotel ai recapiti indicati nel suo sistema di prenotazione o nella conferma."
+        ]
+      },
+      {
+        "title": "4. Bonus FursaDolomiti",
+        "paragraphs": [
+          "La descrizione pubblicata del servizio collega il bonus alla prenotazione tramite FursaDolomiti e alla consegna al check-in. I dati inseriti nel modulo consentono di identificarti come ospite FursaDolomiti. Se prenoti autonomamente sul sito ufficiale dell’hotel, inserisci il codice promozionale FURSADOLOMITI nell’apposito campo o nei commenti alla prenotazione.",
+          "Tatiana concorda personalmente le condizioni dei bonus con ogni hotel. L’entità e la tipologia del bonus dipendono dall’hotel e dal periodo di prenotazione. I bonus non sono garantiti durante l’alta stagione. Per informazioni sul bonus relativo all’hotel e alle date scelti, contatta FursaDolomiti ai recapiti riportati sotto."
+        ]
+      },
+      {
+        "title": "5. Utilizzo del sito",
+        "paragraphs": [
+          "Fornisci recapiti corretti e le informazioni necessarie per la tua richiesta. Utilizza i moduli per la selezione dell’alloggio e le relative domande; non inviare spam e non tentare di compromettere il funzionamento del sito."
+        ]
+      },
+      {
+        "title": "6. Domande e dati personali",
+        "paragraphs": [
+          "Per domande sul sito, sulla selezione personalizzata o sui bonus, contatta FursaDolomiti via email o telefono ai recapiti qui sotto. Le informazioni sul trattamento dei dati personali sono disponibili nell’informativa sulla privacy."
+        ]
+      }
+    ],
+    "privacy": "Informativa sulla privacy"
   }
 }
