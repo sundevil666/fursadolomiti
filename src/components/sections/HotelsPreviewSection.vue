@@ -6,11 +6,16 @@ import KrossBookingWidget from '@/components/KrossBookingWidget.vue'
 import AnimatedText from '@/components/AnimatedText.vue'
 import { bookableHotelPreviews, type HotelCategory, type HotelPreview } from '@/data/homeSections'
 
+type BookingSuedtirolInstance = {
+  render: () => void
+  unmount: () => boolean
+}
+
 declare global {
   interface Window {
     BookingSüdtirol?: {
       Widgets?: {
-        Booking?: (domElement: string | HTMLElement, settings: Record<string, unknown>) => void
+        Booking?: (domElement: string | HTMLElement, settings: Record<string, unknown>) => BookingSuedtirolInstance
       }
     }
     BookingSuedtirol?: Window['BookingSüdtirol']
@@ -56,6 +61,8 @@ const hotelAutoplayDelay = 5200
 let hotelAutoplayTimer: number | undefined
 let filterAnimationTimer: number | undefined
 let bookingSuedtirolScriptPromise: Promise<void> | undefined
+let bookingSuedtirolInstance: BookingSuedtirolInstance | undefined
+let bookingSuedtirolMountVersion = 0
 let bookingExpertScriptPromise: Promise<void> | undefined
 let restoreWindowOpen: (() => void) | undefined
 let widgetTrackingCleanup: (() => void) | undefined
@@ -266,29 +273,43 @@ const handleModalKeydown = (event: KeyboardEvent) => {
 }
 
 const loadBookingSuedtirolScript = () => {
+  // Keep promotion attribution for this booking without the optional 30-day cookie.
+  window.BookingSüdtirolTrackingConsent = false
   if (window.BookingSüdtirol?.Widgets?.Booking) return Promise.resolve()
   if (bookingSuedtirolScriptPromise) return bookingSuedtirolScriptPromise
 
-  bookingSuedtirolScriptPromise = new Promise((resolve, reject) => {
+  bookingSuedtirolScriptPromise = new Promise<void>((resolve, reject) => {
     const existingScript = document.querySelector<HTMLScriptElement>('#booking-suedtirol-js')
-
-    if (existingScript) {
-      existingScript.addEventListener('load', () => resolve(), { once: true })
-      existingScript.addEventListener('error', () => reject(new Error('Booking Südtirol failed')), {
-        once: true,
-      })
-      return
+    const script = existingScript ?? document.createElement('script')
+    const cleanup = () => {
+      script.removeEventListener('load', handleLoad)
+      script.removeEventListener('error', handleError)
+    }
+    const handleError = () => {
+      cleanup()
+      script.remove()
+      reject(new Error('Booking Südtirol failed'))
+    }
+    const handleLoad = () => {
+      if (!window.BookingSüdtirol?.Widgets?.Booking) {
+        handleError()
+        return
+      }
+      cleanup()
+      resolve()
     }
 
-    const script = document.createElement('script')
+    script.addEventListener('load', handleLoad, { once: true })
+    script.addEventListener('error', handleError, { once: true })
+    if (existingScript) return
+
     script.id = 'booking-suedtirol-js'
     script.src = 'https://widget.bookingsuedtirol.com/v2/bundle.js'
     script.defer = true
-    script.addEventListener('load', () => resolve(), { once: true })
-    script.addEventListener('error', () => reject(new Error('Booking Südtirol failed')), {
-      once: true,
-    })
     document.body.append(script)
+  }).catch((error: unknown) => {
+    bookingSuedtirolScriptPromise = undefined
+    throw error
   })
 
   return bookingSuedtirolScriptPromise
@@ -357,15 +378,29 @@ const setBooleanAttribute = (element: HTMLElement, name: string, value?: boolean
   element.setAttribute(name, String(value))
 }
 
+const unmountBookingSuedtirolWidget = () => {
+  bookingSuedtirolMountVersion += 1
+  bookingSuedtirolInstance?.unmount()
+  bookingSuedtirolInstance = undefined
+}
+
 const mountBookingSuedtirolWidget = async (hotel: HotelPreview) => {
   const widgetConfig = hotel.bookingSuedtirol
+  const container = bookingSuedtirolContainer.value
 
-  if (!widgetConfig || !bookingSuedtirolContainer.value) return
+  if (!widgetConfig || !container) return
 
+  unmountBookingSuedtirolWidget()
+  const mountVersion = bookingSuedtirolMountVersion
+  const isCurrentMount = () =>
+    mountVersion === bookingSuedtirolMountVersion &&
+    bookingHotelId.value === hotel.id &&
+    bookingSuedtirolContainer.value === container
   bookingSuedtirolStatus.value = 'loading'
 
   try {
     await loadBookingSuedtirolScript()
+    if (!isCurrentMount()) return
 
     const bookingWidget = window.BookingSüdtirol?.Widgets?.Booking
 
@@ -373,7 +408,6 @@ const mountBookingSuedtirolWidget = async (hotel: HotelPreview) => {
       throw new Error('Booking Südtirol widget API is unavailable')
     }
 
-    bookingSuedtirolContainer.value.innerHTML = ''
     const bookingWidgetConfig: Record<string, unknown> = {
       id: widgetConfig.id,
       propertyId: widgetConfig.propertyId,
@@ -387,10 +421,11 @@ const mountBookingSuedtirolWidget = async (hotel: HotelPreview) => {
       bookingWidgetConfig.promotion = widgetConfig.promotion
     }
 
-    bookingWidget(bookingSuedtirolContainer.value, bookingWidgetConfig)
+    bookingSuedtirolInstance = bookingWidget(container, bookingWidgetConfig)
 
     bookingSuedtirolStatus.value = 'ready'
   } catch (error) {
+    if (!isCurrentMount()) return
     console.error('Booking Südtirol widget failed', error)
     bookingSuedtirolStatus.value = 'error'
   }
@@ -795,11 +830,20 @@ const submitBookingRequest = async () => {
   }
 }
 
-watch(bookingHotelId, async (hotelId) => {
+// Dispose before Vue removes the provider's container, including during transitions.
+watch(bookingHotelId, () => {
+  unmountBookingSuedtirolWidget()
+  widgetTrackingCleanup?.()
+}, { flush: 'sync' })
+
+watch(bookingHotelId, async (hotelId, _previousHotelId, onCleanup) => {
+  let cancelled = false
+  onCleanup(() => { cancelled = true })
   document.body.classList.toggle('is-booking-modal-open', Boolean(hotelId))
 
   if (hotelId) {
     await nextTick()
+    if (cancelled) return
     const hotel = activeBookingHotel.value
 
     if (hotel?.bookingKross) {
@@ -809,6 +853,7 @@ watch(bookingHotelId, async (hotelId) => {
 
     if (hotel?.bookingSuedtirol) {
       await mountBookingSuedtirolWidget(hotel)
+      if (cancelled) return
       installWidgetTracking()
       bookingModal.value?.querySelector<HTMLElement>('.booking-modal__close')?.focus()
       return
@@ -816,6 +861,7 @@ watch(bookingHotelId, async (hotelId) => {
 
     if (hotel?.bookingExpert) {
       await mountBookingExpertWidget(hotel)
+      if (cancelled) return
       installWidgetTracking()
       bookingModal.value?.querySelector<HTMLElement>('.booking-modal__close')?.focus()
       return
@@ -831,6 +877,7 @@ onMounted(() => {
   installWindowOpenTracking()
 })
 onBeforeUnmount(() => {
+  unmountBookingSuedtirolWidget()
   stopHotelAutoplay()
   document.body.classList.remove('is-booking-modal-open')
   restoreWindowOpen?.()
