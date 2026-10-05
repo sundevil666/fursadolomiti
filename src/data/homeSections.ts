@@ -7,6 +7,7 @@ export type HeroSlide = {
 
 export type HotelPreview = {
   id: string
+  visible?: boolean
   category: HotelCategory
   images: string[]
   promoCode: string
@@ -117,6 +118,7 @@ export const heroSlides: HeroSlide[] = [
 export const hotelPreviews: HotelPreview[] = [
   {
     id: 'edenselva',
+    visible: false,
     category: 'fourStar',
     images: [
       '/edenselva/edenselva1.jpg',
@@ -300,6 +302,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'villa-carolina',
+    visible: false,
     bookingKross: true,
     category: 'chalet',
     images: [
@@ -367,5 +370,7 @@ const hasConfiguredBookingUrl = (hotel: HotelPreview) => {
 }
 
 export const bookableHotelPreviews = hotelPreviews.filter(
-  (hotel) => hotel.bookingSuedtirol || hotel.bookingExpert || hotel.bookingKross || hasConfiguredBookingUrl(hotel),
+  (hotel) =>
+    hotel.visible !== false &&
+    (hotel.bookingSuedtirol || hotel.bookingExpert || hotel.bookingKross || hasConfiguredBookingUrl(hotel)),
 )
