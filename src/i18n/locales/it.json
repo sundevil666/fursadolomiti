@@ -133,6 +133,17 @@
           "Formula B&B — pernottamento e prima colazione"
         ]
       },
+      "somont": {
+        "name": "Hotel Somont 4★",
+        "location": "Selva",
+        "description": "Un hotel accogliente ed elegante in stile alpino, con un’atmosfera di ospitalità familiare",
+        "features": [
+          "Autentico ski-in/ski-out — dalla ski room, l’ascensore porta direttamente alla pista del Sellaronda",
+          "SPA & Wellness di 300 m² — piscina coperta, saune e zona relax",
+          "Un’accogliente atmosfera familiare, ottima cucina e servizio attento",
+          "A due passi dal centro del paese"
+        ]
+      },
       "continental": {
         "name": "Continental 4★",
         "location": "Selva",

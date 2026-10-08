@@ -222,6 +222,20 @@ export const hotelPreviews: HotelPreview[] = [
     },
   },
   {
+    id: 'somont',
+    category: 'fourStar',
+    images: ['/somont/somont1.jpg'],
+    promoCode: '',
+    bookingUrl: '',
+    bookingParams: {
+      promoCode: 'promo_code',
+    },
+    nameKey: 'home.hotels.somont.name',
+    locationKey: 'home.hotels.somont.location',
+    descriptionKey: 'home.hotels.somont.description',
+    featuresKey: 'home.hotels.somont.features',
+  },
+  {
     id: 'continental',
     category: 'fourStar',
     images: [

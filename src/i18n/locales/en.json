@@ -133,6 +133,17 @@
           "B&B — accommodation with breakfast"
         ]
       },
+      "somont": {
+        "name": "Hotel Somont 4★",
+        "location": "Selva",
+        "description": "A cosy, elegant Alpine-style hotel with a warm atmosphere of family hospitality",
+        "features": [
+          "True ski-in/ski-out — take the lift from the ski room directly to the Sellaronda ski slope",
+          "300 m² SPA & Wellness area — indoor pool, saunas and relaxation area",
+          "A welcoming family atmosphere, excellent cuisine and attentive service",
+          "Just steps from the village centre"
+        ]
+      },
       "continental": {
         "name": "Continental 4★",
         "location": "Selva",
