@@ -9,7 +9,7 @@ export type AppLocale = 'ru' | 'en' | 'it'
 export const locales: AppLocale[] = ['ru', 'en', 'it']
 
 const savedLocale = localStorage.getItem('locale') as AppLocale | null
-const fallbackLocale: AppLocale = 'ru'
+const fallbackLocale: AppLocale = 'en'
 
 export const i18n = createI18n({
   legacy: false,

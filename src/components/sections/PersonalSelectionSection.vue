@@ -181,7 +181,7 @@ onBeforeUnmount(stopAutoplay)
             </div>
 
             <div class="flex column justify-end">
-              <ul class="flex column justify-end">
+              <ul class="flex column justify-center justify-md-end text-center text-md-left">
                 <li>
                   <AnimatedText :text="t('home.personalSelection.videoPoint1')" tag="span" />
                 </li>

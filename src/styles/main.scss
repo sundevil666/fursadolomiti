@@ -4415,13 +4415,6 @@ body.is-booking-modal-open {
       padding: 36px;
     }
 
-    &__visual {
-      grid-column: 1;
-      z-index: 2;
-      min-height: 0;
-      padding: 30px 0 0;
-    }
-
     &__dots {
       display: block;
       top: 34px;
@@ -4740,11 +4733,6 @@ body.is-booking-modal-open {
       border-radius: 6px;
     }
 
-    &__visual {
-      min-height: 0;
-      padding: 20px 0 0;
-    }
-
     &__phone {
       width: min(220px, 70vw);
       height: 360px;
@@ -5006,12 +4994,6 @@ body.is-booking-modal-open {
 
     &__footer {
       grid-row: 2;
-    }
-
-    &__visual {
-      grid-row: 3;
-      min-height: 342px;
-      padding-top: 86px;
     }
 
     &__phone {
@@ -5358,6 +5340,13 @@ body.is-booking-modal-open {
   }
 }
 
+@media (max-width: 1300px) {
+  .hero-card {
+    left: 100%;
+    transform: translateX(-100%);
+  }
+}
+
 @media (max-width: 1100px) {
   .hero-slider {
     &__image {
@@ -5567,7 +5556,6 @@ body.is-booking-modal-open {
     }
 
     &__visual {
-      grid-column: 2;
       padding: 102px 0 0;
     }
 
@@ -5695,6 +5683,9 @@ body.is-booking-modal-open {
 }
 
 @media (max-width: 640px) {
+  .personal-selection__visual {
+    margin: 0 auto;
+  }
   .app-header {
     &__brand {
       flex: 0 0 204px;
@@ -5840,13 +5831,6 @@ body.is-booking-modal-open {
       width: 100%;
       min-height: 32px;
       font-size: 10px;
-    }
-
-    &__visual {
-      grid-column: 1;
-      justify-content: flex-start;
-      padding: 22px 0 0 16px;
-      background: #175445;
     }
 
     &__phone {
@@ -6271,9 +6255,6 @@ body.is-booking-modal-open {
     content: '';
     pointer-events: none;
   }
-  .personal-selection__visual {
-    margin-right: 75px;
-  }
   .personal-selection__left {
     padding-bottom: 80px;
     padding-right: 0;
@@ -6404,16 +6385,6 @@ body.is-booking-modal-open {
       font-size: 16px;
     }
 
-    &__visual {
-      grid-column: 2 / 3;
-      grid-row: 4 / 5;
-      justify-content: start;
-      min-height: 0;
-      padding: 0 0 clamp(58px, 8vw, 76px);
-      overflow: visible;
-      background: transparent;
-    }
-
     &__phone {
       width: min(272px, 100%);
       height: clamp(498px, 55vw, 500px);
@@ -6497,12 +6468,6 @@ body.is-booking-modal-open {
       font-size: 16px;
     }
 
-    &__visual {
-      grid-column: 2 / 3;
-      grid-row: 4 / 5;
-      padding: 0;
-    }
-
     &__phone {
       width: min(272px, 100%);
       height: clamp(498px, 104vw, 530px);
@@ -6523,6 +6488,9 @@ body.is-booking-modal-open {
       padding: 0 18px;
       font-size: 16px;
     }
+  }
+    .personal-selection__video-content {
+    flex-direction: column;
   }
 }
 
@@ -6740,7 +6708,6 @@ body.is-booking-modal-open {
 
     &__copy,
     &__footer,
-    &__visual,
     &__video,
     &__video p,
     &__video ul,
@@ -6797,7 +6764,6 @@ body.is-booking-modal-open {
     }
 
     &__visual {
-      justify-content: start;
       padding: 0;
     }
 
@@ -6840,6 +6806,9 @@ body.is-booking-modal-open {
 }
 
 @media (max-width: 640px) {
+  .personal-selection__video p {
+    width: 100%;
+  }
   .hero-card__secondary {
     display: none;
   }
@@ -6878,6 +6847,15 @@ body.is-booking-modal-open {
   .app-footer__inner {
     width: calc(100% - 30px);
   }
+  .personal-selection__video-content {
+    gap: 50px;
+  }
+  .personal-selection__video-button {
+    width: auto;
+  }
+  .personal-selection__video-button {
+    margin: 20px auto 0;
+  }
 
   .personal-selection {
     &__note {
@@ -6909,6 +6887,9 @@ body.is-booking-modal-open {
     &__camera {
       min-height: 180px;
     }
+  }
+  .personal-selection__phone {
+  height: 100%;
   }
 }
 
