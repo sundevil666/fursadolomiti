@@ -36,6 +36,11 @@ const stepTitlePromo = (step: HowItWorksStep) =>
             <AnimatedText :text="t('home.howItWorks.note')" tag="span" />
           </p>
         </div>
+        <div class="how-it-works__description">
+          <p>
+            <AnimatedText :text="t('home.howItWorks.bonusDescription')" tag="span" />
+          </p>
+        </div>
 
         <div class="how-it-works__help">
           <p>
