@@ -47,6 +47,9 @@ const bookingExpertStatus = ref<'idle' | 'loading' | 'ready' | 'error'>('idle')
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
+const preferredDates = ref('')
+const guests = ref('')
+const isRequestHotel = computed(() => Boolean(activeBookingHotel.value?.bookingRequest))
 const formError = ref('')
 const formStatus = ref<'idle' | 'sending' | 'redirecting'>('idle')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
@@ -252,6 +255,8 @@ const restartHotelAutoplay = () => {
 const openBookingModal = (hotelId: string) => {
   bookingHotelId.value = hotelId
   widgetTrackingSentForSession = false
+  preferredDates.value = ''
+  guests.value = ''
   firstName.value = ''
   lastName.value = ''
   email.value = ''
@@ -747,7 +752,13 @@ const installWindowOpenTracking = () => {
 }
 
 const submitBookingRequest = async () => {
+  if (formStatus.value === 'sending') return
   formError.value = ''
+
+  if (isRequestHotel.value && (!preferredDates.value.trim() || preferredDates.value.length > 2000 || !Number.isInteger(Number(guests.value)) || Number(guests.value) < 1 || Number(guests.value) > 100)) {
+    formError.value = t('home.hotels.bookingModal.errors.required')
+    return
+  }
 
   if (!firstName.value.trim() || !lastName.value.trim() || !email.value.trim()) {
     formError.value = t('home.hotels.bookingModal.errors.required')
@@ -770,6 +781,8 @@ const submitBookingRequest = async () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        preferredDates: preferredDates.value.trim(),
+        guests: Number(guests.value),
         firstName: firstName.value.trim(),
         lastName: lastName.value.trim(),
         email: email.value.trim(),
@@ -790,6 +803,11 @@ const submitBookingRequest = async () => {
     if (!response.ok) throw new Error(await response.text())
 
     const { promoCode } = (await response.json()) as { promoCode: string }
+
+    if (hotel?.bookingRequest) {
+      formStatus.value = 'redirecting'
+      return
+    }
 
     if (hotel) {
       const localizedBookingUrl = getLocalizedBookingUrl(hotel, locale.value)
@@ -1063,7 +1081,7 @@ onBeforeUnmount(() => {
                   {{
                     isWidgetHotel
                       ? t('home.hotels.bookingModal.widgetTitle', { hotel: activeBookingHotelName })
-                      : t('home.hotels.bookingModal.title')
+                      : isRequestHotel ? t('home.hotels.bookingModal.requestTitle', { hotel: activeBookingHotelName }) : t('home.hotels.bookingModal.title')
                   }}
                 </h2>
                 <p v-if="isWidgetHotel" class="booking-modal__privacy-note">
@@ -1079,13 +1097,13 @@ onBeforeUnmount(() => {
                       ? t('home.hotels.bookingModal.widgetDescription', {
                           provider: widgetProviderName,
                         })
-                      : t('home.hotels.bookingModal.description')
+                      : t(isRequestHotel ? 'home.hotels.bookingModal.requestDescription' : 'home.hotels.bookingModal.description')
                   }}
                 </p>
               </div>
 
               <p v-if="!isWidgetHotel" class="booking-modal__privacy-note">
-                {{ t('home.hotels.bookingModal.privacyNote') }}
+                {{ t(isRequestHotel ? 'home.hotels.bookingModal.requestPrivacy' : 'home.hotels.bookingModal.privacyNote') }}
               </p>
             </div>
 
@@ -1094,10 +1112,10 @@ onBeforeUnmount(() => {
                 <q-icon name="check" />
               </span>
               <h2 class="booking-modal__redirect-title">
-                {{ t('home.hotels.bookingModal.redirectTitle') }}
+                {{ t(isRequestHotel ? 'home.hotels.bookingModal.requestSuccess' : 'home.hotels.bookingModal.redirectTitle') }}
               </h2>
               <p class="booking-modal__redirect-text">
-                {{ t('home.hotels.bookingModal.redirectText') }}
+                {{ t(isRequestHotel ? 'home.hotels.bookingModal.requestSuccessText' : 'home.hotels.bookingModal.redirectText') }}
               </p>
               <button class="booking-modal__primary" type="button" @click="closeBookingModal">
                 {{ t('home.hotels.bookingModal.ok') }}
@@ -1180,6 +1198,16 @@ onBeforeUnmount(() => {
                 />
               </label>
 
+              <template v-if="isRequestHotel">
+                <label class="booking-modal__field">
+                  <span>{{ t('home.hotels.bookingModal.preferredDates') }}</span>
+                  <textarea v-model="preferredDates" required maxlength="2000" rows="3" :placeholder="t('home.hotels.bookingModal.datesPlaceholder')" />
+                </label>
+                <label class="booking-modal__field">
+                  <span>{{ t('home.hotels.bookingModal.guests') }}</span>
+                  <input v-model="guests" required type="number" min="1" max="100" step="1" />
+                </label>
+              </template>
               <p
                 class="booking-modal__required"
                 :class="{ 'booking-modal__required--error': formError }"
@@ -1199,7 +1227,7 @@ onBeforeUnmount(() => {
                     {{
                       formStatus === 'sending'
                         ? t('home.hotels.bookingModal.sending')
-                        : t('home.hotels.bookingModal.continue')
+                        : t(isRequestHotel ? 'home.hotels.bookingModal.requestSubmit' : 'home.hotels.bookingModal.continue')
                     }}
                   </span>
                 </button>
@@ -1213,6 +1241,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.booking-modal__field textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #c9d3ce; border-radius: 10px; font: inherit; resize: vertical; }
 .booking-modal__panel--success {
   width: min(100%, 560px);
   min-height: 0;

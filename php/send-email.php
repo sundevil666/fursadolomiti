@@ -293,6 +293,22 @@ $smtpConfig = [
 ];
 
 $isWidgetTrackingEvent = $normalizedEventType === 'widget_redirect';
+$hotelRecipients = [
+    'chalet-zenit' => 'info@chaletzenit.it',
+    'villa-carolina' => 'info@villa-carolina.com',
+];
+$hotelRecipient = !$isWidgetTrackingEvent ? ($hotelRecipients[$normalizedHotelId] ?? null) : null;
+$preferredDates = trim((string) ($requestBody['preferredDates'] ?? ''));
+$guests = filter_var($requestBody['guests'] ?? null, FILTER_VALIDATE_INT);
+if ($hotelRecipient) {
+    if ($preferredDates === '' || strlen($preferredDates) > 8000 || $guests === false || $guests < 1 || $guests > 100) {
+        jsonResponse(400, ['error' => 'Preferred dates and guest count are required']);
+    }
+    if (!in_array($hotelRecipient, $recipients, true)) {
+        $recipients[] = $hotelRecipient;
+    }
+}
+
 
 if ($isWidgetTrackingEvent) {
     if ($normalizedHotelId === '' || $normalizedHotel === '' || $normalizedWidgetProvider === '') {
@@ -384,6 +400,7 @@ $htmlMessage = $isWidgetTrackingEvent
           <td style="padding:28px 32px 8px;">
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
               renderRow('Отель', $safe['hotel'], true) .
+              ($hotelRecipient ? renderRow('Preferred dates / Date desiderate', escapeHtmlValue($preferredDates), true) . renderRow('Guests / Ospiti', (string) $guests, true) : '') .
               renderRow('Провайдер', escapeHtmlValue($normalizedWidgetProvider), true) .
               renderRow('Действие', escapeHtmlValue($normalizedWidgetAction !== '' ? $normalizedWidgetAction : 'Not available')) .
               renderRow('Дата заявки', $safe['localDateTime'], true) .
@@ -437,6 +454,7 @@ $htmlMessage = $isWidgetTrackingEvent
               renderRow('Фамилия', $safe['lastName']) .
               renderRow('Email', '<span style="color:#08211f;text-decoration:none;">' . $safe['email'] . '</span>', true) .
               renderRow('Отель', $safe['hotel'], true) .
+              ($hotelRecipient ? renderRow('Preferred dates / Date desiderate', escapeHtmlValue($preferredDates), true) . renderRow('Guests / Ospiti', (string) $guests, true) : '') .
               renderRow('Промокод', $safe['promoCode'], true) .
               renderRow('Дата заявки', $safe['localDateTime'], true) .
             '</table>
@@ -501,6 +519,7 @@ $message = $isWidgetTrackingEvent
     'Full name: ' . $fullName,
     'Email: ' . $normalizedEmail,
     'Selected hotel: ' . $normalizedHotel,
+    ...($hotelRecipient ? ['Preferred dates: ' . $preferredDates, 'Guests: ' . $guests] : []),
     'Promo code: ' . $normalizedPromoCode,
     '',
     'Website language: ' . $normalizedLocale,

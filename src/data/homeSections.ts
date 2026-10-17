@@ -8,6 +8,7 @@ export type HeroSlide = {
 export type HotelPreview = {
   id: string
   visible?: boolean
+  bookingRequest?: boolean
   category: HotelCategory
   images: string[]
   promoCode: string
@@ -316,8 +317,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'villa-carolina',
-    visible: false,
-    bookingKross: true,
+    bookingRequest: true,
     category: 'chalet',
     images: [
       'villa-carolina/villa-carolina1.jpg',
@@ -325,8 +325,8 @@ export const hotelPreviews: HotelPreview[] = [
       'villa-carolina/villa-carolina3.jpg',
       'villa-carolina/villa-carolina4.jpg',
     ],
-    promoCode: 'REPLACE_VILLA_CAROLINA',
-    bookingUrl: 'https://example.com/villa-carolina/booking',
+    promoCode: 'FURSADOLOMITI',
+    bookingUrl: '',
     bookingParams: {
       firstName: 'contact_first_name',
       lastName: 'contact_last_name',
@@ -342,6 +342,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'chalet-zenit',
+    bookingRequest: true,
     category: 'chalet',
     images: [
       '/chalet-zenit/chalet-zenit1.png',
@@ -350,8 +351,8 @@ export const hotelPreviews: HotelPreview[] = [
       '/chalet-zenit/chalet-zenit5.jpg',
       '/chalet-zenit/chalet-zenit6.png',
     ],
-    promoCode: 'REPLACE_CHALET_ZENIT',
-    bookingUrl: 'https://example.com/chalet-zenit/booking',
+    promoCode: 'FURSADOLOMITI',
+    bookingUrl: '',
     bookingParams: {
       firstName: 'contact_first_name',
       lastName: 'contact_last_name',
@@ -364,11 +365,6 @@ export const hotelPreviews: HotelPreview[] = [
     featuresKey: 'home.hotels.chaletZenit.features',
     featuresLabelKey: 'home.hotels.chaletZenit.featuresLabel',
     statsKey: 'home.hotels.chaletZenit.stats',
-    bookingSuedtirol: {
-      id: '46f72afb-7807-4d15-af6f-50bfe01de476',
-      propertyId: 13459,
-      promotion: ['affiliate', 'fursadolomiti.com', 'chalet_zenit_13459'],
-    },
   },
 ]
 
@@ -386,5 +382,5 @@ const hasConfiguredBookingUrl = (hotel: HotelPreview) => {
 export const bookableHotelPreviews = hotelPreviews.filter(
   (hotel) =>
     hotel.visible !== false &&
-    (hotel.bookingSuedtirol || hotel.bookingExpert || hotel.bookingKross || hasConfiguredBookingUrl(hotel)),
+    (hotel.bookingRequest || hotel.bookingSuedtirol || hotel.bookingExpert || hotel.bookingKross || hasConfiguredBookingUrl(hotel)),
 )

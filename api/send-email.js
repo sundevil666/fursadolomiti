@@ -94,6 +94,20 @@ export default async function handler(request, response) {
   }
 
   const isWidgetTrackingEvent = normalizedEventType === 'widget_redirect'
+  const hotelRecipients = new Map([
+    ['chalet-zenit', 'info@chaletzenit.it'],
+    ['villa-carolina', 'info@villa-carolina.com'],
+  ])
+  const hotelRecipient = !isWidgetTrackingEvent && hotelRecipients.get(normalizedHotelId)
+  const preferredDates = String(request.body?.preferredDates || '').trim()
+  const guests = Number(request.body?.guests)
+  if (hotelRecipient) {
+    if (!preferredDates || preferredDates.length > 2000 || !Number.isInteger(guests) || guests < 1 || guests > 100) {
+      return response.status(400).json({ error: 'Preferred dates and guest count are required' })
+    }
+    if (!recipients.includes(hotelRecipient)) recipients.push(hotelRecipient)
+  }
+
 
   if (isWidgetTrackingEvent) {
     if (!normalizedHotelId || !normalizedHotel || !normalizedWidgetProvider) {
@@ -168,6 +182,7 @@ export default async function handler(request, response) {
           <td style="padding:28px 32px 8px;">
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">
               ${row('Отель', safe.hotel, true)}
+              ${hotelRecipient ? row('Preferred dates / Date desiderate', escapeHtml(preferredDates), true) + row('Guests / Ospiti', String(guests), true) : ''}
               ${row('Провайдер', escapeHtml(normalizedWidgetProvider), true)}
               ${row('Действие', escapeHtml(normalizedWidgetAction || 'Not available'))}
               ${row('Дата заявки', safe.localDateTime, true)}
@@ -225,6 +240,7 @@ export default async function handler(request, response) {
               ${row('Фамилия', safe.lastName)}
               ${row('Email', `<span style="color:#08211f;text-decoration:none;">${safe.email}</span>`, true)}
               ${row('Отель', safe.hotel, true)}
+              ${hotelRecipient ? row('Preferred dates / Date desiderate', escapeHtml(preferredDates), true) + row('Guests / Ospiti', String(guests), true) : ''}
               ${row('Промокод', safe.promoCode, true)}
               ${row('Дата заявки', safe.localDateTime, true)}
             </table>
@@ -288,6 +304,7 @@ export default async function handler(request, response) {
     `Full name: ${fullName}`,
     `Email: ${normalizedEmail}`,
     `Selected hotel: ${normalizedHotel}`,
+    ...(hotelRecipient ? [`Preferred dates: ${preferredDates}`, `Guests: ${guests}`] : []),
     `Promo code: ${normalizedPromoCode}`,
     '',
     `Website language: ${normalizedLocale}`,
