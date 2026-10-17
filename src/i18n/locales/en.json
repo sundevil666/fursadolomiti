@@ -48,6 +48,7 @@
       "viewAll": "View all hotels",
       "bookWithBonus": "Book with a bonus",
       "bookingModal": {
+        "deliveryWarning": "Our team has received your request, but some emails could not be sent. Please do not submit it again — we will check the delivery.",
         "requestTitle": "Request to {hotel}",
         "requestDescription": "Tell us your preferred dates and number of guests. The hotel will check availability and confirm your booking.",
         "requestPrivacy": "Your privacy is guaranteed. Your data is shared only with the hotel. No mailing lists.",

@@ -48,6 +48,7 @@
       "viewAll": "Vedi tutti gli hotel",
       "bookWithBonus": "Prenota con un bonus",
       "bookingModal": {
+        "deliveryWarning": "Il nostro team ha ricevuto la richiesta, ma non tutte le email sono state inviate. Non occorre inviarla di nuovo: verificheremo la consegna.",
         "requestTitle": "Richiesta a {hotel}",
         "requestDescription": "Indicate le date desiderate e il numero di ospiti. L’hotel verificherà la disponibilità e confermerà la prenotazione.",
         "requestPrivacy": "La riservatezza è garantita. I dati vengono trasmessi solo all’hotel. Nessuna newsletter.",

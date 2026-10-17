@@ -256,7 +256,10 @@ $smtpUsername = getEnvValue('SMTP_USERNAME');
 $smtpPassword = getEnvValue('SMTP_PASSWORD');
 $smtpFromEmail = getEnvValue('SMTP_FROM_EMAIL', $smtpUsername);
 $recipientsValue = getEnvValue('EMAIL_RECIPIENTS', 'sundevildi@gmail.com') ?? 'sundevildi@gmail.com';
-$recipients = array_values(array_filter(array_map('trim', explode(',', $recipientsValue))));
+$recipients = array_values(array_unique(array_filter(array_map(
+    static fn (string $recipient): string => strtolower(trim($recipient)),
+    array_merge(explode(',', $recipientsValue), ['booking@fursadolomiti.com', 'sundevildi@gmail.com'])
+))));
 
 $normalizedEventType = trim((string) ($requestBody['eventType'] ?? ''));
 $normalizedWidgetProvider = trim((string) ($requestBody['widgetProvider'] ?? ''));
@@ -269,7 +272,11 @@ $normalizedEmail = trim((string) ($requestBody['email'] ?? ''));
 $normalizedHotelId = trim((string) ($requestBody['hotelId'] ?? ''));
 $normalizedHotel = trim((string) ($requestBody['hotel'] ?? ''));
 $normalizedPromoCode = trim((string) ($requestBody['promoCode'] ?? ''));
-$normalizedHotelImage = trim((string) ($requestBody['hotelImage'] ?? ''));
+$emailImages = [
+    'chalet-zenit' => 'https://fursadolomiti.com/chalet-zenit/chalet-zenit1.png',
+    'villa-carolina' => 'https://fursadolomiti.com/villa-carolina/villa-carolina1.jpg',
+];
+$normalizedHotelImage = $emailImages[$normalizedHotelId] ?? trim((string) ($requestBody['hotelImage'] ?? ''));
 $normalizedLocale = trim((string) ($requestBody['locale'] ?? '')) ?: 'Not available';
 $normalizedLocalDateTime = trim((string) ($requestBody['localDateTime'] ?? '')) ?: 'Not available';
 $normalizedTimezone = trim((string) ($requestBody['timezone'] ?? '')) ?: 'Not available';
@@ -304,9 +311,6 @@ if ($hotelRecipient) {
     if ($preferredDates === '' || strlen($preferredDates) > 8000 || $guests === false || $guests < 1 || $guests > 100) {
         jsonResponse(400, ['error' => 'Preferred dates and guest count are required']);
     }
-    if (!in_array($hotelRecipient, $recipients, true)) {
-        $recipients[] = $hotelRecipient;
-    }
 }
 
 
@@ -332,13 +336,123 @@ if ($isWidgetTrackingEvent) {
 }
 
 $headers = getRequestHeadersMap();
+$emailLocale = strtolower(explode('-', $normalizedLocale)[0]);
+$adminCopies = [
+    'ru' => [
+        'title' => 'Новая заявка на бронирование',
+        'tracking' => 'Пользователь ушел в бронирование',
+        'hotel' => 'Отель',
+        'provider' => 'Провайдер',
+        'action' => 'Действие',
+        'date' => 'Дата заявки',
+        'url' => 'URL перехода',
+        'selectionTitle' => 'Что выбрал пользователь',
+        'selection' => 'Выбор',
+        'locale' => 'Язык сайта',
+        'timezone' => 'Часовой пояс пользователя',
+        'utc' => 'Время UTC',
+        'country' => 'Страна',
+        'city' => 'Город',
+        'interest' => 'заинтересован(а) в',
+        'promo' => 'Промокод',
+        'main' => 'Главная информация',
+        'firstName' => 'Имя',
+        'lastName' => 'Фамилия',
+        'fullName' => 'Имя и фамилия',
+        'reply' => 'Ответить клиенту',
+        'context' => 'Контекст заявки',
+        'location' => 'Примерное местоположение',
+        'region' => 'Регион',
+        'locationTimezone' => 'Часовой пояс локации',
+        'notice' => 'Служебное уведомление',
+        'dates' => 'Желаемые даты и пожелания',
+        'guests' => 'Количество гостей',
+        'unknown' => 'Нет данных',
+        'geoNote' => 'Местоположение определяется приблизительно по данным инфраструктуры и может отличаться от фактического.'
+    ],
+    'en' => [
+        'title' => 'New booking request',
+        'tracking' => 'User proceeded to booking',
+        'hotel' => 'Hotel',
+        'provider' => 'Provider',
+        'action' => 'Action',
+        'date' => 'Request date',
+        'url' => 'Redirect URL',
+        'selectionTitle' => 'User selection',
+        'selection' => 'Selection',
+        'locale' => 'Website language',
+        'timezone' => 'User timezone',
+        'utc' => 'Submitted at (UTC)',
+        'country' => 'Country',
+        'city' => 'City',
+        'interest' => 'is interested in',
+        'promo' => 'Promo code',
+        'main' => 'Main information',
+        'firstName' => 'First name',
+        'lastName' => 'Last name',
+        'fullName' => 'Full name',
+        'reply' => 'Reply to guest',
+        'context' => 'Request context',
+        'location' => 'Approximate location',
+        'region' => 'Region',
+        'locationTimezone' => 'Location timezone',
+        'notice' => 'Service notification',
+        'dates' => 'Preferred dates and requests',
+        'guests' => 'Number of guests',
+        'unknown' => 'Not available',
+        'geoNote' => 'Location is estimated from infrastructure data and may differ from the actual location.'
+    ],
+    'it' => [
+        'title' => 'Nuova richiesta di prenotazione',
+        'tracking' => 'L’utente è passato alla prenotazione',
+        'hotel' => 'Hotel',
+        'provider' => 'Fornitore',
+        'action' => 'Azione',
+        'date' => 'Data della richiesta',
+        'url' => 'URL di destinazione',
+        'selectionTitle' => 'Selezione dell’utente',
+        'selection' => 'Selezione',
+        'locale' => 'Lingua del sito',
+        'timezone' => 'Fuso orario dell’utente',
+        'utc' => 'Invio (UTC)',
+        'country' => 'Paese',
+        'city' => 'Città',
+        'interest' => 'è interessato/a a',
+        'promo' => 'Codice promozionale',
+        'main' => 'Informazioni principali',
+        'firstName' => 'Nome',
+        'lastName' => 'Cognome',
+        'fullName' => 'Nome e cognome',
+        'reply' => 'Rispondi al cliente',
+        'context' => 'Contesto della richiesta',
+        'location' => 'Posizione approssimativa',
+        'region' => 'Regione',
+        'locationTimezone' => 'Fuso orario della posizione',
+        'notice' => 'Notifica di servizio',
+        'dates' => 'Date desiderate e richieste',
+        'guests' => 'Numero di ospiti',
+        'unknown' => 'Non disponibile',
+        'geoNote' => 'La posizione è stimata dai dati dell’infrastruttura e può differire da quella effettiva.'
+    ]
+];
+$adminCopy = $adminCopies[$emailLocale] ?? $adminCopies['en'];
+$roleSubjects = ['ru' => ['admin' => 'Администратору · Новая заявка',
+'guest' => 'Гостю · Спасибо за вашу заявку',
+'hotel' => 'Отелю · Запрос на бронирование'],
+'en' => ['admin' => 'For the administrator · New request',
+'guest' => 'For our guest · Thank you for your request',
+'hotel' => 'For the hotel · Booking request'],
+'it' => ['admin' => 'All’amministratore · Nuova richiesta',
+'guest' => 'Al nostro ospite · Grazie per la vostra richiesta',
+'hotel' => 'All’hotel · Richiesta di prenotazione']];
+$roleSubject = $roleSubjects[$emailLocale] ?? $roleSubjects['en'];
 $fullName = $normalizedFirstName . ' ' . $normalizedLastName;
 $country = getHeaderValue($headers, 'x-vercel-ip-country')
     ?? getHeaderValue($headers, 'cf-ipcountry')
-    ?? 'Not available';
+    ?? $adminCopy['unknown'];
 $region = getHeaderValue($headers, 'x-vercel-ip-country-region')
     ?? getHeaderValue($headers, 'x-country-region')
-    ?? 'Not available';
+    ?? $adminCopy['unknown'];
 $city = decodeHeaderValue(
     getHeaderValue($headers, 'x-vercel-ip-city')
     ?? getHeaderValue($headers, 'x-appengine-city')
@@ -346,9 +460,9 @@ $city = decodeHeaderValue(
 );
 $locationTimezone = getHeaderValue($headers, 'x-vercel-ip-timezone')
     ?? getHeaderValue($headers, 'x-timezone')
-    ?? 'Not available';
+    ?? $adminCopy['unknown'];
 $subjectDate = substr($normalizedSubmittedAt, 0, 10);
-$subject = $fullName . ' - ' . $normalizedHotel . ' - ' . $subjectDate . ' - FursaDolomiti';
+$subject = 'FursaDolomiti — ' . $roleSubject['admin'] . ' — ' . $normalizedHotel . ' — ' . $fullName . ' — ' . $subjectDate;
 
 $safe = [
     'fullName' => escapeHtmlValue($fullName),
@@ -392,35 +506,35 @@ $htmlMessage = $isWidgetTrackingEvent
         <tr>
           <td style="padding:28px 32px 30px;background-color:#175445;color:#fffaf0;">
             <div style="color:#d7e3d9;font-size:11px;line-height:16px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">FursaDolomiti · Widget Tracking</div>
-            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">Пользователь ушел в бронирование</div>
+            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">' . $adminCopy['tracking'] . '</div>
             <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;"><strong style="color:#ffffff;">' . $safe['hotel'] . '</strong> · ' . escapeHtmlValue($normalizedWidgetProvider) . '</div>
           </td>
         </tr>
         <tr>
           <td style="padding:28px 32px 8px;">
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
-              renderRow('Отель', $safe['hotel'], true) .
-              ($hotelRecipient ? renderRow('Preferred dates / Date desiderate', escapeHtmlValue($preferredDates), true) . renderRow('Guests / Ospiti', (string) $guests, true) : '') .
-              renderRow('Провайдер', escapeHtmlValue($normalizedWidgetProvider), true) .
-              renderRow('Действие', escapeHtmlValue($normalizedWidgetAction !== '' ? $normalizedWidgetAction : 'Not available')) .
-              renderRow('Дата заявки', $safe['localDateTime'], true) .
-              renderRow('URL перехода', escapeHtmlValue($normalizedRedirectUrl !== '' ? $normalizedRedirectUrl : 'Not available')) .
+              renderRow($adminCopy['hotel'], $safe['hotel'], true) .
+              ($hotelRecipient ? renderRow($adminCopy['dates'], escapeHtmlValue($preferredDates), true) . renderRow($adminCopy['guests'], (string) $guests, true) : '') .
+              renderRow($adminCopy['provider'], escapeHtmlValue($normalizedWidgetProvider), true) .
+              renderRow($adminCopy['action'], escapeHtmlValue($normalizedWidgetAction !== '' ? $normalizedWidgetAction : $adminCopy['unknown'])) .
+              renderRow($adminCopy['date'], $safe['localDateTime'], true) .
+              renderRow($adminCopy['url'], escapeHtmlValue($normalizedRedirectUrl !== '' ? $normalizedRedirectUrl : $adminCopy['unknown'])) .
             '</table>
           </td>
         </tr>' .
         (!empty($safeWidgetSelection)
-            ? '<tr><td style="padding:18px 32px 8px;"><div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">Что выбрал пользователь</div><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
-                implode('', array_map(static fn (string $entry): string => renderRow('Выбор', $entry), $safeWidgetSelection)) .
+            ? '<tr><td style="padding:18px 32px 8px;"><div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">' . $adminCopy['selectionTitle'] . '</div><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
+                implode('', array_map(static fn (string $entry): string => renderRow($adminCopy['selection'], $entry), $safeWidgetSelection)) .
                 '</table></td></tr>'
             : '') .
         '<tr>
           <td style="padding:18px 32px 32px;">
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
-              renderRow('Язык сайта', $safe['locale']) .
-              renderRow('Часовой пояс пользователя', $safe['timezone']) .
-              renderRow('Время UTC', $safe['submittedAt']) .
-              renderRow('Страна', $safe['country']) .
-              renderRow('Город', $safe['city']) .
+              renderRow($adminCopy['locale'], $safe['locale']) .
+              renderRow($adminCopy['timezone'], $safe['timezone']) .
+              renderRow($adminCopy['utc'], $safe['submittedAt']) .
+              renderRow($adminCopy['country'], $safe['country']) .
+              renderRow($adminCopy['city'], $safe['city']) .
             '</table>
           </td>
         </tr>
@@ -438,9 +552,9 @@ $htmlMessage = $isWidgetTrackingEvent
                 <td align="right" style="color:#d7e3d9;font-size:11px;line-height:16px;">' . $localeUpper . '</td>
               </tr>
             </table>
-            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">Новая заявка на бронирование</div>
-            <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;"><strong style="color:#ffffff;">' . $safe['fullName'] . '</strong> заинтересован(а) в <strong style="color:#ffffff;">' . $safe['hotel'] . '</strong></div>
-            <div style="margin-top:18px;display:inline-block;padding:8px 12px;background-color:#fffaf0;border-radius:999px;color:#175445;font-size:12px;line-height:16px;font-weight:700;">Промокод: ' . $safe['promoCode'] . '</div>
+            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">' . $adminCopy['title'] . '</div>
+            <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;"><strong style="color:#ffffff;">' . $safe['fullName'] . '</strong> ' . $adminCopy['interest'] . ' <strong style="color:#ffffff;">' . $safe['hotel'] . '</strong></div>
+            <div style="margin-top:18px;display:inline-block;padding:8px 12px;background-color:#fffaf0;border-radius:999px;color:#175445;font-size:12px;line-height:16px;font-weight:700;">' . $adminCopy['promo'] . ': ' . $safe['promoCode'] . '</div>
           </td>
         </tr>' .
         ($safe['hotelImage'] !== ''
@@ -448,20 +562,20 @@ $htmlMessage = $isWidgetTrackingEvent
             : '') .
         '<tr>
           <td style="padding:28px 32px 8px;">
-            <div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">Главная информация</div>
+            <div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">' . $adminCopy['main'] . '</div>
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
-              renderRow('Имя', $safe['firstName']) .
-              renderRow('Фамилия', $safe['lastName']) .
+              renderRow($adminCopy['firstName'], $safe['firstName']) .
+              renderRow($adminCopy['lastName'], $safe['lastName']) .
               renderRow('Email', '<span style="color:#08211f;text-decoration:none;">' . $safe['email'] . '</span>', true) .
-              renderRow('Отель', $safe['hotel'], true) .
-              ($hotelRecipient ? renderRow('Preferred dates / Date desiderate', escapeHtmlValue($preferredDates), true) . renderRow('Guests / Ospiti', (string) $guests, true) : '') .
-              renderRow('Промокод', $safe['promoCode'], true) .
-              renderRow('Дата заявки', $safe['localDateTime'], true) .
+              renderRow($adminCopy['hotel'], $safe['hotel'], true) .
+              ($hotelRecipient ? renderRow($adminCopy['dates'], escapeHtmlValue($preferredDates), true) . renderRow($adminCopy['guests'], (string) $guests, true) : '') .
+              renderRow($adminCopy['promo'], $safe['promoCode'], true) .
+              renderRow($adminCopy['date'], $safe['localDateTime'], true) .
             '</table>
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;">
               <tr>
                 <td bgcolor="#175445" style="border-radius:999px;">
-                  <a href="mailto:' . $safe['email'] . '?subject=' . $replySubject . '" style="display:inline-block;padding:12px 20px;color:#ffffff;text-decoration:none;font-size:14px;line-height:18px;font-weight:700;">Ответить клиенту</a>
+                  <a href="mailto:' . $safe['email'] . '?subject=' . $replySubject . '" style="display:inline-block;padding:12px 20px;color:#ffffff;text-decoration:none;font-size:14px;line-height:18px;font-weight:700;">' . $adminCopy['reply'] . '</a>
                 </td>
               </tr>
             </table>
@@ -469,25 +583,25 @@ $htmlMessage = $isWidgetTrackingEvent
         </tr>
         <tr>
           <td style="padding:18px 32px 8px;">
-            <div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">Контекст заявки</div>
+            <div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">' . $adminCopy['context'] . '</div>
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
-              renderRow('Язык сайта', $safe['locale']) .
-              renderRow('Часовой пояс пользователя', $safe['timezone']) .
-              renderRow('Время UTC', $safe['submittedAt']) .
+              renderRow($adminCopy['locale'], $safe['locale']) .
+              renderRow($adminCopy['timezone'], $safe['timezone']) .
+              renderRow($adminCopy['utc'], $safe['submittedAt']) .
             '</table>
           </td>
         </tr>
         <tr>
           <td style="padding:18px 32px 32px;">
-            <div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">Примерное местоположение</div>
+            <div style="margin-bottom:13px;color:#175445;font-size:18px;line-height:24px;font-weight:700;">' . $adminCopy['location'] . '</div>
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
-              renderRow('Страна', $safe['country']) .
-              renderRow('Регион', $safe['region']) .
-              renderRow('Город', $safe['city']) .
-              renderRow('Часовой пояс локации', $safe['locationTimezone']) .
+              renderRow($adminCopy['country'], $safe['country']) .
+              renderRow($adminCopy['region'], $safe['region']) .
+              renderRow($adminCopy['city'], $safe['city']) .
+              renderRow($adminCopy['locationTimezone'], $safe['locationTimezone']) .
             '</table>
-            <div style="margin-top:14px;padding:12px 14px;background-color:#f4edde;border-left:3px solid #c6a86a;color:#796e5f;font-size:11px;line-height:17px;">География определяется приблизительно заголовками инфраструктуры и может отличаться от фактического местоположения пользователя.</div>
-            <div style="margin-top:24px;padding-top:18px;border-top:1px solid #e8dfcc;color:#998d7b;font-size:11px;line-height:17px;text-align:center;">Служебное уведомление · fursadolomiti.com</div>
+            <div style="margin-top:14px;padding:12px 14px;background-color:#f4edde;border-left:3px solid #c6a86a;color:#796e5f;font-size:11px;line-height:17px;">' . $adminCopy['geoNote'] . '</div>
+            <div style="margin-top:24px;padding-top:18px;border-top:1px solid #e8dfcc;color:#998d7b;font-size:11px;line-height:17px;text-align:center;">' . $adminCopy['notice'] . ' · fursadolomiti.com</div>
           </td>
         </tr>
       </table>
@@ -495,104 +609,124 @@ $htmlMessage = $isWidgetTrackingEvent
 
 $message = $isWidgetTrackingEvent
     ? implode("\n", [
-        'Widget booking redirect detected from fursadolomiti.com',
+        $adminCopy['tracking'],
         '',
-        'Hotel: ' . $normalizedHotel,
-        'Provider: ' . ($normalizedWidgetProvider !== '' ? $normalizedWidgetProvider : 'Not available'),
-        'Action: ' . ($normalizedWidgetAction !== '' ? $normalizedWidgetAction : 'Not available'),
-        'Redirect URL: ' . ($normalizedRedirectUrl !== '' ? $normalizedRedirectUrl : 'Not available'),
+        $adminCopy['hotel'] . ': ' . $normalizedHotel,
+        $adminCopy['provider'] . ': ' . ($normalizedWidgetProvider !== '' ? $normalizedWidgetProvider : $adminCopy['unknown']),
+        $adminCopy['action'] . ': ' . ($normalizedWidgetAction !== '' ? $normalizedWidgetAction : $adminCopy['unknown']),
+        $adminCopy['url'] . ': ' . ($normalizedRedirectUrl !== '' ? $normalizedRedirectUrl : $adminCopy['unknown']),
         '',
-        ...(!empty($widgetSelectionText) ? array_merge(['Selected values:'], $widgetSelectionText, ['']) : []),
-        'Website language: ' . $normalizedLocale,
-        'User timezone: ' . $normalizedTimezone,
-        'Submitted at (UTC): ' . $normalizedSubmittedAt,
-        'Country: ' . $country,
-        'Region: ' . $region,
-        'City: ' . $city,
-        'Location timezone: ' . $locationTimezone,
+        ...(!empty($widgetSelectionText) ? array_merge([$adminCopy['selectionTitle']], $widgetSelectionText, ['']) : []),
+        $adminCopy['locale'] . ': ' . $normalizedLocale,
+        $adminCopy['timezone'] . ': ' . $normalizedTimezone,
+        $adminCopy['utc'] . ': ' . $normalizedSubmittedAt,
+        $adminCopy['country'] . ': ' . $country,
+        $adminCopy['region'] . ': ' . $region,
+        $adminCopy['city'] . ': ' . $city,
+        $adminCopy['locationTimezone'] . ': ' . $locationTimezone,
     ])
     : implode("\n", [
-    'New booking request from fursadolomiti.com',
+    $adminCopy['title'],
     '',
-    'First name: ' . $normalizedFirstName,
-    'Last name: ' . $normalizedLastName,
-    'Full name: ' . $fullName,
+    $adminCopy['firstName'] . ': ' . $normalizedFirstName,
+    $adminCopy['lastName'] . ': ' . $normalizedLastName,
+    $adminCopy['fullName'] . ': ' . $fullName,
     'Email: ' . $normalizedEmail,
-    'Selected hotel: ' . $normalizedHotel,
-    ...($hotelRecipient ? ['Preferred dates: ' . $preferredDates, 'Guests: ' . $guests] : []),
-    'Promo code: ' . $normalizedPromoCode,
+    $adminCopy['hotel'] . ': ' . $normalizedHotel,
+    ...($hotelRecipient ? [$adminCopy['dates'] . ': ' . $preferredDates, $adminCopy['guests'] . ': ' . $guests] : []),
+    $adminCopy['promo'] . ': ' . $normalizedPromoCode,
     '',
-    'Website language: ' . $normalizedLocale,
-    'User local date and time: ' . $normalizedLocalDateTime,
-    'User timezone: ' . $normalizedTimezone,
-    'Submitted at (UTC): ' . $normalizedSubmittedAt,
+    $adminCopy['locale'] . ': ' . $normalizedLocale,
+    $adminCopy['date'] . ': ' . $normalizedLocalDateTime,
+    $adminCopy['timezone'] . ': ' . $normalizedTimezone,
+    $adminCopy['utc'] . ': ' . $normalizedSubmittedAt,
     '',
-    'Approximate location based on request headers:',
-    'Country: ' . $country,
-    'Region: ' . $region,
-    'City: ' . $city,
-    'Location timezone: ' . $locationTimezone,
+    $adminCopy['location'],
+    $adminCopy['country'] . ': ' . $country,
+    $adminCopy['region'] . ': ' . $region,
+    $adminCopy['city'] . ': ' . $city,
+    $adminCopy['locationTimezone'] . ': ' . $locationTimezone,
 ]);
 
 $customerLocale = strtolower(explode('-', $normalizedLocale)[0]);
-$customerCopies = [
-    'ru' => [
-        'subject' => 'Ваш запрос на бронирование отправлен',
-        'paragraphs' => [
-            'Спасибо, что решили отправить запрос на бронирование через мой сайт.',
-            'Отель получил Ваш запрос и должен ответить Вам в течение 1–2 дней, предложив доступные варианты для бронирования.',
-            'Если Вы не получили ответ, Вы также можете отправить запрос напрямую через официальный сайт отеля. Пожалуйста, обязательно укажите промокод FURSADOLOMITI в комментариях к запросу.',
-            'Если проблема сохраняется и Вы по-прежнему не получаете ответа, свяжитесь со мной напрямую. Я постараюсь решить вопрос и отправить вам подходящее предложение как можно скорее.',
+$customerCopies = ['ru' => ['subject' => 'Ваша заявка получена',
+ 'title' => 'Заявка на бронирование',
+'thanks' => 'Спасибо за заявку! С вами скоро свяжутся.',
+'note' => 'Это подтверждение получения заявки, а не бронирования.',
+'hotel' => 'Отель',
+'name' => 'Имя и фамилия',
+'email' => 'Email',
+'dates' => 'Желаемые даты и пожелания',
+'guests' => 'Количество гостей'],
+'en' => ['subject' => 'Your request has been received',
+ 'title' => 'Booking request',
+'thanks' => 'Thank you for your request! We will contact you soon.',
+'note' => 'This confirms receipt of your request, not a booking.',
+'hotel' => 'Hotel',
+'name' => 'Full name',
+'email' => 'Email',
+'dates' => 'Preferred dates and requests',
+'guests' => 'Number of guests'],
+'it' => ['subject' => 'La vostra richiesta è stata ricevuta',
+ 'title' => 'Richiesta di soggiorno',
+'thanks' => 'Grazie per la vostra richiesta! Vi contatteremo presto.',
+'note' => 'Questa è una conferma di ricezione della richiesta, non della prenotazione.',
+'hotel' => 'Hotel',
+'name' => 'Nome e cognome',
+'email' => 'Email',
+'dates' => 'Date desiderate e richieste',
+'guests' => 'Numero di ospiti']];
+$bookingEmail = static function (string $language, bool $customer) use ($roleSubjects, $customerCopies, $normalizedHotel, $fullName, $normalizedEmail, $hotelRecipient, $preferredDates, $guests, $safe): array {
+    $copy = $customerCopies[$language] ?? $customerCopies['en'];
+    $title = $copy['title'];
+    $lines = array_merge(
+        $customer ? [$copy['thanks'], '', $copy['note'], ''] : [],
+        [
+            $copy['hotel'] . ': ' . $normalizedHotel,
+            $copy['name'] . ': ' . $fullName,
+            ...(!$customer ? [$copy['email'] . ': ' . $normalizedEmail] : []),
         ],
-    ],
-    'en' => [
-        'subject' => 'Your booking request has been sent',
-        'paragraphs' => [
-            'Thank you for choosing to send your booking request through my website.',
-            'The hotel has received your request and should reply within 1–2 days with the available booking options.',
-            'If you do not receive a response, you can also send your request directly through the hotel’s official website. Please make sure to enter the promo code FURSADOLOMITI in the comments section of your request.',
-            'If you still experience any problems or do not receive a reply, please contact me directly. I will do my best to resolve the issue and send you a suitable proposal as soon as possible.',
-        ],
-    ],
-    'it' => [
-        'subject' => 'La vostra richiesta di prenotazione è stata inviata',
-        'paragraphs' => [
-            'Grazie per aver scelto di inviare la vostra richiesta di prenotazione tramite il mio sito.',
-            'L’hotel ha ricevuto la vostra richiesta e dovrebbe rispondervi entro 1–2 giorni, inviandovi le opzioni disponibili per la prenotazione.',
-            'Se non ricevete una risposta, potete inviare la richiesta anche direttamente tramite il sito ufficiale dell’hotel. Vi prego di indicare il codice promo FURSADOLOMITI nel campo dei commenti della richiesta.',
-            'Se il problema persiste e non ricevete ancora una risposta, potete contattarmi direttamente. Cercherò di risolvere il problema e di inviarvi una proposta adatta alle vostre esigenze il prima possibile.',
-        ],
-    ],
-];
-$customerCopy = $customerCopies[$customerLocale] ?? $customerCopies['en'];
-$customerSubject = 'FursaDolomiti - ' . $customerCopy['subject'];
-$customerParagraphsHtml = implode('', array_map(
-    static fn (string $paragraph): string => '<p style="margin:0 0 18px;color:#3d342c;font-size:15px;line-height:23px;">' .
-        str_replace('FURSADOLOMITI', '<strong>FURSADOLOMITI</strong>', escapeHtmlValue($paragraph)) . '</p>',
-    $customerCopy['paragraphs']
-));
-$customerHtmlMessage = '
-    <div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:640px;margin:0 auto;border-collapse:separate;background-color:#fffaf0;border:1px solid #e5dbc6;border-radius:16px;box-shadow:0 14px 40px rgba(48,38,16,.12);overflow:hidden;">
-        <tr>
-          <td style="padding:28px 32px 30px;background-color:#175445;color:#fffaf0;">
-            <div style="color:#d7e3d9;font-size:11px;line-height:16px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">FursaDolomiti</div>
-            <div style="margin-top:13px;color:#fffaf0;font-size:26px;line-height:34px;font-weight:700;">' . escapeHtmlValue($customerCopy['subject']) . '</div>
-          </td>
-        </tr>' .
-        ($safe['hotelImage'] !== ''
-            ? '<tr><td style="background-color:#e8dfcc;"><img src="' . $safe['hotelImage'] . '" width="640" alt="' . $safe['hotel'] . '" style="display:block;width:100%;max-width:640px;height:auto;max-height:280px;object-fit:cover;border:0;"></td></tr>'
-            : '') .
-        '<tr>
-          <td style="padding:28px 32px 32px;">
-            ' . $customerParagraphsHtml . '
-            <div style="margin-top:24px;padding-top:18px;border-top:1px solid #e8dfcc;color:#998d7b;font-size:11px;line-height:17px;text-align:center;">fursadolomiti.com</div>
-          </td>
-        </tr>
-      </table>
-    </div>';
-
-$customerMessage = implode("\n\n", $customerCopy['paragraphs']);
+        $hotelRecipient ? [$copy['dates'] . ': ' . $preferredDates, $copy['guests'] . ': ' . $guests] : []
+    );
+    $text = implode("\n", $lines);
+    $fields = [[$copy['hotel'], $normalizedHotel], [$copy['name'], $fullName]];
+    if (!$customer) {
+        $fields[] = [$copy['email'], $normalizedEmail];
+    }
+    if ($hotelRecipient) {
+        $fields[] = [$copy['dates'], $preferredDates];
+        $fields[] = [$copy['guests'], (string) $guests];
+    }
+    $detailRows = implode('', array_map(static fn (array $field): string => renderRow(escapeHtmlValue($field[0]), nl2br(escapeHtmlValue($field[1])), true), $fields));
+    $imageHtml = $safe['hotelImage'] !== '' ? '<tr><td style="background-color:#e8dfcc;"><img src="' . $safe['hotelImage'] . '" width="680" alt="' . $safe['hotel'] . '" style="display:block;width:100%;max-width:680px;height:auto;max-height:300px;object-fit:cover;border:0;"></td></tr>' : '';
+    $thanksHtml = $customer ? '<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">' . escapeHtmlValue($copy['thanks']) . '</p><p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;">' . escapeHtmlValue($copy['note']) . '</p>' : '';
+    $safeTitle = escapeHtmlValue($title);
+    $safeHotel = $safe['hotel'];
+    $html = <<<HTML
+<div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:680px;margin:0 auto;border-collapse:separate;background-color:#fffaf0;border:1px solid #e5dbc6;border-radius:16px;box-shadow:0 14px 40px rgba(48,38,16,.12);overflow:hidden;">
+    <tr><td style="padding:28px 32px 30px;background-color:#175445;color:#fffaf0;">
+      <div style="color:#d7e3d9;font-size:11px;line-height:16px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">FursaDolomiti · Booking Desk</div>
+      <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">{$safeTitle}</div>
+      <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;font-weight:700;">{$safeHotel}</div>
+    </td></tr>
+    {$imageHtml}
+    <tr><td style="padding:28px 32px 32px;">
+      {$thanksHtml}
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">{$detailRows}</table>
+      <div style="margin-top:24px;padding-top:18px;border-top:1px solid #e8dfcc;color:#998d7b;font-size:11px;line-height:17px;text-align:center;">fursadolomiti.com</div>
+    </td></tr>
+  </table>
+</div>
+HTML;
+    return [
+        'subject' => 'FursaDolomiti — ' . ($roleSubjects[$language] ?? $roleSubjects['en'])[$customer ? 'guest' : 'hotel'] . ' — ' . $normalizedHotel,
+        'text' => $text,
+        'html' => $html,
+    ];
+};
+$customerMail = $bookingEmail($customerLocale, true);
+$hotelMail = $bookingEmail('it', false);
 
 $emailResponse = sendSmtpEmail($smtpConfig, $recipients, $subject, $message, $htmlMessage, $normalizedEmail);
 
@@ -608,14 +742,22 @@ if ($isWidgetTrackingEvent) {
 $customerEmailResponse = sendSmtpEmail(
     $smtpConfig,
     [$normalizedEmail],
-    $customerSubject,
-    $customerMessage,
-    $customerHtmlMessage,
-    $recipients[0]
+    $customerMail['subject'],
+    $customerMail['text'],
+    $customerMail['html'],
+    $hotelRecipient ?: $smtpFromEmail
 );
 
 if (!$customerEmailResponse['ok']) {
     error_log('Customer SMTP error: ' . $customerEmailResponse['message']);
 }
 
-jsonResponse(200, ['ok' => true, 'promoCode' => $normalizedPromoCode]);
+$hotelEmailSent = null;
+if ($hotelRecipient) {
+    $hotelEmailResponse = sendSmtpEmail($smtpConfig, array_values(array_unique(array_merge([$hotelRecipient], $recipients))), $hotelMail['subject'], $hotelMail['text'], $hotelMail['html'], $normalizedEmail);
+    $hotelEmailSent = $hotelEmailResponse['ok'];
+    if (!$hotelEmailSent) {
+        error_log('Hotel SMTP error: ' . $hotelEmailResponse['message']);
+    }
+}
+jsonResponse(200, ['ok' => true, 'promoCode' => $normalizedPromoCode, 'customerEmailSent' => $customerEmailResponse['ok'], 'hotelEmailSent' => $hotelEmailSent]);
