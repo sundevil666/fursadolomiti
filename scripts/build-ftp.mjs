@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { cpSync, existsSync, mkdirSync, rmSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 
 if (!existsSync('php/email-config.php')) {
   throw new Error('Create php/email-config.php from php/email-config.example.php before building for FTP.')
@@ -15,7 +15,16 @@ rmSync(output, { recursive: true, force: true })
 mkdirSync(output, { recursive: true })
 cpSync('dist', `${output}/fursa-release`, { recursive: true })
 mkdirSync(`${output}/fursa-release/php`, { recursive: true })
-cpSync('php/send-email.php', `${output}/fursa-release/php/send-email.php`)
+// Bake production recipient rules into the FTP artifact, leaving source/Vercel unchanged.
+const handlerSource = readFileSync('php/send-email.php', 'utf8')
+const recipientPolicy = 'const EXCLUDED_ADMIN_RECIPIENTS = [];'
+if (handlerSource.split(recipientPolicy).length !== 2) {
+  throw new Error('FTP recipient policy marker is missing or duplicated in php/send-email.php.')
+}
+writeFileSync(
+  `${output}/fursa-release/php/send-email.php`,
+  handlerSource.replace(recipientPolicy, "const EXCLUDED_ADMIN_RECIPIENTS = ['sundevildi@gmail.com'];"),
+)
 cpSync('php/email-config.php', `${output}/fursa-release/php/email-config.php`)
 cpSync('php/.htaccess', `${output}/fursa-release/php/.htaccess`)
 cpSync('deployment/.htaccess', `${output}/.htaccess`)

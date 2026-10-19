@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+// build:ftp sets this in the generated handler only; guest emails are unaffected.
+const EXCLUDED_ADMIN_RECIPIENTS = [];
+
 $emailConfigPath = __DIR__ . '/email-config.php';
 $emailConfig = is_file($emailConfigPath) ? require $emailConfigPath : [];
 
@@ -260,6 +263,7 @@ $recipients = array_values(array_unique(array_filter(array_map(
     static fn (string $recipient): string => strtolower(trim($recipient)),
     array_merge(explode(',', $recipientsValue), ['booking@fursadolomiti.com', 'sundevildi@gmail.com'])
 ))));
+$recipients = array_values(array_diff($recipients, EXCLUDED_ADMIN_RECIPIENTS));
 
 $normalizedEventType = trim((string) ($requestBody['eventType'] ?? ''));
 $normalizedWidgetProvider = trim((string) ($requestBody['widgetProvider'] ?? ''));
