@@ -53,7 +53,7 @@
         "requestDescription": "Indicate le date desiderate e il numero di ospiti. L’hotel verificherà la disponibilità e confermerà la prenotazione.",
         "requestPrivacy": "La riservatezza è garantita. I dati vengono trasmessi solo all’hotel. Nessuna newsletter.",
         "requestSuccess": "Richiesta inviata",
-        "requestSuccessText": "L’hotel vi contatterà via email. La prenotazione non è ancora confermata.",
+        "requestSuccessText": "L’hotel vi contatterà via email.",
         "requestSubmit": "Invia richiesta",
         "preferredDates": "Date desiderate e richieste",
         "datesPlaceholder": "Ad esempio: 10–17 gennaio, con flessibilità di 2 giorni.",

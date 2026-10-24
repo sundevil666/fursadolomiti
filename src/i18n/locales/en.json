@@ -53,7 +53,7 @@
         "requestDescription": "Tell us your preferred dates and number of guests. The hotel will check availability and confirm your booking.",
         "requestPrivacy": "Your privacy is guaranteed. Your data is shared only with the hotel. No mailing lists.",
         "requestSuccess": "Request sent",
-        "requestSuccessText": "The hotel will contact you by email. Your booking is not yet confirmed.",
+        "requestSuccessText": "The hotel will contact you by email.",
         "requestSubmit": "Send request",
         "preferredDates": "Preferred dates and requests",
         "datesPlaceholder": "For example: January 10–17, flexible by 2 days.",
