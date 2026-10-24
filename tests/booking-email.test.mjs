@@ -62,8 +62,8 @@ test('separate admin, simple hotel and localized customer emails', async () => {
     const customer = sent.find((mail) => mail.to === body.email)
     assert.match(sent[0].html, new RegExp(adminTitle))
     assert.match(sent[0].text, new RegExp(adminTitle))
-    assert.match(hotel.html, /Richiesta di soggiorno/)
-    assert.match(hotel.text, /Date desiderate e richieste/)
+    assert.match(hotel.html, locale === 'it' ? /Richiesta di soggiorno/ : /Booking request/)
+    assert.match(hotel.text, locale === 'it' ? /Date desiderate e richieste/ : /Preferred dates and requests/)
     assert.doesNotMatch(hotel.text, /Спасибо|Thank you|Grazie/)
     assert.deepEqual(hotel.to, ['info@chaletzenit.it', ...sent[0].to])
     assert.ok(hotel)
@@ -83,7 +83,7 @@ test('separate admin, simple hotel and localized customer emails', async () => {
     }[locale]
     assert.ok(sent[0].subject.includes(roleLabels[0]))
     assert.ok(customer.subject.includes(roleLabels[1]))
-    assert.match(hotel.subject, /All’hotel · Richiesta di prenotazione/)
+    assert.match(hotel.subject, locale === 'it' ? /All’hotel · Richiesta di prenotazione/ : /For the hotel/)
     assert.equal(new Set([sent[0].subject, customer.subject, hotel.subject]).size, 3)
     assert.match(customer.text, new RegExp(thanks))
     for (const mail of [hotel, customer]) {
@@ -123,5 +123,34 @@ test('both administrators receive two roles, plus the guest role only when enter
     }
   } finally {
     process.env.EMAIL_RECIPIENTS = savedRecipients
+  }
+})
+
+test('widget and link submissions send only admin and guest mail in the selected language', async () => {
+  for (const bookingMode of ['widget', 'redirect']) {
+    for (const locale of ['ru', 'en', 'it']) {
+      const { sent, status, result } = await run(locale, false, {
+        bookingMode, promoCode: '',
+        ...(bookingMode === 'widget' ? { preferredDates: '', guests: 0 } : {}),
+      })
+      assert.equal(status, 200)
+      assert.equal(sent.length, 2)
+      assert.equal(result.hotelEmailSent, null)
+      assert.equal(result.customerEmailSent, true)
+      assert.ok(sent.every(mail => !(Array.isArray(mail.to) && mail.to.includes('info@chaletzenit.it'))))
+      if (bookingMode === 'redirect') {
+        assert.ok(sent.every(mail => mail.text.includes(body.preferredDates)))
+      } else {
+        assert.ok(sent.every(mail => !mail.text.includes(body.preferredDates)))
+      }
+    }
+  }
+})
+
+test('redirect requests validate dates and guest count even without a hotel recipient', async () => {
+  for (const fields of [{ preferredDates: '' }, { guests: 0 }, { guests: 1.5 }, { guests: 101 }]) {
+    const { status, sent } = await run('en', false, { hotelId: 'luna-mondschein', bookingMode: 'redirect', ...fields })
+    assert.equal(status, 400)
+    assert.equal(sent.length, 0)
   }
 })

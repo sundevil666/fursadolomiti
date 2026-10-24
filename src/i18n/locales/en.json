@@ -50,6 +50,7 @@
       "bookingModal": {
         "deliveryWarning": "Our team has received your request, but some emails could not be sent. Please do not submit it again — we will check the delivery.",
         "requestTitle": "Request to {hotel}",
+        "redirectDescription": "Enter your preferred dates and number of guests. After submitting the request, you will continue to the hotel website to complete your booking.",
         "requestDescription": "Tell us your preferred dates and number of guests. The hotel will check availability and confirm your booking.",
         "requestPrivacy": "Your privacy is guaranteed. Your data is shared only with the hotel. No mailing lists.",
         "requestSuccess": "Request sent",
@@ -70,7 +71,7 @@
         "required": "All fields are required",
         "sending": "Sending your request...",
         "redirectTitle": "Request sent",
-        "redirectText": "The official booking page will open in a new tab. You can return to the hotels or close this window here.",
+        "redirectText": "You will now be redirected to the hotel’s official website to complete your booking.",
         "ok": "OK",
         "errors": {
           "required": "Please complete all fields",

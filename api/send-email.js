@@ -105,10 +105,12 @@ export default async function handler(request, response) {
     ['chalet-zenit', 'info@chaletzenit.it'],
     ['villa-carolina', 'info@villa-carolina.com'],
   ])
-  const hotelRecipient = !isWidgetTrackingEvent && hotelRecipients.get(normalizedHotelId)
+  const bookingMode = String(request.body?.bookingMode || '').trim()
+  const hotelRecipient = !isWidgetTrackingEvent && !['widget', 'redirect'].includes(bookingMode) && hotelRecipients.get(normalizedHotelId)
   const preferredDates = String(request.body?.preferredDates || '').trim()
   const guests = Number(request.body?.guests)
-  if (hotelRecipient) {
+  const isBookingRequest = !isWidgetTrackingEvent && (['request', 'redirect'].includes(bookingMode) || Boolean(hotelRecipient))
+  if (isBookingRequest) {
     if (
       !preferredDates ||
       preferredDates.length > 2000 ||
@@ -130,8 +132,7 @@ export default async function handler(request, response) {
       !normalizedLastName ||
       !normalizedEmail ||
       !normalizedHotelId ||
-      !normalizedHotel ||
-      !normalizedPromoCode
+      !normalizedHotel
     ) {
       return response.status(400).json({ error: 'All fields are required' })
     }
@@ -314,7 +315,7 @@ export default async function handler(request, response) {
           <td style="padding:28px 32px 8px;">
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">
               ${row(adminCopy.hotel, safe.hotel, true)}
-              ${hotelRecipient ? row(adminCopy.dates, escapeHtml(preferredDates), true) + row(adminCopy.guests, String(guests), true) : ''}
+              ${isBookingRequest ? row(adminCopy.dates, escapeHtml(preferredDates), true) + row(adminCopy.guests, String(guests), true) : ''}
               ${row(adminCopy.provider, escapeHtml(normalizedWidgetProvider), true)}
               ${row(adminCopy.action, escapeHtml(normalizedWidgetAction || adminCopy.unknown))}
               ${row(adminCopy.date, safe.localDateTime, true)}
@@ -372,7 +373,7 @@ export default async function handler(request, response) {
               ${row(adminCopy.lastName, safe.lastName)}
               ${row('Email', `<span style="color:#08211f;text-decoration:none;">${safe.email}</span>`, true)}
               ${row(adminCopy.hotel, safe.hotel, true)}
-              ${hotelRecipient ? row(adminCopy.dates, escapeHtml(preferredDates), true) + row(adminCopy.guests, String(guests), true) : ''}
+              ${isBookingRequest ? row(adminCopy.dates, escapeHtml(preferredDates), true) + row(adminCopy.guests, String(guests), true) : ''}
               ${row(adminCopy.promo, safe.promoCode, true)}
               ${row(adminCopy.date, safe.localDateTime, true)}
             </table>
@@ -438,7 +439,7 @@ export default async function handler(request, response) {
         `${adminCopy.fullName}: ${fullName}`,
         `Email: ${normalizedEmail}`,
         `${adminCopy.hotel}: ${normalizedHotel}`,
-        ...(hotelRecipient
+        ...(isBookingRequest
           ? [`${adminCopy.dates}: ${preferredDates}`, `${adminCopy.guests}: ${guests}`]
           : []),
         `${adminCopy.promo}: ${normalizedPromoCode}`,
@@ -499,7 +500,7 @@ export default async function handler(request, response) {
       [copy.hotel, normalizedHotel],
       [copy.name, fullName],
       ...(!customer ? [[copy.email, normalizedEmail]] : []),
-      ...(hotelRecipient
+      ...(isBookingRequest
         ? [
             [copy.dates, preferredDates],
             [copy.guests, String(guests)],
@@ -522,7 +523,7 @@ export default async function handler(request, response) {
       `${copy.hotel}: ${normalizedHotel}`,
       `${copy.name}: ${fullName}`,
       ...(!customer ? [`${copy.email}: ${normalizedEmail}`] : []),
-      ...(hotelRecipient ? [`${copy.dates}: ${preferredDates}`, `${copy.guests}: ${guests}`] : []),
+      ...(isBookingRequest ? [`${copy.dates}: ${preferredDates}`, `${copy.guests}: ${guests}`] : []),
     ]
     return {
       subject: `FursaDolomiti — ${(roleSubjects[language] || roleSubjects.en)[customer ? 'guest' : 'hotel']} — ${normalizedHotel}`,
@@ -545,7 +546,7 @@ export default async function handler(request, response) {
     }
   }
   const customerMail = bookingEmail(customerLocale, true)
-  const hotelMail = bookingEmail('it', false)
+  const hotelMail = bookingEmail(customerLocale === 'it' ? 'it' : 'en', false)
 
   try {
     const transporter = nodemailer.createTransport({

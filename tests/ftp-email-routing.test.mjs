@@ -6,14 +6,14 @@ import { join } from 'node:path'
 import test from 'node:test'
 
 // Run after npm run build:ftp. Exercise the actual generated PHP handler with SMTP mocked.
-function deliver(handlerPath, email, hotelId, eventType = '') {
+function deliver(handlerPath, email, hotelId, eventType = '', overrides = {}) {
   let source = readFileSync(handlerPath, 'utf8')
   const start = source.indexOf('function sendSmtpEmail(')
   const end = source.indexOf("if (($_SERVER['REQUEST_METHOD']", start)
   assert.ok(start > 0 && end > start)
   source = source.slice(0, start) + `
 function sendSmtpEmail(array $config, array $recipients, string $subject, string $text, string $html, ?string $replyTo = null): array {
-    $GLOBALS['testMails'][] = compact('recipients', 'subject');
+    $GLOBALS['testMails'][] = compact('recipients', 'subject', 'text', 'html');
     return ['ok' => true];
 }
 $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -26,7 +26,7 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
     writeFileSync(file, source)
     return JSON.parse(execFileSync('php', [file], {
       encoding: 'utf8',
-      input: JSON.stringify({ email, hotelId, hotel: hotelId, eventType, widgetProvider: 'Test provider', firstName: 'Test', lastName: 'Guest', promoCode: 'TEST', preferredDates: 'Flexible dates', guests: 2, locale: 'en' }),
+      input: JSON.stringify({ email, hotelId, hotel: hotelId, eventType, widgetProvider: 'Test provider', firstName: 'Test', lastName: 'Guest', promoCode: 'TEST', preferredDates: 'Flexible dates', guests: 2, locale: 'en', ...overrides }),
       env: { ...process.env, SMTP_HOST: 'test.invalid', SMTP_USERNAME: 'sender@example.com', SMTP_FROM_EMAIL: 'sender@example.com', SMTP_PASSWORD: 'mock', SMTP_PORT: '465', SMTP_ENCRYPTION: 'ssl', EMAIL_RECIPIENTS: ' SUNDEVILDI@GMAIL.COM ,extra-admin@example.com' },
     })).mails
   } finally {
@@ -54,4 +54,24 @@ test('FTP build leaves the PHP source policy unchanged', () => {
   const mails = deliver('php/send-email.php', 'guest@example.com', 'chalet-zenit')
   assert.ok(mails[0].recipients.includes('sundevildi@gmail.com'))
   assert.ok(mails[2].recipients.includes('sundevildi@gmail.com'))
+})
+
+
+test('PHP and FTP apply locale and delivery rules to all three booking modes', () => {
+  for (const path of ['php/send-email.php', 'dist-ftp/fursa-release/php/send-email.php']) {
+    for (const locale of ['ru', 'en', 'it']) {
+      const labels = { ru: ['Администратору', 'Гостю'], en: ['For the administrator', 'For our guest'], it: ['All’amministratore', 'Al nostro ospite'] }[locale]
+      for (const bookingMode of ['request', 'redirect', 'widget']) {
+        const mails = deliver(path, 'guest@example.com', 'chalet-zenit', '', { locale, bookingMode, promoCode: '', ...(bookingMode === 'widget' ? { preferredDates: '', guests: 0 } : {}) })
+        assert.equal(mails.length, bookingMode === 'request' ? 3 : 2)
+        assert.ok(mails[0].subject.includes(labels[0]))
+        assert.ok(mails[1].subject.includes(labels[1]))
+        if (bookingMode === 'request') {
+          assert.ok(mails[2].subject.includes(locale === 'it' ? 'All’hotel' : 'For the hotel'))
+          assert.ok(mails[2].text.includes(locale === 'it' ? 'Date desiderate e richieste' : 'Preferred dates and requests'))
+        }
+        if (bookingMode !== 'widget') assert.ok(mails.every(mail => mail.text.includes('Flexible dates')))
+      }
+    }
+  }
 })

@@ -38,6 +38,7 @@ const activeFilter = ref<HotelFilter>('all')
 const previousFilter = ref<HotelFilter>('fourStar')
 const isFilterAnimating = ref(false)
 const bookingHotelId = ref<string | null>(null)
+const bookingStep = ref<'details' | 'widget'>('details')
 const bookingModal = ref<HTMLElement | null>(null)
 const bookingSuedtirolContainer = ref<HTMLElement | null>(null)
 const bookingExpertContainer = ref<HTMLElement | null>(null)
@@ -49,7 +50,7 @@ const lastName = ref('')
 const email = ref('')
 const preferredDates = ref('')
 const guests = ref('')
-const isRequestHotel = computed(() => Boolean(activeBookingHotel.value?.bookingRequest))
+const isRequestHotel = computed(() => Boolean(activeBookingHotel.value) && !isWidgetHotel.value)
 const deliveryWarning = ref('')
 const formError = ref('')
 const formStatus = ref<'idle' | 'sending' | 'redirecting'>('idle')
@@ -100,7 +101,9 @@ const activeBookingHotel = computed(() =>
 const isBookingSuedtirolHotel = computed(() => Boolean(activeBookingHotel.value?.bookingSuedtirol))
 const isBookingExpertHotel = computed(() => Boolean(activeBookingHotel.value?.bookingExpert))
 const isBookingKrossHotel = computed(() => Boolean(activeBookingHotel.value?.bookingKross))
-const isWidgetHotel = computed(() => isBookingSuedtirolHotel.value || isBookingExpertHotel.value || isBookingKrossHotel.value)
+const hasBookingWidget = (hotel: HotelPreview) => Boolean(hotel.bookingSuedtirol || hotel.bookingExpert || hotel.bookingKross)
+const isWidgetHotel = computed(() => Boolean(activeBookingHotel.value && hasBookingWidget(activeBookingHotel.value)))
+const showWidget = computed(() => isWidgetHotel.value && bookingStep.value === 'widget')
 const widgetStatus = computed(() =>
   isBookingKrossHotel.value ? bookingKrossStatus.value : isBookingExpertHotel.value ? bookingExpertStatus.value : bookingSuedtirolStatus.value,
 )
@@ -254,6 +257,7 @@ const restartHotelAutoplay = () => {
 }
 
 const openBookingModal = (hotelId: string) => {
+  bookingStep.value = 'details'
   bookingHotelId.value = hotelId
   widgetTrackingSentForSession = false
   deliveryWarning.value = ''
@@ -373,11 +377,20 @@ const getLocalizedBookingUrl = (hotel: HotelPreview, appLocale: string) => {
 
 const isPlaceholderBookingUrl = (bookingUrl: string) => {
   try {
-    return new URL(bookingUrl).hostname === 'example.com'
+    const url = new URL(bookingUrl)
+    return !['https:', 'http:'].includes(url.protocol) || url.hostname === 'example.com'
   } catch {
     return true
   }
 }
+
+const bookingMode = computed(() => {
+  const hotel = activeBookingHotel.value
+  if (hotel && hasBookingWidget(hotel)) return 'widget'
+  return hotel && !isPlaceholderBookingUrl(getLocalizedBookingUrl(hotel, locale.value))
+    ? 'redirect'
+    : 'request'
+})
 
 const setBooleanAttribute = (element: HTMLElement, name: string, value?: boolean) => {
   if (value === undefined) return
@@ -740,7 +753,7 @@ const installWindowOpenTracking = () => {
 
   window.open = ((...args: Parameters<typeof window.open>) => {
     const [url] = args
-    if (bookingHotelId.value && isWidgetHotel.value) {
+    if (bookingHotelId.value && showWidget.value) {
       void reportWidgetTracking('window.open', typeof url === 'string' ? url : '')
     }
 
@@ -783,6 +796,7 @@ const submitBookingRequest = async () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        bookingMode: bookingMode.value,
         preferredDates: preferredDates.value.trim(),
         guests: Number(guests.value),
         firstName: firstName.value.trim(),
@@ -809,7 +823,13 @@ const submitBookingRequest = async () => {
       deliveryWarning.value = t('home.hotels.bookingModal.deliveryWarning')
     }
 
-    if (hotel?.bookingRequest) {
+    if (isWidgetHotel.value) {
+      formStatus.value = 'idle'
+      bookingStep.value = 'widget'
+      return
+    }
+
+    if (bookingMode.value === 'request') {
       formStatus.value = 'redirecting'
       return
     }
@@ -835,7 +855,7 @@ const submitBookingRequest = async () => {
         bookingUrl.searchParams.set(hotel.bookingParams.email, email.value.trim())
       }
 
-      bookingUrl.searchParams.set(hotel.bookingParams.promoCode, promoCode)
+      if (promoCode) bookingUrl.searchParams.set(hotel.bookingParams.promoCode, promoCode)
 
       Object.entries(hotel.bookingHiddenParams ?? {}).forEach(([paramName, paramValue]) => {
         bookingUrl.searchParams.set(paramName, paramValue)
@@ -843,7 +863,7 @@ const submitBookingRequest = async () => {
 
       formStatus.value = 'redirecting'
       window.setTimeout(() => {
-        window.location.assign(bookingUrl.href)
+        if (bookingHotelId.value === hotel.id) window.location.assign(bookingUrl.href)
       }, 1400)
     }
   } catch (error) {
@@ -859,7 +879,7 @@ watch(bookingHotelId, () => {
   widgetTrackingCleanup?.()
 }, { flush: 'sync' })
 
-watch(bookingHotelId, async (hotelId, _previousHotelId, onCleanup) => {
+watch([bookingHotelId, bookingStep], async ([hotelId, step], _previous, onCleanup) => {
   let cancelled = false
   onCleanup(() => { cancelled = true })
   document.body.classList.toggle('is-booking-modal-open', Boolean(hotelId))
@@ -868,6 +888,11 @@ watch(bookingHotelId, async (hotelId, _previousHotelId, onCleanup) => {
     await nextTick()
     if (cancelled) return
     const hotel = activeBookingHotel.value
+
+    if (step === 'details') {
+      bookingModal.value?.querySelector<HTMLElement>('input')?.focus()
+      return
+    }
 
     if (hotel?.bookingKross) {
       bookingModal.value?.querySelector<HTMLElement>('.booking-modal__close')?.focus()
@@ -1036,7 +1061,7 @@ onBeforeUnmount(() => {
             class="fd-btn fd-btn--outline"
             @click.stop="openBookingModal(hotel.id)"
           >
-            <AnimatedText :text="t('home.hotels.bookWithBonus')" tag="span" />
+            <AnimatedText :text="t(hasBookingWidget(hotel) ? 'home.hotels.bookWithBonus' : 'home.hotels.bookingModal.requestSubmit')" tag="span" />
           </q-btn>
         </div>
       </article>
@@ -1063,9 +1088,9 @@ onBeforeUnmount(() => {
           <section
             class="booking-modal__panel"
             :class="{
-              'booking-modal__panel--widget': isWidgetHotel,
-              'booking-modal__panel--expert': isBookingExpertHotel,
-              'booking-modal__panel--limited-lower': activeBookingHotel?.bookingModalLowerMaxHeight,
+              'booking-modal__panel--widget': showWidget,
+              'booking-modal__panel--expert': showWidget && isBookingExpertHotel,
+              'booking-modal__panel--limited-lower': showWidget && activeBookingHotel?.bookingModalLowerMaxHeight,
               'booking-modal__panel--success': formStatus === 'redirecting',
             }"
             :style="bookingModalPanelStyle"
@@ -1084,12 +1109,12 @@ onBeforeUnmount(() => {
               <div>
                 <h2 :id="`booking-modal-title-${bookingHotelId}`" class="booking-modal__title">
                   {{
-                    isWidgetHotel
+                    showWidget
                       ? t('home.hotels.bookingModal.widgetTitle', { hotel: activeBookingHotelName })
                       : isRequestHotel ? t('home.hotels.bookingModal.requestTitle', { hotel: activeBookingHotelName }) : t('home.hotels.bookingModal.title')
                   }}
                 </h2>
-                <p v-if="isWidgetHotel" class="booking-modal__privacy-note">
+                <p v-if="showWidget" class="booking-modal__privacy-note">
                   {{
                     t('home.hotels.bookingModal.widgetPrivacyNote', {
                       provider: widgetProviderName,
@@ -1098,16 +1123,16 @@ onBeforeUnmount(() => {
                 </p>
                 <p class="booking-modal__description">
                   {{
-                    isWidgetHotel
+                    showWidget
                       ? t('home.hotels.bookingModal.widgetDescription', {
                           provider: widgetProviderName,
                         })
-                      : t(isRequestHotel ? 'home.hotels.bookingModal.requestDescription' : 'home.hotels.bookingModal.description')
+                      : t(bookingMode === 'redirect' ? 'home.hotels.bookingModal.redirectDescription' : isRequestHotel ? 'home.hotels.bookingModal.requestDescription' : 'home.hotels.bookingModal.description')
                   }}
                 </p>
               </div>
 
-              <p v-if="!isWidgetHotel" class="booking-modal__privacy-note">
+              <p v-if="!showWidget" class="booking-modal__privacy-note">
                 {{ t(isRequestHotel ? 'home.hotels.bookingModal.requestPrivacy' : 'home.hotels.bookingModal.privacyNote') }}
               </p>
             </div>
@@ -1117,10 +1142,10 @@ onBeforeUnmount(() => {
                 <q-icon name="check" />
               </span>
               <h2 class="booking-modal__redirect-title">
-                {{ t(isRequestHotel ? 'home.hotels.bookingModal.requestSuccess' : 'home.hotels.bookingModal.redirectTitle') }}
+                {{ t(bookingMode === 'request' ? 'home.hotels.bookingModal.requestSuccess' : 'home.hotels.bookingModal.redirectTitle') }}
               </h2>
               <p class="booking-modal__redirect-text">
-                {{ t(isRequestHotel ? 'home.hotels.bookingModal.requestSuccessText' : 'home.hotels.bookingModal.redirectText') }}
+                {{ t(bookingMode === 'request' ? 'home.hotels.bookingModal.requestSuccessText' : 'home.hotels.bookingModal.redirectText') }}
               </p>
               <p v-if="deliveryWarning" role="status" class="booking-modal__redirect-text">{{ deliveryWarning }}</p>
               <button class="booking-modal__primary" type="button" @click="closeBookingModal">
@@ -1128,8 +1153,10 @@ onBeforeUnmount(() => {
               </button>
             </div>
 
+            <p v-if="showWidget && deliveryWarning" role="status">{{ deliveryWarning }}</p>
+
             <div
-              v-if="isWidgetHotel"
+              v-if="showWidget"
               class="booking-modal__widget-shell"
               :class="{ 'booking-modal__widget-shell--expert': isBookingExpertHotel }"
             >
@@ -1247,6 +1274,32 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.booking-modal__panel:not(.booking-modal__panel--widget) {
+  min-height: 0;
+  max-height: calc(100dvh - 64px);
+  overflow-y: auto;
+}
+
+.booking-modal__panel:not(.booking-modal__panel--widget) .booking-modal__form {
+  overflow-y: visible;
+}
+
+@media (max-width: 900px) {
+  .booking-modal__panel:not(.booking-modal__panel--widget) {
+    max-height: calc(100dvh - 48px);
+  }
+}
+
+@media (max-width: 520px) {
+  .booking-modal__panel:not(.booking-modal__panel--widget) {
+    max-height: 100dvh;
+  }
+
+  .booking-modal__panel:not(.booking-modal__panel--widget) .booking-modal__intro {
+    padding-top: 42px;
+  }
+}
+
 .booking-modal__field textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #c9d3ce; border-radius: 10px; font: inherit; resize: vertical; }
 .booking-modal__panel--success {
   width: min(100%, 560px);

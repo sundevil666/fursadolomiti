@@ -308,10 +308,12 @@ $hotelRecipients = [
     'chalet-zenit' => 'info@chaletzenit.it',
     'villa-carolina' => 'info@villa-carolina.com',
 ];
-$hotelRecipient = !$isWidgetTrackingEvent ? ($hotelRecipients[$normalizedHotelId] ?? null) : null;
+$bookingMode = trim((string) ($requestBody['bookingMode'] ?? ''));
+$hotelRecipient = !$isWidgetTrackingEvent && !in_array($bookingMode, ['widget', 'redirect'], true) ? ($hotelRecipients[$normalizedHotelId] ?? null) : null;
 $preferredDates = trim((string) ($requestBody['preferredDates'] ?? ''));
 $guests = filter_var($requestBody['guests'] ?? null, FILTER_VALIDATE_INT);
-if ($hotelRecipient) {
+$isBookingRequest = !$isWidgetTrackingEvent && (in_array($bookingMode, ['request', 'redirect'], true) || (bool) $hotelRecipient);
+if ($isBookingRequest) {
     if ($preferredDates === '' || strlen($preferredDates) > 8000 || $guests === false || $guests < 1 || $guests > 100) {
         jsonResponse(400, ['error' => 'Preferred dates and guest count are required']);
     }
@@ -328,8 +330,7 @@ if ($isWidgetTrackingEvent) {
         $normalizedLastName === '' ||
         $normalizedEmail === '' ||
         $normalizedHotelId === '' ||
-        $normalizedHotel === '' ||
-        $normalizedPromoCode === ''
+        $normalizedHotel === ''
     ) {
         jsonResponse(400, ['error' => 'All fields are required']);
     }
@@ -518,7 +519,7 @@ $htmlMessage = $isWidgetTrackingEvent
           <td style="padding:28px 32px 8px;">
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
               renderRow($adminCopy['hotel'], $safe['hotel'], true) .
-              ($hotelRecipient ? renderRow($adminCopy['dates'], escapeHtmlValue($preferredDates), true) . renderRow($adminCopy['guests'], (string) $guests, true) : '') .
+              ($isBookingRequest ? renderRow($adminCopy['dates'], escapeHtmlValue($preferredDates), true) . renderRow($adminCopy['guests'], (string) $guests, true) : '') .
               renderRow($adminCopy['provider'], escapeHtmlValue($normalizedWidgetProvider), true) .
               renderRow($adminCopy['action'], escapeHtmlValue($normalizedWidgetAction !== '' ? $normalizedWidgetAction : $adminCopy['unknown'])) .
               renderRow($adminCopy['date'], $safe['localDateTime'], true) .
@@ -572,7 +573,7 @@ $htmlMessage = $isWidgetTrackingEvent
               renderRow($adminCopy['lastName'], $safe['lastName']) .
               renderRow('Email', '<span style="color:#08211f;text-decoration:none;">' . $safe['email'] . '</span>', true) .
               renderRow($adminCopy['hotel'], $safe['hotel'], true) .
-              ($hotelRecipient ? renderRow($adminCopy['dates'], escapeHtmlValue($preferredDates), true) . renderRow($adminCopy['guests'], (string) $guests, true) : '') .
+              ($isBookingRequest ? renderRow($adminCopy['dates'], escapeHtmlValue($preferredDates), true) . renderRow($adminCopy['guests'], (string) $guests, true) : '') .
               renderRow($adminCopy['promo'], $safe['promoCode'], true) .
               renderRow($adminCopy['date'], $safe['localDateTime'], true) .
             '</table>
@@ -637,7 +638,7 @@ $message = $isWidgetTrackingEvent
     $adminCopy['fullName'] . ': ' . $fullName,
     'Email: ' . $normalizedEmail,
     $adminCopy['hotel'] . ': ' . $normalizedHotel,
-    ...($hotelRecipient ? [$adminCopy['dates'] . ': ' . $preferredDates, $adminCopy['guests'] . ': ' . $guests] : []),
+    ...($isBookingRequest ? [$adminCopy['dates'] . ': ' . $preferredDates, $adminCopy['guests'] . ': ' . $guests] : []),
     $adminCopy['promo'] . ': ' . $normalizedPromoCode,
     '',
     $adminCopy['locale'] . ': ' . $normalizedLocale,
@@ -680,7 +681,7 @@ $customerCopies = ['ru' => ['subject' => 'Ваша заявка получена
 'email' => 'Email',
 'dates' => 'Date desiderate e richieste',
 'guests' => 'Numero di ospiti']];
-$bookingEmail = static function (string $language, bool $customer) use ($roleSubjects, $customerCopies, $normalizedHotel, $fullName, $normalizedEmail, $hotelRecipient, $preferredDates, $guests, $safe): array {
+$bookingEmail = static function (string $language, bool $customer) use ($roleSubjects, $customerCopies, $normalizedHotel, $fullName, $normalizedEmail, $isBookingRequest, $preferredDates, $guests, $safe): array {
     $copy = $customerCopies[$language] ?? $customerCopies['en'];
     $title = $copy['title'];
     $lines = array_merge(
@@ -690,14 +691,14 @@ $bookingEmail = static function (string $language, bool $customer) use ($roleSub
             $copy['name'] . ': ' . $fullName,
             ...(!$customer ? [$copy['email'] . ': ' . $normalizedEmail] : []),
         ],
-        $hotelRecipient ? [$copy['dates'] . ': ' . $preferredDates, $copy['guests'] . ': ' . $guests] : []
+        $isBookingRequest ? [$copy['dates'] . ': ' . $preferredDates, $copy['guests'] . ': ' . $guests] : []
     );
     $text = implode("\n", $lines);
     $fields = [[$copy['hotel'], $normalizedHotel], [$copy['name'], $fullName]];
     if (!$customer) {
         $fields[] = [$copy['email'], $normalizedEmail];
     }
-    if ($hotelRecipient) {
+    if ($isBookingRequest) {
         $fields[] = [$copy['dates'], $preferredDates];
         $fields[] = [$copy['guests'], (string) $guests];
     }
@@ -730,7 +731,7 @@ HTML;
     ];
 };
 $customerMail = $bookingEmail($customerLocale, true);
-$hotelMail = $bookingEmail('it', false);
+$hotelMail = $bookingEmail($customerLocale === 'it' ? 'it' : 'en', false);
 
 $emailResponse = sendSmtpEmail($smtpConfig, $recipients, $subject, $message, $htmlMessage, $normalizedEmail);
 
