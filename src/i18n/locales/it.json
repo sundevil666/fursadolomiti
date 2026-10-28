@@ -50,7 +50,7 @@
       "bookingModal": {
         "requestTitle": "Richiesta a {hotel}",
         "redirectDescription": "Indicate le date desiderate e il numero di ospiti. Dopo l’invio della richiesta, passerete al sito dell’hotel per completare la prenotazione.",
-        "requestDescription": "Indicate le date desiderate e il numero di ospiti. L’hotel verificherà la disponibilità e confermerà la prenotazione.",
+        "requestDescription": "Indicate le date desiderate e il numero di ospiti. Se viaggiate con bambini di età inferiore ai 18 anni, indicate la loro età al momento dell’arrivo. L’hotel/chalet verificherà la disponibilità per le date selezionate e vi invierà direttamente una proposta.",
         "requestPrivacy": "La riservatezza è garantita. I dati vengono trasmessi solo all’hotel. Nessuna newsletter.",
         "requestSuccess": "Richiesta inviata",
         "requestSuccessText": "L’hotel vi contatterà via email.",

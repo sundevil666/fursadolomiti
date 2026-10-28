@@ -50,7 +50,7 @@
       "bookingModal": {
         "requestTitle": "Request to {hotel}",
         "redirectDescription": "Enter your preferred dates and number of guests. After submitting the request, you will continue to the hotel website to complete your booking.",
-        "requestDescription": "Tell us your preferred dates and number of guests. The hotel will check availability and confirm your booking.",
+        "requestDescription": "Please indicate your preferred dates and the number of guests. If you are travelling with children under 18, please specify their age at the time of arrival. The hotel/chalet will check availability for your selected dates and send you an offer directly.",
         "requestPrivacy": "Your privacy is guaranteed. Your data is shared only with the hotel. No mailing lists.",
         "requestSuccess": "Request sent",
         "requestSuccessText": "The hotel will contact you by email.",
