@@ -119,7 +119,7 @@ export const heroSlides: HeroSlide[] = [
 export const hotelPreviews: HotelPreview[] = [
   {
     id: 'edenselva',
-    visible: false,
+    visible: true,
     category: 'fourStar',
     images: [
       '/edenselva/edenselva1.jpg',
@@ -140,9 +140,9 @@ export const hotelPreviews: HotelPreview[] = [
     descriptionKey: 'home.hotels.edenselva.description',
     featuresKey: 'home.hotels.edenselva.features',
     bookingExpert: {
-      searchbox: 'newwidget',
+      searchbox: 'FursaDolomiti',
       hotel: 41512,
-      layout: 12224,
+      layout: 20020600,
       guests: 'types',
     },
     bookingModalLowerMaxHeight: '280px',
