@@ -18,7 +18,7 @@ type FooterCamera = {
 }
 
 const { locale, t } = useI18n()
-const footerMenuIds = ['hotels', 'rental']
+const footerMenuIds = ['hotels']
 const menuItems = (menuItemsMock as MenuItem[]).filter((item) => footerMenuIds.includes(item.id))
 const footerCameras: FooterCamera[] = [
   {

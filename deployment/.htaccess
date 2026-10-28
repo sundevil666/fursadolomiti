@@ -17,10 +17,7 @@ RewriteCond %{DOCUMENT_ROOT}/fursa-release/index.html -f
 RewriteRule ^hotel-booking\.php$ /hotels [R=302,END]
 
 RewriteCond %{DOCUMENT_ROOT}/fursa-release/index.html -f
-RewriteRule ^ski-rental\.php$ /rental [R=302,END]
-
-RewriteCond %{DOCUMENT_ROOT}/fursa-release/index.html -f
-RewriteRule ^(?:hotels/?|rental/?|privacy-policy/?|terms/?)?$ fursa-release/index.html [END]
+RewriteRule ^(?:hotels/?|privacy-policy/?|terms/?)?$ fursa-release/index.html [END]
 
 # Serve release assets and the PHP endpoint from the isolated folder.
 RewriteCond %{DOCUMENT_ROOT}/fursa-release/index.html -f

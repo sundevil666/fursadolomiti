@@ -34,23 +34,5 @@
       "en": "This page will contain hotel descriptions, filters, benefits and booking sections. The current content is a placeholder for the upcoming design implementation.",
       "it": "Questa pagina conterra descrizioni degli hotel, filtri, vantaggi e sezioni di prenotazione. Il contenuto attuale e un segnaposto per il futuro layout."
     }
-  },
-  {
-    "id": "rental",
-    "title": {
-      "ru": "Прокат",
-      "en": "Rental",
-      "it": "Noleggio"
-    },
-    "lead": {
-      "ru": "Раздел для проката снаряжения, транспорта и сопутствующих услуг.",
-      "en": "A section for equipment, transport and related service rental.",
-      "it": "Una sezione per il noleggio di attrezzature, trasporti e servizi correlati."
-    },
-    "body": {
-      "ru": "Позже здесь будут категории проката, карточки товаров, условия и быстрый запрос. Заглушка нужна для проверки переключения языков и структуры страниц.",
-      "en": "Later this page will include rental categories, item cards, terms and a quick request flow. The placeholder helps verify language switching and page structure.",
-      "it": "In seguito questa pagina includera categorie di noleggio, schede, condizioni e richiesta rapida. Il segnaposto aiuta a verificare lingua e struttura."
-    }
   }
 ]

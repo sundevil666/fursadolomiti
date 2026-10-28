@@ -16,14 +16,5 @@
       "en": "Hotels",
       "it": "Hotel"
     }
-  },
-  {
-    "id": "rental",
-    "routeName": "rental",
-    "labels": {
-      "ru": "Прокат",
-      "en": "Rental",
-      "it": "Noleggio"
-    }
   }
 ]
