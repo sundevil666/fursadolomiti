@@ -288,6 +288,20 @@ export const hotelPreviews: HotelPreview[] = [
     featuresKey: 'home.hotels.lunaMondschein.features',
   },
   {
+    id: 'diamant',
+    category: 'fourStar',
+    images: ['/diamant/diamant-1.webp', '/diamant/diamant-2.webp'],
+    promoCode: '',
+    bookingUrl: 'https://www.hoteldiamant.it/',
+    bookingParams: {
+      promoCode: 'promo_code',
+    },
+    nameKey: 'home.hotels.diamant.name',
+    locationKey: 'home.hotels.diamant.location',
+    descriptionKey: 'home.hotels.diamant.description',
+    featuresKey: 'home.hotels.diamant.features',
+  },
+  {
     id: 'luxury-chalet-p',
     category: 'chalet',
     images: [

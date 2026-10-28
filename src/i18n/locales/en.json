@@ -176,6 +176,17 @@
           "Spacious spa area for complete rest and recovery"
         ]
       },
+      "diamant": {
+        "name": "Hotel Diamant 4★S",
+        "location": "Santa Cristina",
+        "description": "Located between Ortisei and Santa Cristina, in a peaceful setting ideal for relaxation, surrounded by a spacious garden.",
+        "features": [
+          "Large panoramic SPA with 5 pools, 6 saunas and an extensive park with a natural pond.",
+          "Heated indoor and outdoor pools with views of the Dolomites.",
+          "Free shuttle service to the ski lifts in Santa Cristina.",
+          "Sunny location all year round, with spectacular views of Sassolungo and the Sella Group."
+        ]
+      },
       "luxuryChaletP": {
         "name": "Luxury Chalet P",
         "location": "Ortisei",
