@@ -24,7 +24,7 @@ const footerCameras: FooterCamera[] = [
   {
     id: 'seceda',
     altKey: 'footer.images.seceda',
-    label: 'Secada',
+    label: 'Seceda',
     previewUrl: 'https://valgardena.panomax.com/',
     url: 'https://valgardena.panomax.com/',
   },
@@ -45,7 +45,7 @@ const footerCameras: FooterCamera[] = [
   {
     id: 'dantercapies',
     altKey: 'footer.images.dantercapies',
-    label: 'Dantercapies',
+    label: 'Dantercepies',
     previewUrl: 'https://valgardena.panomax.com/dantercepies',
     url: 'https://valgardena.panomax.com/dantercepies',
   },
