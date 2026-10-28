@@ -51,7 +51,6 @@ const email = ref('')
 const preferredDates = ref('')
 const guests = ref('')
 const isRequestHotel = computed(() => Boolean(activeBookingHotel.value) && !isWidgetHotel.value)
-const deliveryWarning = ref('')
 const formError = ref('')
 const formStatus = ref<'idle' | 'sending' | 'redirecting'>('idle')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
@@ -260,7 +259,6 @@ const openBookingModal = (hotelId: string) => {
   bookingStep.value = 'details'
   bookingHotelId.value = hotelId
   widgetTrackingSentForSession = false
-  deliveryWarning.value = ''
   preferredDates.value = ''
   guests.value = ''
   firstName.value = ''
@@ -818,10 +816,7 @@ const submitBookingRequest = async () => {
 
     if (!response.ok) throw new Error(await response.text())
 
-    const { promoCode, customerEmailSent, hotelEmailSent } = (await response.json()) as { promoCode: string; customerEmailSent?: boolean; hotelEmailSent?: boolean }
-    if (customerEmailSent === false || hotelEmailSent === false) {
-      deliveryWarning.value = t('home.hotels.bookingModal.deliveryWarning')
-    }
+    const { promoCode } = (await response.json()) as { promoCode: string }
 
     if (isWidgetHotel.value) {
       formStatus.value = 'idle'
@@ -1147,13 +1142,11 @@ onBeforeUnmount(() => {
               <p class="booking-modal__redirect-text">
                 {{ t(bookingMode === 'request' ? 'home.hotels.bookingModal.requestSuccessText' : 'home.hotels.bookingModal.redirectText') }}
               </p>
-              <p v-if="deliveryWarning" role="status" class="booking-modal__redirect-text">{{ deliveryWarning }}</p>
               <button class="booking-modal__primary" type="button" @click="closeBookingModal">
                 {{ t('home.hotels.bookingModal.ok') }}
               </button>
             </div>
 
-            <p v-if="showWidget && deliveryWarning" role="status">{{ deliveryWarning }}</p>
 
             <div
               v-if="showWidget"
