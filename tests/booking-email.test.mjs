@@ -154,3 +154,29 @@ test('redirect requests validate dates and guest count even without a hotel reci
     assert.equal(sent.length, 0)
   }
 })
+
+test('Invictus requests flag the missing hotel email only in admin mail', async () => {
+  for (const [locale, note] of [
+    ['ru', 'Email для Chalet Invictus не предоставлен.'],
+    ['en', 'No hotel email has been provided for Chalet Invictus.'],
+    ['it', 'L’indirizzo email di Chalet Invictus non è stato fornito.'],
+  ]) {
+    const { status, sent, result } = await run(locale, false, {
+      hotelId: 'chalet-invictus',
+      hotel: 'Chalet Invictus',
+      bookingMode: 'request',
+    })
+    assert.equal(status, 200)
+    assert.equal(sent.length, 2)
+    assert.equal(result.hotelEmailSent, null)
+    assert.ok(sent[0].html.includes(note))
+    assert.ok(sent[0].text.includes(note))
+    const guest = sent.find((mail) => mail.to === body.email)
+    assert.ok(guest)
+    assert.ok(!guest.html.includes(note))
+    assert.ok(!guest.text.includes(note))
+    const existing = await run(locale)
+    assert.ok(!existing.sent[0].html.includes(note))
+    assert.ok(!existing.sent[0].text.includes(note))
+  }
+})

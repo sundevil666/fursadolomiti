@@ -174,6 +174,7 @@ export default async function handler(request, response) {
       dates: 'Желаемые даты и пожелания',
       guests: 'Количество гостей',
       unknown: 'Нет данных',
+      missingHotelEmail: 'Email для Chalet Invictus не предоставлен. Заявка отправлена только администрации.',
       geoNote:
         'Местоположение определяется приблизительно по данным инфраструктуры и может отличаться от фактического.',
     },
@@ -207,6 +208,7 @@ export default async function handler(request, response) {
       dates: 'Preferred dates and requests',
       guests: 'Number of guests',
       unknown: 'Not available',
+      missingHotelEmail: 'No hotel email has been provided for Chalet Invictus. The request was sent to the administrators only.',
       geoNote:
         'Location is estimated from infrastructure data and may differ from the actual location.',
     },
@@ -240,11 +242,13 @@ export default async function handler(request, response) {
       dates: 'Date desiderate e richieste',
       guests: 'Numero di ospiti',
       unknown: 'Non disponibile',
+      missingHotelEmail: 'L’indirizzo email di Chalet Invictus non è stato fornito. La richiesta è stata inviata solo agli amministratori.',
       geoNote:
         'La posizione è stimata dai dati dell’infrastruttura e può differire da quella effettiva.',
     },
   }
   const adminCopy = adminCopies[emailLocale] || adminCopies.en
+  const missingHotelEmail = isBookingRequest && normalizedHotelId === 'chalet-invictus' && !hotelRecipient
   const roleSubjects = {
     ru: {
       admin: 'Администратору · Новая заявка',
@@ -373,6 +377,7 @@ export default async function handler(request, response) {
               ${row(adminCopy.lastName, safe.lastName)}
               ${row('Email', `<span style="color:#08211f;text-decoration:none;">${safe.email}</span>`, true)}
               ${row(adminCopy.hotel, safe.hotel, true)}
+              ${missingHotelEmail ? row(adminCopy.notice, escapeHtml(adminCopy.missingHotelEmail), true) : ''}
               ${isBookingRequest ? row(adminCopy.dates, escapeHtml(preferredDates), true) + row(adminCopy.guests, String(guests), true) : ''}
               ${row(adminCopy.promo, safe.promoCode, true)}
               ${row(adminCopy.date, safe.localDateTime, true)}
@@ -439,6 +444,7 @@ export default async function handler(request, response) {
         `${adminCopy.fullName}: ${fullName}`,
         `Email: ${normalizedEmail}`,
         `${adminCopy.hotel}: ${normalizedHotel}`,
+        ...(missingHotelEmail ? [adminCopy.missingHotelEmail] : []),
         ...(isBookingRequest
           ? [`${adminCopy.dates}: ${preferredDates}`, `${adminCopy.guests}: ${guests}`]
           : []),

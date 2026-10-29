@@ -225,6 +225,32 @@
           }
         ]
       },
+      "chaletInvictus": {
+        "name": "Chalet Invictus",
+        "location": "Selva",
+        "description": "Esclusivo chalet di nuova costruzione, situato in posizione strategica a Selva di Val Gardena, a soli 200 metri dalle piste da sci. Apertura prevista per l’inizio di dicembre 2026.",
+        "featuresLabel": "Caratteristiche:",
+        "features": [
+          "Spa privata di lusso con piscine, saune, palestra Technogym e sala massaggi.",
+          "Vista panoramica sulle Dolomiti dalle camere e terrazze.",
+          "4 camere con bagno privato, inclusa una Master Suite.",
+          "Servizi esclusivi con colazione, pulizia giornaliera e concierge."
+        ],
+        "stats": [
+          {
+            "icon": "groups",
+            "value": "7"
+          },
+          {
+            "icon": "bed",
+            "value": "4"
+          },
+          {
+            "icon": "shower",
+            "value": "4"
+          }
+        ]
+      },
       "chaletZenit": {
         "name": "Chalet Zenit",
         "location": "Selva",
