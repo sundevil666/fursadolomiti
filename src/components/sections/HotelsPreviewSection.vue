@@ -1122,7 +1122,7 @@ onBeforeUnmount(() => {
                       ? t('home.hotels.bookingModal.widgetDescription', {
                           provider: widgetProviderName,
                         })
-                      : t('home.hotels.bookingModal.requestDescription')
+                      : t(bookingMode === 'request' ? 'home.hotels.bookingModal.requestDescription' : 'home.hotels.bookingModal.description')
                   }}
                 </p>
               </div>
