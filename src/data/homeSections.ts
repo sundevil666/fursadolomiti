@@ -375,6 +375,7 @@ export const hotelPreviews: HotelPreview[] = [
       '/chalet-invictus/invictus-2.jpg',
       '/chalet-invictus/invictus-3.jpg',
       '/chalet-invictus/invictus-4.jpg',
+      '/chalet-invictus/invictus-5.jpg',
     ],
     promoCode: 'FURSADOLOMITI',
     bookingUrl: '',
