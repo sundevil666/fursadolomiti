@@ -7,6 +7,7 @@ export type HeroSlide = {
 
 export type HotelPreview = {
   id: string
+  publicationStatus?: 'preview' | 'published' | 'hidden'
   visible?: boolean
   bookingRequest?: boolean
   category: HotelCategory
@@ -119,6 +120,7 @@ export const heroSlides: HeroSlide[] = [
 export const hotelPreviews: HotelPreview[] = [
   {
     id: 'edenselva',
+    publicationStatus: 'published',
     visible: true,
     category: 'fourStar',
     images: [
@@ -149,6 +151,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'alpenroyal',
+    publicationStatus: 'published',
     category: 'fiveStar',
     images: [
       '/alpenroyal/alpenroyal-summer-exterior-pool.jpg',
@@ -178,6 +181,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'posta',
+    publicationStatus: 'published',
     category: 'fourStar',
     images: ['/posta_4/Posta4 (1).jpg', '/posta_4/posta1.jpg', '/posta_4/FamilyHotel(3) (3).jpg'],
     promoCode: 'REPLACE_POSTA',
@@ -200,6 +204,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'portillo-dolomites',
+    publicationStatus: 'published',
     category: 'fourStar',
     images: [
       '/portillo-dolomites/portillo-dolomites1.jpg',
@@ -224,8 +229,9 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'somont',
+    publicationStatus: 'preview',
     category: 'fourStar',
-    images: ['/somont/somont1.jpg'],
+    images: ['/somont/somont-2.webp', '/somont/somont-3.webp', '/somont/somont-4.webp', '/somont/somont-1.webp'],
     promoCode: '',
     bookingUrl: '',
     bookingParams: {
@@ -238,6 +244,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'continental',
+    publicationStatus: 'published',
     category: 'fourStar',
     images: [
       'hotel-continental/continental1.jpg',
@@ -265,6 +272,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'luna-mondschein',
+    publicationStatus: 'published',
     category: 'fourStar',
     images: [
       'hotel-luna/luna1.jpg',
@@ -289,6 +297,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'diamant',
+    publicationStatus: 'preview',
     category: 'fourStar',
     images: ['/diamant/diamant-1.webp', '/diamant/diamant-2.webp'],
     promoCode: '',
@@ -303,6 +312,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'luxury-chalet-p',
+    publicationStatus: 'published',
     category: 'chalet',
     images: [
       '/luxury-chalet-p/luxury-chalet-p1.jpg',
@@ -331,6 +341,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'villa-carolina',
+    publicationStatus: 'published',
     bookingRequest: true,
     category: 'chalet',
     images: [
@@ -356,6 +367,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'chalet-invictus',
+    publicationStatus: 'published',
     bookingRequest: true,
     category: 'chalet',
     images: [
@@ -381,6 +393,7 @@ export const hotelPreviews: HotelPreview[] = [
   },
   {
     id: 'chalet-zenit',
+    publicationStatus: 'published',
     bookingRequest: true,
     category: 'chalet',
     images: [
@@ -421,5 +434,7 @@ const hasConfiguredBookingUrl = (hotel: HotelPreview) => {
 export const bookableHotelPreviews = hotelPreviews.filter(
   (hotel) =>
     hotel.visible !== false &&
-    (hotel.bookingRequest || hotel.bookingSuedtirol || hotel.bookingExpert || hotel.bookingKross || hasConfiguredBookingUrl(hotel)),
+    hotel.publicationStatus !== 'hidden' &&
+    !(import.meta.env.VITE_DEPLOY_TARGET === 'ftp' && hotel.publicationStatus === 'preview') &&
+    (hotel.publicationStatus === 'preview' || hotel.bookingRequest || hotel.bookingSuedtirol || hotel.bookingExpert || hotel.bookingKross || hasConfiguredBookingUrl(hotel)),
 )

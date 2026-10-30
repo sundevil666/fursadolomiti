@@ -1019,6 +1019,9 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="hotel-preview__content" @click="openBookingModal(hotel.id)">
+          <p v-if="hotel.publicationStatus === 'preview'" class="hotel-preview__dev-notice">
+            {{ t('home.hotels.devOnlyNotice') }}
+          </p>
           <h3 class="hotel-preview__name">
             <AnimatedText :text="t(hotel.nameKey)" tag="span" />
           </h3>
@@ -1267,6 +1270,18 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.hotel-preview__dev-notice {
+  align-self: flex-start;
+  margin: 0 0 12px;
+  padding: 6px 10px;
+  border: 1px solid #b87913;
+  border-radius: 6px;
+  background: #fff3d6;
+  color: #704600;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .booking-modal__panel:not(.booking-modal__panel--widget) {
   min-height: 0;
   max-height: calc(100dvh - 64px);

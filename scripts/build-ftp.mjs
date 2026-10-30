@@ -8,7 +8,7 @@ if (!existsSync('php/email-config.php')) {
 // Force the same-origin PHP endpoint for this deployment only.
 execFileSync('npm', ['run', 'build'], {
   stdio: 'inherit',
-  env: { ...process.env, VITE_BOOKING_EMAIL_ENDPOINT: '/php/send-email.php' },
+  env: { ...process.env, VITE_BOOKING_EMAIL_ENDPOINT: '/php/send-email.php', VITE_DEPLOY_TARGET: 'ftp' },
 })
 const output = 'dist-ftp'
 rmSync(output, { recursive: true, force: true })

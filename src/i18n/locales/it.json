@@ -91,6 +91,7 @@
           "error": "Impossibile caricare il widget"
         }
       },
+      "devOnlyNotice": "Questo hotel è visibile solo su dev",
       "features": "Caratteristiche:",
       "filters": {
         "label": "Filtro hotel",
