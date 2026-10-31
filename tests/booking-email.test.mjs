@@ -57,7 +57,7 @@ test('separate admin, simple hotel and localized customer emails', async () => {
       'sundevildi@gmail.com',
     ])
     const hotel = sent.find(
-      (mail) => Array.isArray(mail.to) && mail.to.includes('info@chaletzenit.it'),
+      (mail) => Array.isArray(mail.to) && /For the hotel|All’hotel/.test(mail.subject),
     )
     const customer = sent.find((mail) => mail.to === body.email)
     assert.match(sent[0].html, new RegExp(adminTitle))
@@ -65,7 +65,11 @@ test('separate admin, simple hotel and localized customer emails', async () => {
     assert.match(hotel.html, locale === 'it' ? /Richiesta di soggiorno/ : /Booking request/)
     assert.match(hotel.text, locale === 'it' ? /Date desiderate e richieste/ : /Preferred dates and requests/)
     assert.doesNotMatch(hotel.text, /Спасибо|Thank you|Grazie/)
-    assert.deepEqual(hotel.to, ['info@chaletzenit.it', ...sent[0].to])
+    assert.deepEqual(hotel.to, sent[0].to)
+    assert.ok(sent.every(mail => mail.subject.startsWith('[Vercel] ')))
+    assert.ok(sent.every(mail => !(Array.isArray(mail.to) ? mail.to : [mail.to]).includes('info@chaletzenit.it')))
+    assert.deepEqual(sent[3].to, sent[0].to)
+    assert.equal(sent[3].html, customer.html)
     assert.ok(hotel)
     assert.ok(customer)
     assert.ok(!customer.html.includes(body.email))
@@ -100,7 +104,7 @@ test('customer failure is reported without losing the accepted request', async (
   assert.equal(result.customerEmailSent, false)
 })
 
-test('both administrators receive two roles, plus the guest role only when entered in the form', async () => {
+test('Vercel administrators receive all three roles and guest copies are deduplicated', async () => {
   const savedRecipients = process.env.EMAIL_RECIPIENTS
   try {
     process.env.EMAIL_RECIPIENTS = 'sundevildi@gmail.com, BOOKING@FURSADOLOMITI.COM'
@@ -110,14 +114,14 @@ test('both administrators receive two roles, plus the guest role only when enter
       'guest@example.com',
     ]) {
       const { sent } = await run('ru', false, { email })
-      assert.equal(sent.length, 3)
+      assert.equal(sent.length, 4)
       for (const admin of ['booking@fursadolomiti.com', 'sundevildi@gmail.com']) {
         const received = sent.filter((mail) =>
           (Array.isArray(mail.to) ? mail.to : [mail.to]).includes(admin),
         )
-        assert.equal(received.length, email === admin ? 3 : 2)
+        assert.equal(received.length, 3)
         for (const mail of sent) {
-          if (Array.isArray(mail.to)) assert.equal(mail.to.filter((to) => to === admin).length, 1)
+          if (Array.isArray(mail.to)) assert.ok(mail.to.filter((to) => to === admin).length <= 1)
         }
       }
     }
@@ -137,7 +141,7 @@ test('widget and link submissions send only admin and guest mail in the selected
       assert.equal(sent.length, 2)
       assert.equal(result.hotelEmailSent, null)
       assert.equal(result.customerEmailSent, true)
-      assert.ok(sent.every(mail => !(Array.isArray(mail.to) && mail.to.includes('info@chaletzenit.it'))))
+      assert.ok(sent.every(mail => !(Array.isArray(mail.to) && /For the hotel|All’hotel/.test(mail.subject))))
       if (bookingMode === 'redirect') {
         assert.ok(sent.every(mail => mail.text.includes(body.preferredDates)))
       } else {
@@ -155,7 +159,7 @@ test('redirect requests validate dates and guest count even without a hotel reci
   }
 })
 
-test('Invictus requests reach the hotel and show the provided address only in admin notes', async () => {
+test('Vercel Invictus requests route the hotel template to admins and retain the destination in admin notes', async () => {
   for (const [locale, note] of [
     ['ru', 'Email отеля: info@chaletinvictus.it'],
     ['en', 'Hotel email: info@chaletinvictus.it'],
@@ -167,9 +171,9 @@ test('Invictus requests reach the hotel and show the provided address only in ad
       bookingMode: 'request',
     })
     assert.equal(status, 200)
-    assert.equal(sent.length, 3)
+    assert.equal(sent.length, 4)
     assert.equal(result.hotelEmailSent, true)
-    const hotel = sent.find((mail) => Array.isArray(mail.to) && mail.to.includes('info@chaletinvictus.it'))
+    const hotel = sent.find((mail) => Array.isArray(mail.to) && /Отелю|For the hotel|All’hotel/.test(mail.subject))
     assert.ok(hotel)
     assert.equal(hotel.replyTo, body.email)
     assert.ok(!hotel.html.includes(note))
@@ -196,7 +200,7 @@ test('admin mail identifies each configured email destination', async () => {
     assert.equal(status, 200)
     assert.ok(sent[0].text.includes(`Hotel email: ${address}`))
     assert.ok(sent[0].html.includes(address))
-    assert.ok(sent.some(mail => Array.isArray(mail.to) && mail.to.includes(address)))
+    assert.ok(sent.every(mail => !(Array.isArray(mail.to) ? mail.to : [mail.to]).includes(address)))
   }
 })
 

@@ -486,7 +486,7 @@ $locationTimezone = getHeaderValue($headers, 'x-vercel-ip-timezone')
     ?? getHeaderValue($headers, 'x-timezone')
     ?? $adminCopy['unknown'];
 $subjectDate = substr($normalizedSubmittedAt, 0, 10);
-$subject = 'FursaDolomiti — ' . $roleSubject['admin'] . ' — ' . $normalizedHotel . ' — ' . $fullName . ' — ' . $subjectDate;
+$subject = 'FursaDolomiti — ' . $adminCopy['title'] . ' — ' . $normalizedHotel . ' — ' . $fullName . ' — ' . $subjectDate;
 
 $safe = [
     'fullName' => escapeHtmlValue($fullName),
@@ -762,7 +762,7 @@ $bookingEmail = static function (string $language, bool $customer) use ($roleSub
 </div>
 HTML;
     return [
-        'subject' => 'FursaDolomiti — ' . ($roleSubjects[$language] ?? $roleSubjects['en'])[$customer ? 'guest' : 'hotel'] . ' — ' . $normalizedHotel,
+        'subject' => 'FursaDolomiti — ' . ($customer ? $copy['subject'] : $copy['title']) . ' — ' . $normalizedHotel,
         'text' => $text,
         'html' => $html,
     ];
@@ -796,7 +796,7 @@ if (!$customerEmailResponse['ok']) {
 
 $hotelEmailSent = null;
 if ($hotelRecipient) {
-    $hotelEmailResponse = sendSmtpEmail($smtpConfig, array_values(array_unique(array_merge([$hotelRecipient], $recipients))), $hotelMail['subject'], $hotelMail['text'], $hotelMail['html'], $normalizedEmail);
+    $hotelEmailResponse = sendSmtpEmail($smtpConfig, [$hotelRecipient], $hotelMail['subject'], $hotelMail['text'], $hotelMail['html'], $normalizedEmail);
     $hotelEmailSent = $hotelEmailResponse['ok'];
     if (!$hotelEmailSent) {
         error_log('Hotel SMTP error: ' . $hotelEmailResponse['message']);

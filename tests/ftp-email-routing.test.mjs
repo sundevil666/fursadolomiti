@@ -41,7 +41,7 @@ test('FTP artifact excludes Sundevil from admin and hotel copies but preserves g
       assert.equal(mails.length, 3)
       assert.deepEqual(mails[0].recipients, ['extra-admin@example.com', 'booking@fursadolomiti.com'])
       assert.deepEqual(mails[1].recipients, [email])
-      assert.deepEqual(mails[2].recipients, [hotel, 'extra-admin@example.com', 'booking@fursadolomiti.com'])
+      assert.deepEqual(mails[2].recipients, [hotel])
       assert.equal(mails.filter(mail => mail.recipients.includes('sundevildi@gmail.com')).length, email === 'sundevildi@gmail.com' ? 1 : 0)
     }
   }
@@ -53,7 +53,7 @@ test('FTP artifact excludes Sundevil from admin and hotel copies but preserves g
 test('FTP build leaves the PHP source policy unchanged', () => {
   const mails = deliver('php/send-email.php', 'guest@example.com', 'chalet-zenit')
   assert.ok(mails[0].recipients.includes('sundevildi@gmail.com'))
-  assert.ok(mails[2].recipients.includes('sundevildi@gmail.com'))
+  assert.deepEqual(mails[2].recipients, ['info@chaletzenit.it'])
 })
 
 
@@ -64,10 +64,11 @@ test('PHP and FTP apply locale and delivery rules to all three booking modes', (
       for (const bookingMode of ['request', 'redirect', 'widget']) {
         const mails = deliver(path, 'guest@example.com', 'chalet-zenit', '', { locale, bookingMode, promoCode: '', ...(bookingMode === 'widget' ? { preferredDates: '', guests: 0 } : {}) })
         assert.equal(mails.length, bookingMode === 'request' ? 3 : 2)
-        assert.ok(mails[0].subject.includes(labels[0]))
-        assert.ok(mails[1].subject.includes(labels[1]))
+        assert.ok(!mails[0].subject.includes(labels[0]))
+        assert.ok(mails.every(mail => !mail.subject.includes('Vercel')))
+        assert.ok(!mails[1].subject.includes(labels[1]))
         if (bookingMode === 'request') {
-          assert.ok(mails[2].subject.includes(locale === 'it' ? 'All’hotel' : 'For the hotel'))
+          assert.ok(!mails[2].subject.includes(locale === 'it' ? 'All’hotel' : 'For the hotel'))
           assert.ok(mails[2].text.includes(locale === 'it' ? 'Date desiderate e richieste' : 'Preferred dates and requests'))
         }
         if (bookingMode !== 'widget') assert.ok(mails.every(mail => mail.text.includes('Flexible dates')))

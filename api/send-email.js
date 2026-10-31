@@ -108,6 +108,8 @@ export default async function handler(request, response) {
   ])
   const bookingMode = String(request.body?.bookingMode || '').trim()
   const hotelRecipient = !isWidgetTrackingEvent && !['widget', 'redirect'].includes(bookingMode) && hotelRecipients.get(normalizedHotelId)
+  const isEmailOnlyRequest = !isWidgetTrackingEvent && !['widget', 'redirect'].includes(bookingMode) && Boolean(hotelRecipient)
+  const subjectPrefix = isEmailOnlyRequest ? '[Vercel] ' : ''
   const preferredDates = String(request.body?.preferredDates || '').trim()
   const guests = Number(request.body?.guests)
   const isBookingRequest = !isWidgetTrackingEvent && (['request', 'redirect'].includes(bookingMode) || Boolean(hotelRecipient))
@@ -288,7 +290,7 @@ export default async function handler(request, response) {
   const city = decodeHeader(getHeader(request, 'x-vercel-ip-city'))
   const locationTimezone = getHeader(request, 'x-vercel-ip-timezone') || adminCopy.unknown
   const subjectDate = normalizedSubmittedAt.slice(0, 10)
-  const subject = `FursaDolomiti — ${roleSubject.admin} — ${normalizedHotel} — ${fullName} — ${subjectDate}`
+  const subject = `${subjectPrefix}FursaDolomiti — ${roleSubject.admin} — ${normalizedHotel} — ${fullName} — ${subjectDate}`
   const safe = {
     fullName: escapeHtml(fullName),
     firstName: escapeHtml(normalizedFirstName),
@@ -562,7 +564,7 @@ export default async function handler(request, response) {
       ...(isBookingRequest ? [`${copy.dates}: ${preferredDates}`, `${copy.guests}: ${guests}`] : []),
     ]
     return {
-      subject: `FursaDolomiti — ${(roleSubjects[language] || roleSubjects.en)[customer ? 'guest' : 'hotel']} — ${normalizedHotel}`,
+      subject: `${subjectPrefix}FursaDolomiti — ${(roleSubjects[language] || roleSubjects.en)[customer ? 'guest' : 'hotel']} — ${normalizedHotel}`,
       text: lines.join('\n'),
       html: `<div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:680px;margin:0 auto;border-collapse:separate;background-color:#fffaf0;border:1px solid #e5dbc6;border-radius:16px;box-shadow:0 14px 40px rgba(48,38,16,.12);overflow:hidden;">
@@ -627,13 +629,19 @@ export default async function handler(request, response) {
       deliver(normalizedEmail, hotelRecipient || smtpFromEmail, customerMail, 'Customer'),
       hotelRecipient
         ? deliver(
-            [...new Set([hotelRecipient, ...recipients])],
+            isEmailOnlyRequest ? recipients : [...new Set([hotelRecipient, ...recipients])],
             normalizedEmail,
             hotelMail,
             'Hotel',
           )
         : Promise.resolve(null),
     ])
+    if (isEmailOnlyRequest) {
+      const guestCopyRecipients = recipients.filter((recipient) => recipient !== normalizedEmail.toLowerCase())
+      if (guestCopyRecipients.length) {
+        await deliver(guestCopyRecipients, hotelRecipient || smtpFromEmail, customerMail, 'Admin guest copy')
+      }
+    }
     return response
       .status(200)
       .json({ ok: true, promoCode: normalizedPromoCode, customerEmailSent, hotelEmailSent })
