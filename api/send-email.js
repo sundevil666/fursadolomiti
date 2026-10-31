@@ -103,6 +103,7 @@ export default async function handler(request, response) {
   const isWidgetTrackingEvent = normalizedEventType === 'widget_redirect'
   const hotelRecipients = new Map([
     ['chalet-zenit', 'info@chaletzenit.it'],
+    ['chalet-invictus', 'info@chaletinvictus.it'],
     ['villa-carolina', 'info@villa-carolina.com'],
   ])
   const bookingMode = String(request.body?.bookingMode || '').trim()
@@ -174,7 +175,12 @@ export default async function handler(request, response) {
       dates: 'Желаемые даты и пожелания',
       guests: 'Количество гостей',
       unknown: 'Нет данных',
-      missingHotelEmail: 'Email для Chalet Invictus не предоставлен. Заявка отправлена только администрации.',
+      bookingMethod: 'Способ бронирования',
+      emailRequest: 'Заявка по email',
+      widgetBooking: 'Бронирование через виджет',
+      linkBooking: 'Переход по ссылке',
+      hotelEmail: 'Email отеля',
+      missingHotelEmail: 'Email отеля не предоставлен. Заявка отправляется только администрации.',
       geoNote:
         'Местоположение определяется приблизительно по данным инфраструктуры и может отличаться от фактического.',
     },
@@ -208,7 +214,12 @@ export default async function handler(request, response) {
       dates: 'Preferred dates and requests',
       guests: 'Number of guests',
       unknown: 'Not available',
-      missingHotelEmail: 'No hotel email has been provided for Chalet Invictus. The request was sent to the administrators only.',
+      bookingMethod: 'Booking method',
+      emailRequest: 'Email request',
+      widgetBooking: 'Booking through a widget',
+      linkBooking: 'Redirect to booking website',
+      hotelEmail: 'Hotel email',
+      missingHotelEmail: 'No hotel email provided. The request is sent to the administrators only.',
       geoNote:
         'Location is estimated from infrastructure data and may differ from the actual location.',
     },
@@ -242,13 +253,17 @@ export default async function handler(request, response) {
       dates: 'Date desiderate e richieste',
       guests: 'Numero di ospiti',
       unknown: 'Non disponibile',
-      missingHotelEmail: 'L’indirizzo email di Chalet Invictus non è stato fornito. La richiesta è stata inviata solo agli amministratori.',
+      bookingMethod: 'Modalità di prenotazione',
+      emailRequest: 'Richiesta via email',
+      widgetBooking: 'Prenotazione tramite widget',
+      linkBooking: 'Reindirizzamento al sito di prenotazione',
+      hotelEmail: 'Email della struttura',
+      missingHotelEmail: 'Email della struttura non fornita. La richiesta viene inviata solo agli amministratori.',
       geoNote:
         'La posizione è stimata dai dati dell’infrastruttura e può differire da quella effettiva.',
     },
   }
   const adminCopy = adminCopies[emailLocale] || adminCopies.en
-  const missingHotelEmail = isBookingRequest && normalizedHotelId === 'chalet-invictus' && !hotelRecipient
   const roleSubjects = {
     ru: {
       admin: 'Администратору · Новая заявка',
@@ -304,6 +319,19 @@ export default async function handler(request, response) {
       <td width="38%" valign="top" style="padding:13px 16px;border-bottom:1px solid #e8dfcc;color:#756b5c;font-size:12px;line-height:18px;text-transform:uppercase;letter-spacing:.4px;">${label}</td>
       <td valign="top" style="padding:13px 16px;border-bottom:1px solid #e8dfcc;color:#08211f;font-size:14px;line-height:20px;font-weight:${highlighted ? '700' : '500'};">${value}</td>
     </tr>`
+  const bookingMethod = isWidgetTrackingEvent || bookingMode === 'widget'
+    ? adminCopy.widgetBooking
+    : bookingMode === 'redirect' ? adminCopy.linkBooking : adminCopy.emailRequest
+  const bookingDetails = [[adminCopy.bookingMethod, bookingMethod]]
+  if (isWidgetTrackingEvent || bookingMode === 'widget') {
+    bookingDetails.push([adminCopy.provider, normalizedWidgetProvider || adminCopy.unknown])
+  } else if (bookingMode === 'redirect') {
+    bookingDetails.push([adminCopy.url, normalizedRedirectUrl || adminCopy.unknown])
+  } else {
+    bookingDetails.push([adminCopy.hotelEmail, hotelRecipient || adminCopy.missingHotelEmail])
+  }
+  const bookingDetailsHtml = bookingDetails.map(([label, value]) => row(label, escapeHtml(value), true)).join('')
+  const bookingDetailsText = bookingDetails.map(([label, value]) => `${label}: ${value}`)
   const htmlMessage = isWidgetTrackingEvent
     ? `
     <div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
@@ -319,6 +347,7 @@ export default async function handler(request, response) {
           <td style="padding:28px 32px 8px;">
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">
               ${row(adminCopy.hotel, safe.hotel, true)}
+              ${bookingDetailsHtml}
               ${isBookingRequest ? row(adminCopy.dates, escapeHtml(preferredDates), true) + row(adminCopy.guests, String(guests), true) : ''}
               ${row(adminCopy.provider, escapeHtml(normalizedWidgetProvider), true)}
               ${row(adminCopy.action, escapeHtml(normalizedWidgetAction || adminCopy.unknown))}
@@ -377,7 +406,7 @@ export default async function handler(request, response) {
               ${row(adminCopy.lastName, safe.lastName)}
               ${row('Email', `<span style="color:#08211f;text-decoration:none;">${safe.email}</span>`, true)}
               ${row(adminCopy.hotel, safe.hotel, true)}
-              ${missingHotelEmail ? row(adminCopy.notice, escapeHtml(adminCopy.missingHotelEmail), true) : ''}
+              ${bookingDetailsHtml}
               ${isBookingRequest ? row(adminCopy.dates, escapeHtml(preferredDates), true) + row(adminCopy.guests, String(guests), true) : ''}
               ${row(adminCopy.promo, safe.promoCode, true)}
               ${row(adminCopy.date, safe.localDateTime, true)}
@@ -421,6 +450,7 @@ export default async function handler(request, response) {
         adminCopy.tracking,
         '',
         `${adminCopy.hotel}: ${normalizedHotel}`,
+        ...bookingDetailsText,
         `${adminCopy.provider}: ${normalizedWidgetProvider || adminCopy.unknown}`,
         `${adminCopy.action}: ${normalizedWidgetAction || adminCopy.unknown}`,
         `${adminCopy.url}: ${normalizedRedirectUrl || adminCopy.unknown}`,
@@ -444,7 +474,7 @@ export default async function handler(request, response) {
         `${adminCopy.fullName}: ${fullName}`,
         `Email: ${normalizedEmail}`,
         `${adminCopy.hotel}: ${normalizedHotel}`,
-        ...(missingHotelEmail ? [adminCopy.missingHotelEmail] : []),
+        ...bookingDetailsText,
         ...(isBookingRequest
           ? [`${adminCopy.dates}: ${preferredDates}`, `${adminCopy.guests}: ${guests}`]
           : []),

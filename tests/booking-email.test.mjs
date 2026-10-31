@@ -155,11 +155,11 @@ test('redirect requests validate dates and guest count even without a hotel reci
   }
 })
 
-test('Invictus requests flag the missing hotel email only in admin mail', async () => {
+test('Invictus requests reach the hotel and show the provided address only in admin notes', async () => {
   for (const [locale, note] of [
-    ['ru', 'Email для Chalet Invictus не предоставлен.'],
-    ['en', 'No hotel email has been provided for Chalet Invictus.'],
-    ['it', 'L’indirizzo email di Chalet Invictus non è stato fornito.'],
+    ['ru', 'Email отеля: info@chaletinvictus.it'],
+    ['en', 'Hotel email: info@chaletinvictus.it'],
+    ['it', 'Email della struttura: info@chaletinvictus.it'],
   ]) {
     const { status, sent, result } = await run(locale, false, {
       hotelId: 'chalet-invictus',
@@ -167,9 +167,14 @@ test('Invictus requests flag the missing hotel email only in admin mail', async 
       bookingMode: 'request',
     })
     assert.equal(status, 200)
-    assert.equal(sent.length, 2)
-    assert.equal(result.hotelEmailSent, null)
-    assert.ok(sent[0].html.includes(note))
+    assert.equal(sent.length, 3)
+    assert.equal(result.hotelEmailSent, true)
+    const hotel = sent.find((mail) => Array.isArray(mail.to) && mail.to.includes('info@chaletinvictus.it'))
+    assert.ok(hotel)
+    assert.equal(hotel.replyTo, body.email)
+    assert.ok(!hotel.html.includes(note))
+    assert.ok(!hotel.text.includes(note))
+    assert.ok(sent[0].html.includes('info@chaletinvictus.it'))
     assert.ok(sent[0].text.includes(note))
     const guest = sent.find((mail) => mail.to === body.email)
     assert.ok(guest)
@@ -178,5 +183,34 @@ test('Invictus requests flag the missing hotel email only in admin mail', async 
     const existing = await run(locale)
     assert.ok(!existing.sent[0].html.includes(note))
     assert.ok(!existing.sent[0].text.includes(note))
+  }
+})
+
+test('admin mail identifies each configured email destination', async () => {
+  for (const [hotelId, address] of [
+    ['chalet-zenit', 'info@chaletzenit.it'],
+    ['villa-carolina', 'info@villa-carolina.com'],
+    ['chalet-invictus', 'info@chaletinvictus.it'],
+  ]) {
+    const { sent, status } = await run('en', false, { hotelId, bookingMode: 'request' })
+    assert.equal(status, 200)
+    assert.ok(sent[0].text.includes(`Hotel email: ${address}`))
+    assert.ok(sent[0].html.includes(address))
+    assert.ok(sent.some(mail => Array.isArray(mail.to) && mail.to.includes(address)))
+  }
+})
+
+test('admin mail explains widget, redirect and missing email without leaking markup', async () => {
+  for (const [overrides, expected] of [
+    [{ bookingMode: 'widget', widgetProvider: 'Booking Südtirol', preferredDates: '', guests: 0 }, ['Booking through a widget', 'Booking Südtirol']],
+    [{ bookingMode: 'redirect', redirectUrl: 'https://www.hoteldiamant.it/?test=<value>' }, ['Redirect to booking website', 'https://www.hoteldiamant.it/?test=<value>']],
+    [{ eventType: 'widget_redirect', widgetProvider: 'BookingExpert', redirectUrl: 'https://example.com/booking' }, ['Booking through a widget', 'BookingExpert']],
+    [{ bookingMode: 'request', hotelId: 'unknown-hotel' }, ['Email request', 'No hotel email provided.']],
+  ]) {
+    const { sent, status } = await run('en', false, overrides)
+    assert.equal(status, 200)
+    for (const value of expected) assert.ok(sent[0].text.includes(value))
+    assert.ok(!sent[0].html.includes('<value>'))
+    assert.ok(sent[0].html.includes('Booking method'))
   }
 })

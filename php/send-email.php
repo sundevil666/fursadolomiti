@@ -306,6 +306,7 @@ $smtpConfig = [
 $isWidgetTrackingEvent = $normalizedEventType === 'widget_redirect';
 $hotelRecipients = [
     'chalet-zenit' => 'info@chaletzenit.it',
+    'chalet-invictus' => 'info@chaletinvictus.it',
     'villa-carolina' => 'info@villa-carolina.com',
 ];
 $bookingMode = trim((string) ($requestBody['bookingMode'] ?? ''));
@@ -373,7 +374,12 @@ $adminCopies = [
         'dates' => 'Желаемые даты и пожелания',
         'guests' => 'Количество гостей',
         'unknown' => 'Нет данных',
-        'missingHotelEmail' => 'Email для Chalet Invictus не предоставлен. Заявка отправлена только администрации.',
+        'bookingMethod' => 'Способ бронирования',
+        'emailRequest' => 'Заявка по email',
+        'widgetBooking' => 'Бронирование через виджет',
+        'linkBooking' => 'Переход по ссылке',
+        'hotelEmail' => 'Email отеля',
+        'missingHotelEmail' => 'Email отеля не предоставлен. Заявка отправляется только администрации.',
         'geoNote' => 'Местоположение определяется приблизительно по данным инфраструктуры и может отличаться от фактического.'
     ],
     'en' => [
@@ -406,7 +412,12 @@ $adminCopies = [
         'dates' => 'Preferred dates and requests',
         'guests' => 'Number of guests',
         'unknown' => 'Not available',
-        'missingHotelEmail' => 'No hotel email has been provided for Chalet Invictus. The request was sent to the administrators only.',
+        'bookingMethod' => 'Booking method',
+        'emailRequest' => 'Email request',
+        'widgetBooking' => 'Booking through a widget',
+        'linkBooking' => 'Redirect to booking website',
+        'hotelEmail' => 'Hotel email',
+        'missingHotelEmail' => 'No hotel email provided. The request is sent to the administrators only.',
         'geoNote' => 'Location is estimated from infrastructure data and may differ from the actual location.'
     ],
     'it' => [
@@ -439,12 +450,16 @@ $adminCopies = [
         'dates' => 'Date desiderate e richieste',
         'guests' => 'Numero di ospiti',
         'unknown' => 'Non disponibile',
-        'missingHotelEmail' => 'L’indirizzo email di Chalet Invictus non è stato fornito. La richiesta è stata inviata solo agli amministratori.',
+        'bookingMethod' => 'Modalità di prenotazione',
+        'emailRequest' => 'Richiesta via email',
+        'widgetBooking' => 'Prenotazione tramite widget',
+        'linkBooking' => 'Reindirizzamento al sito di prenotazione',
+        'hotelEmail' => 'Email della struttura',
+        'missingHotelEmail' => 'Email della struttura non fornita. La richiesta viene inviata solo agli amministratori.',
         'geoNote' => 'La posizione è stimata dai dati dell’infrastruttura e può differire da quella effettiva.'
     ]
 ];
 $adminCopy = $adminCopies[$emailLocale] ?? $adminCopies['en'];
-$missingHotelEmail = $isBookingRequest && $normalizedHotelId === 'chalet-invictus' && !$hotelRecipient;
 $roleSubjects = ['ru' => ['admin' => 'Администратору · Новая заявка',
 'guest' => 'Гостю · Спасибо за вашу заявку',
 'hotel' => 'Отелю · Запрос на бронирование'],
@@ -508,6 +523,20 @@ $safeWidgetSelection = array_map('escapeHtmlValue', $widgetSelectionText);
 $replySubject = rawurlencode('FursaDolomiti - ' . $normalizedHotel);
 $localeUpper = escapeHtmlValue(strtoupper($normalizedLocale));
 
+$bookingMethod = $isWidgetTrackingEvent || $bookingMode === 'widget'
+    ? $adminCopy['widgetBooking']
+    : ($bookingMode === 'redirect' ? $adminCopy['linkBooking'] : $adminCopy['emailRequest']);
+$bookingDetails = [[$adminCopy['bookingMethod'], $bookingMethod]];
+if ($isWidgetTrackingEvent || $bookingMode === 'widget') {
+    $bookingDetails[] = [$adminCopy['provider'], $normalizedWidgetProvider !== '' ? $normalizedWidgetProvider : $adminCopy['unknown']];
+} elseif ($bookingMode === 'redirect') {
+    $bookingDetails[] = [$adminCopy['url'], $normalizedRedirectUrl !== '' ? $normalizedRedirectUrl : $adminCopy['unknown']];
+} else {
+    $bookingDetails[] = [$adminCopy['hotelEmail'], $hotelRecipient ?: $adminCopy['missingHotelEmail']];
+}
+$bookingDetailsHtml = implode('', array_map(static fn (array $detail): string => renderRow($detail[0], escapeHtmlValue($detail[1]), true), $bookingDetails));
+$bookingDetailsText = array_map(static fn (array $detail): string => $detail[0] . ': ' . $detail[1], $bookingDetails);
+
 $htmlMessage = $isWidgetTrackingEvent
     ? '
     <div style="margin:0;padding:32px 12px;background-color:#f1eadb;font-family:Arial,Helvetica,sans-serif;color:#08211f;">
@@ -523,6 +552,7 @@ $htmlMessage = $isWidgetTrackingEvent
           <td style="padding:28px 32px 8px;">
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">' .
               renderRow($adminCopy['hotel'], $safe['hotel'], true) .
+              $bookingDetailsHtml .
               ($isBookingRequest ? renderRow($adminCopy['dates'], escapeHtmlValue($preferredDates), true) . renderRow($adminCopy['guests'], (string) $guests, true) : '') .
               renderRow($adminCopy['provider'], escapeHtmlValue($normalizedWidgetProvider), true) .
               renderRow($adminCopy['action'], escapeHtmlValue($normalizedWidgetAction !== '' ? $normalizedWidgetAction : $adminCopy['unknown'])) .
@@ -577,7 +607,7 @@ $htmlMessage = $isWidgetTrackingEvent
               renderRow($adminCopy['lastName'], $safe['lastName']) .
               renderRow('Email', '<span style="color:#08211f;text-decoration:none;">' . $safe['email'] . '</span>', true) .
               renderRow($adminCopy['hotel'], $safe['hotel'], true) .
-              ($missingHotelEmail ? renderRow($adminCopy['notice'], escapeHtmlValue($adminCopy['missingHotelEmail']), true) : '') .
+              $bookingDetailsHtml .
               ($isBookingRequest ? renderRow($adminCopy['dates'], escapeHtmlValue($preferredDates), true) . renderRow($adminCopy['guests'], (string) $guests, true) : '') .
               renderRow($adminCopy['promo'], $safe['promoCode'], true) .
               renderRow($adminCopy['date'], $safe['localDateTime'], true) .
@@ -622,6 +652,7 @@ $message = $isWidgetTrackingEvent
         $adminCopy['tracking'],
         '',
         $adminCopy['hotel'] . ': ' . $normalizedHotel,
+        ...$bookingDetailsText,
         $adminCopy['provider'] . ': ' . ($normalizedWidgetProvider !== '' ? $normalizedWidgetProvider : $adminCopy['unknown']),
         $adminCopy['action'] . ': ' . ($normalizedWidgetAction !== '' ? $normalizedWidgetAction : $adminCopy['unknown']),
         $adminCopy['url'] . ': ' . ($normalizedRedirectUrl !== '' ? $normalizedRedirectUrl : $adminCopy['unknown']),
@@ -643,7 +674,7 @@ $message = $isWidgetTrackingEvent
     $adminCopy['fullName'] . ': ' . $fullName,
     'Email: ' . $normalizedEmail,
     $adminCopy['hotel'] . ': ' . $normalizedHotel,
-    ...($missingHotelEmail ? [$adminCopy['missingHotelEmail']] : []),
+    ...$bookingDetailsText,
     ...($isBookingRequest ? [$adminCopy['dates'] . ': ' . $preferredDates, $adminCopy['guests'] . ': ' . $guests] : []),
     $adminCopy['promo'] . ': ' . $normalizedPromoCode,
     '',

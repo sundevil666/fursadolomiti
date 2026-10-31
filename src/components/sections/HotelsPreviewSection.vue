@@ -795,6 +795,8 @@ const submitBookingRequest = async () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         bookingMode: bookingMode.value,
+        widgetProvider: isWidgetHotel.value ? widgetProviderName.value : '',
+        redirectUrl: hotel && bookingMode.value === 'redirect' ? getLocalizedBookingUrl(hotel, locale.value) : '',
         preferredDates: preferredDates.value.trim(),
         guests: Number(guests.value),
         firstName: firstName.value.trim(),
