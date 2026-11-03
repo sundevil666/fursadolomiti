@@ -102,7 +102,7 @@
       },
       "alpenroyal": {
         "name": "Alpenroyal 5★",
-        "location": "Selva",
+        "location": "Selva di Val Gardena",
         "description": "Secluded hotel with high level of service and calm atmosphere in Selva",
         "features": [
           "Shuttle to the lifts (3-5 minutes)",
@@ -113,7 +113,7 @@
       },
       "edenselva": {
         "name": "Edenselva 4★",
-        "location": "Selva",
+        "location": "Selva di Val Gardena",
         "description": "A cozy hotel on the Sellaronda ski route with direct access to the slopes",
         "features": [
           "Cozy and relaxing atmosphere",
@@ -124,7 +124,7 @@
       },
       "posta": {
         "name": "Family Hotel Posta 4★",
-        "location": "Santa Cristina",
+        "location": "Santa Cristina Valgardena",
         "description": "A family-friendly hotel with children's playrooms and entertainment services for children aged 3 and older",
         "features": [
           "In the heart of Santa Cristina",
@@ -135,7 +135,7 @@
       },
       "portilloDolomites": {
         "name": "Portillo Dolomites 1966’S 4★",
-        "location": "Selva",
+        "location": "Selva di Val Gardena",
         "description": "An elegant hotel with spacious spa and wellness areas, swimming pools and magnificent views of the Dolomites",
         "features": [
           "Convenient location: just steps from the centre and a 2–3-minute ride to the ski slopes on the hotel shuttle",
@@ -146,7 +146,7 @@
       },
       "somont": {
         "name": "Hotel Somont 4★",
-        "location": "Selva",
+        "location": "Selva di Val Gardena",
         "description": "A cosy, elegant Alpine-style hotel with a warm atmosphere of family hospitality",
         "features": [
           "True ski-in/ski-out — take the lift from the ski room directly to the Sellaronda ski slope",
@@ -157,7 +157,7 @@
       },
       "continental": {
         "name": "Continental 4★",
-        "location": "Selva",
+        "location": "Selva di Val Gardena",
         "description": "Located next to the lift and ideal for recovery and relaxation after an active day, away from the noise and bustle.",
         "features": [
           "Ski-in / ski-out with direct access to the famous Sellaronda ski route",
@@ -179,7 +179,7 @@
       },
       "diamant": {
         "name": "Hotel Diamant 4★S",
-        "location": "Santa Cristina",
+        "location": "Santa Cristina Valgardena",
         "description": "Located between Ortisei and Santa Cristina, in a peaceful setting ideal for relaxation, surrounded by a spacious garden.",
         "features": [
           "Large panoramic SPA with 5 pools, 6 saunas and an extensive park with a natural pond.",
@@ -202,7 +202,7 @@
       },
       "villaCarolina": {
         "name": "Villa Carolina",
-        "location": "Selva",
+        "location": "Selva di Val Gardena",
         "description": "An exclusive chalet for maximum comfort and privacy, with panoramic views of the Dolomites",
         "featuresLabel": "Features:",
         "features": [
@@ -228,7 +228,7 @@
       },
       "chaletInvictus": {
         "name": "Chalet Invictus",
-        "location": "Selva",
+        "location": "Selva di Val Gardena",
         "description": "Exclusive newly built chalet in a prime location in Selva di Val Gardena, just 200 metres from the ski slopes. Expected opening in early December 2026.",
         "featuresLabel": "Features:",
         "features": [
@@ -254,7 +254,7 @@
       },
       "chaletZenit": {
         "name": "Chalet Zenit",
-        "location": "Selva",
+        "location": "Selva di Val Gardena",
         "description": "A high-end modern chalet in an elegant Alpine style with natural wood throughout",
         "featuresLabel": "Features:",
         "features": [
