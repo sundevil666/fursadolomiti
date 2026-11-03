@@ -35,7 +35,7 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
 }
 
 test('FTP artifact excludes Sundevil from admin and hotel copies but preserves guest delivery', () => {
-  for (const [id, hotel] of [['chalet-zenit', 'info@chaletzenit.it'], ['villa-carolina', 'info@villa-carolina.com']]) {
+  for (const [id, hotel] of [['chalet-lum-dor', 'info@lumdor.it'], ['chalet-zenit', 'info@chaletzenit.it'], ['villa-carolina', 'info@villa-carolina.com']]) {
     for (const email of ['guest@example.com', 'sundevildi@gmail.com']) {
       const mails = deliver('dist-ftp/fursa-release/php/send-email.php', email, id)
       assert.equal(mails.length, 3)

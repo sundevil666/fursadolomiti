@@ -306,6 +306,7 @@ $smtpConfig = [
 $isWidgetTrackingEvent = $normalizedEventType === 'widget_redirect';
 $hotelRecipients = [
     'chalet-zenit' => 'info@chaletzenit.it',
+    'chalet-lum-dor' => 'info@lumdor.it',
     'chalet-invictus' => 'info@chaletinvictus.it',
     'villa-carolina' => 'info@villa-carolina.com',
 ];

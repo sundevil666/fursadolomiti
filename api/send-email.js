@@ -103,6 +103,7 @@ export default async function handler(request, response) {
   const isWidgetTrackingEvent = normalizedEventType === 'widget_redirect'
   const hotelRecipients = new Map([
     ['chalet-zenit', 'info@chaletzenit.it'],
+    ['chalet-lum-dor', 'info@lumdor.it'],
     ['chalet-invictus', 'info@chaletinvictus.it'],
     ['villa-carolina', 'info@villa-carolina.com'],
   ])

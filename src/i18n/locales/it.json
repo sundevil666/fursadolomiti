@@ -226,6 +226,32 @@
           }
         ]
       },
+      "chaletLumDor": {
+        "name": "Chalet Lum d’Or",
+        "location": "Selva di Val Gardena",
+        "description": "Esclusivo chalet di lusso in posizione tranquilla e panoramica sopra Selva di Val Gardena, a 5 minuti dal centro e dalle piste da sci con shuttle privato.",
+        "featuresLabel": "Caratteristiche:",
+        "features": [
+          "Servizi esclusivi con colazione, concierge e navetta privata per le piste.",
+          "Spa privata di lusso con sauna finlandese, bagno turco, idromassaggio e doccia emozionale.",
+          "Piscina esterna a sfioro riscaldata con vista panoramica sulle Dolomiti.",
+          "Palestra privata attrezzata e giardino con area relax."
+        ],
+        "stats": [
+          {
+            "icon": "groups",
+            "value": "8"
+          },
+          {
+            "icon": "bed",
+            "value": "4"
+          },
+          {
+            "icon": "shower",
+            "value": "4"
+          }
+        ]
+      },
       "chaletInvictus": {
         "name": "Chalet Invictus",
         "location": "Selva di Val Gardena",
