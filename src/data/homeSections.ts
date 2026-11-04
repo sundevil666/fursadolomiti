@@ -375,6 +375,7 @@ export const hotelPreviews: HotelPreview[] = [
       '/chalet-lum-dor/lum-dor-2.jpg',
       '/chalet-lum-dor/lum-dor-3.jpg',
       '/chalet-lum-dor/lum-dor-4.jpg',
+      '/chalet-lum-dor/lum-dor-5.jpg',
     ],
     promoCode: 'FURSADOLOMITI',
     bookingUrl: '',

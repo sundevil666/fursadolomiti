@@ -492,6 +492,10 @@ const bookingEmailEndpoint =
   import.meta.env.VITE_BOOKING_EMAIL_ENDPOINT ||
   (window.location.hostname.endsWith('.vercel.app') ? '/api/send-email' : '/php/send-email.php')
 
+const bookingEmailImageOrigin = window.location.hostname.endsWith('.vercel.app')
+  ? window.location.origin
+  : 'https://fursadolomiti.com'
+
 const getWidgetContainer = () =>
   (isBookingExpertHotel.value ? bookingExpertContainer.value : bookingSuedtirolContainer.value) ?? null
 
@@ -695,7 +699,7 @@ const reportWidgetTracking = async (widgetAction: string, redirectUrl = '') => {
         hotelId: hotel.id,
         hotel: t(hotel.nameKey),
         promoCode: hotel.promoCode,
-        hotelImage: hotel.images[0] ? new URL(hotel.images[0], 'https://fursadolomiti.com').href : '',
+        hotelImage: hotel.images[0] ? new URL(hotel.images[0], bookingEmailImageOrigin).href : '',
         locale: locale.value,
         localDateTime: new Intl.DateTimeFormat(locale.value, {
           dateStyle: 'full',
@@ -805,7 +809,7 @@ const submitBookingRequest = async () => {
         hotelId: hotel?.id,
         hotel: hotelName,
         promoCode: hotel?.promoCode,
-        hotelImage: hotel?.images[0] ? new URL(hotel.images[0], 'https://fursadolomiti.com').href : '',
+        hotelImage: hotel?.images[0] ? new URL(hotel.images[0], bookingEmailImageOrigin).href : '',
         locale: locale.value,
         localDateTime: new Intl.DateTimeFormat(locale.value, {
           dateStyle: 'full',
