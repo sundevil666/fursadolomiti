@@ -50,7 +50,7 @@ const lastName = ref('')
 const email = ref('')
 const preferredDates = ref('')
 const guests = ref('')
-const isRequestHotel = computed(() => Boolean(activeBookingHotel.value) && !isWidgetHotel.value)
+const isRequestHotel = computed(() => Boolean(activeBookingHotel.value) && bookingMode.value === 'request')
 const formError = ref('')
 const formStatus = ref<'idle' | 'sending' | 'redirecting'>('idle')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
