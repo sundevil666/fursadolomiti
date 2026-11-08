@@ -60,6 +60,18 @@ type BookingField = typeof bookingFields[number]
 type FieldErrorCode = 'required' | 'email' | 'datesTooLong' | 'guests'
 const fieldErrors = ref<Partial<Record<BookingField, FieldErrorCode>>>({})
 const validationAttempt = ref(0)
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const validateEmail = () => {
+  const value = email.value.trim()
+  if (!value) fieldErrors.value.email = 'required'
+  else if (!emailPattern.test(value)) fieldErrors.value.email = 'email'
+  else delete fieldErrors.value.email
+}
+const focusInvalidField = async () => {
+  validationAttempt.value += 1
+  await nextTick()
+  bookingModal.value?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+}
 const fieldErrorText = (field: BookingField) => {
   const code = fieldErrors.value[field]
   return code ? t(`home.hotels.bookingModal.errors.${code === 'required' ? 'fieldRequired' : code}`) : ''
@@ -792,6 +804,12 @@ const submitBookingRequest = async () => {
   formError.value = ''
 
   fieldErrors.value = {}
+  // Catch malformed email immediately; the server remains authoritative for the full form.
+  if (email.value.trim() && !emailPattern.test(email.value.trim())) {
+    validateEmail()
+    await focusInvalidField()
+    return
+  }
 
   const hotel = bookableHotelPreviews.find((item) => item.id === bookingHotelId.value)
   const hotelName = hotel ? t(hotel.nameKey) : bookingHotelId.value
@@ -836,10 +854,7 @@ const submitBookingRequest = async () => {
         }
         if (Object.keys(fieldErrors.value).length) {
           formStatus.value = 'idle'
-          formError.value = t('home.hotels.bookingModal.errors.checkFields')
-          validationAttempt.value += 1
-          await nextTick()
-          bookingModal.value?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+          await focusInvalidField()
           return
         }
       }
@@ -1241,17 +1256,19 @@ onBeforeUnmount(() => {
                     :placeholder="t('home.hotels.bookingModal.firstNamePlaceholder')"
                     @input="clearFieldError('firstName')"
                   />
-                  <Transition name="booking-error">
-                    <span
-                      v-if="fieldErrors.firstName"
-                      id="booking-error-firstName"
-                      :key="validationAttempt"
-                      class="booking-modal__field-error"
-                    >
-                      <q-icon name="error_outline" aria-hidden="true" />
-                      {{ fieldErrorText('firstName') }}
-                    </span>
-                  </Transition>
+                  <span class="booking-modal__error-slot" aria-live="polite">
+                    <Transition name="booking-error">
+                      <span
+                        v-if="fieldErrors.firstName"
+                        id="booking-error-firstName"
+                        :key="validationAttempt"
+                        class="booking-modal__field-error"
+                      >
+                        <q-icon name="error_outline" aria-hidden="true" />
+                        {{ fieldErrorText('firstName') }}
+                      </span>
+                    </Transition>
+                  </span>
                 </label>
 
                 <label
@@ -1269,17 +1286,19 @@ onBeforeUnmount(() => {
                     :placeholder="t('home.hotels.bookingModal.lastNamePlaceholder')"
                     @input="clearFieldError('lastName')"
                   />
-                  <Transition name="booking-error">
-                    <span
-                      v-if="fieldErrors.lastName"
-                      id="booking-error-lastName"
-                      :key="validationAttempt"
-                      class="booking-modal__field-error"
-                    >
-                      <q-icon name="error_outline" aria-hidden="true" />
-                      {{ fieldErrorText('lastName') }}
-                    </span>
-                  </Transition>
+                  <span class="booking-modal__error-slot" aria-live="polite">
+                    <Transition name="booking-error">
+                      <span
+                        v-if="fieldErrors.lastName"
+                        id="booking-error-lastName"
+                        :key="validationAttempt"
+                        class="booking-modal__field-error"
+                      >
+                        <q-icon name="error_outline" aria-hidden="true" />
+                        {{ fieldErrorText('lastName') }}
+                      </span>
+                    </Transition>
+                  </span>
                 </label>
 
                 <label
@@ -1296,18 +1315,21 @@ onBeforeUnmount(() => {
                     autocomplete="email"
                     :placeholder="t('home.hotels.bookingModal.emailPlaceholder')"
                     @input="clearFieldError('email')"
+                    @blur="validateEmail"
                   />
-                  <Transition name="booking-error">
-                    <span
-                      v-if="fieldErrors.email"
-                      id="booking-error-email"
-                      :key="validationAttempt"
-                      class="booking-modal__field-error"
-                    >
-                      <q-icon name="error_outline" aria-hidden="true" />
-                      {{ fieldErrorText('email') }}
-                    </span>
-                  </Transition>
+                  <span class="booking-modal__error-slot" aria-live="polite">
+                    <Transition name="booking-error">
+                      <span
+                        v-if="fieldErrors.email"
+                        id="booking-error-email"
+                        :key="validationAttempt"
+                        class="booking-modal__field-error"
+                      >
+                        <q-icon name="error_outline" aria-hidden="true" />
+                        {{ fieldErrorText('email') }}
+                      </span>
+                    </Transition>
+                  </span>
                 </label>
                 <template v-if="requiresBookingDetails">
                   <label
@@ -1325,17 +1347,19 @@ onBeforeUnmount(() => {
                       :placeholder="t('home.hotels.bookingModal.datesPlaceholder')"
                       @input="clearFieldError('preferredDates')"
                     />
-                    <Transition name="booking-error">
-                      <span
-                        v-if="fieldErrors.preferredDates"
-                        id="booking-error-preferredDates"
-                        :key="validationAttempt"
-                        class="booking-modal__field-error"
-                      >
-                        <q-icon name="error_outline" aria-hidden="true" />
-                        {{ fieldErrorText('preferredDates') }}
-                      </span>
-                    </Transition>
+                    <span class="booking-modal__error-slot" aria-live="polite">
+                      <Transition name="booking-error">
+                        <span
+                          v-if="fieldErrors.preferredDates"
+                          id="booking-error-preferredDates"
+                          :key="validationAttempt"
+                          class="booking-modal__field-error"
+                        >
+                          <q-icon name="error_outline" aria-hidden="true" />
+                          {{ fieldErrorText('preferredDates') }}
+                        </span>
+                      </Transition>
+                    </span>
                   </label>
                   <label
                     class="booking-modal__field"
@@ -1353,17 +1377,19 @@ onBeforeUnmount(() => {
                       step="1"
                       @input="clearFieldError('guests')"
                     />
-                    <Transition name="booking-error">
-                      <span
-                        v-if="fieldErrors.guests"
-                        id="booking-error-guests"
-                        :key="validationAttempt"
-                        class="booking-modal__field-error"
-                      >
-                        <q-icon name="error_outline" aria-hidden="true" />
-                        {{ fieldErrorText('guests') }}
-                      </span>
-                    </Transition>
+                    <span class="booking-modal__error-slot" aria-live="polite">
+                      <Transition name="booking-error">
+                        <span
+                          v-if="fieldErrors.guests"
+                          id="booking-error-guests"
+                          :key="validationAttempt"
+                          class="booking-modal__field-error"
+                        >
+                          <q-icon name="error_outline" aria-hidden="true" />
+                          {{ fieldErrorText('guests') }}
+                        </span>
+                      </Transition>
+                    </span>
                   </label>
                 </template>
               </fieldset>
@@ -1462,28 +1488,46 @@ onBeforeUnmount(() => {
   }
 }
 
+.booking-modal__field {
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.booking-modal__error-slot {
+  display: block;
+  height: 36px;
+}
+
 .booking-modal__field-error {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 5px;
   color: #a43b31;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 18px;
+
+  .q-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 14px;
+  }
+}
+
+.booking-modal__required {
+  min-height: 36px;
+  line-height: 18px;
 }
 
 .booking-error-enter-active,
 .booking-error-leave-active {
-  overflow: hidden;
-  transition: opacity 180ms ease, transform 180ms ease, max-height 180ms ease;
-  max-height: 100px;
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
 .booking-error-enter-from,
 .booking-error-leave-to {
   opacity: 0;
   transform: translateY(-5px);
-  max-height: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

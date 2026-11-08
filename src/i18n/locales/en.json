@@ -74,7 +74,6 @@
         "ok": "OK",
         "errors": {
           "fieldRequired": "Please fill in this field",
-          "checkFields": "Please check the highlighted fields",
           "datesTooLong": "Please keep your request within 2000 characters",
           "guests": "Enter a whole number of guests from 1 to 100",
           "required": "Please complete all fields",

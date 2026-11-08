@@ -103,18 +103,32 @@ test('mail failure keeps the personal form and does not open a widget', async ()
 test('server field errors render together, clear on edit and never open a widget', async () => {
   const { s, requests, redirects } = setup()
   s.openBookingModal('continental')
-  s.email.value = 'invalid'
+  s.email.value = ''
   await s.submitBookingRequest()
   assert.equal(requests.length, 1)
-  assert.deepEqual({ ...s.fieldErrors.value }, { firstName: 'required', lastName: 'required', email: 'email' })
+  assert.deepEqual({ ...s.fieldErrors.value }, { firstName: 'required', lastName: 'required', email: 'required' })
   assert.equal(s.showWidget.value, false)
   assert.equal(s.formStatus.value, 'idle')
-  assert.match(s.formError.value, /checkFields/)
+  assert.equal(s.formError.value, '')
   s.firstName.value = 'Test'
   s.clearFieldError('firstName')
   assert.equal(s.fieldErrors.value.firstName, undefined)
-  assert.equal(s.fieldErrors.value.email, 'email')
+  assert.equal(s.fieldErrors.value.email, 'required')
   assert.equal(redirects.length, 0)
   s.closeBookingModal(); s.openBookingModal('continental')
   assert.equal(Object.keys(s.fieldErrors.value).length, 0)
+})
+
+
+test('malformed email is rejected on the frontend before any request', async () => {
+  for (const email of ['invalid', 'guest@', 'guest@example', 'guest @example.com']) {
+    const { s, requests, fill } = setup()
+    s.openBookingModal('continental'); fill()
+    s.email.value = email
+    await s.submitBookingRequest()
+    assert.equal(requests.length, 0)
+    assert.equal(s.fieldErrors.value.email, 'email')
+    assert.equal(s.formError.value, '')
+    assert.equal(s.showWidget.value, false)
+  }
 })

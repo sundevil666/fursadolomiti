@@ -74,7 +74,6 @@
         "ok": "OK",
         "errors": {
           "fieldRequired": "Compila questo campo",
-          "checkFields": "Controlla i campi evidenziati",
           "datesTooLong": "Limita la richiesta a 2000 caratteri",
           "guests": "Inserisci un numero intero di ospiti da 1 a 100",
           "required": "Compila tutti i campi",
