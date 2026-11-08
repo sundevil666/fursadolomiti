@@ -6,7 +6,7 @@ import { join } from 'node:path'
 import test from 'node:test'
 
 // Run after npm run build:ftp. Exercise the actual generated PHP handler with SMTP mocked.
-function deliver(handlerPath, email, hotelId, eventType = '', overrides = {}) {
+function deliver(handlerPath, email, hotelId, eventType = '', overrides = {}, fullResponse = false) {
   let source = readFileSync(handlerPath, 'utf8')
   const start = source.indexOf('function sendSmtpEmail(')
   const end = source.indexOf("if (($_SERVER['REQUEST_METHOD']", start)
@@ -24,11 +24,12 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
   try {
     const file = join(directory, 'send-email.php')
     writeFileSync(file, source)
-    return JSON.parse(execFileSync('php', [file], {
+    const result = JSON.parse(execFileSync('php', [file], {
       encoding: 'utf8',
       input: JSON.stringify({ email, hotelId, hotel: hotelId, eventType, widgetProvider: 'Test provider', firstName: 'Test', lastName: 'Guest', promoCode: 'TEST', preferredDates: 'Flexible dates', guests: 2, locale: 'en', ...overrides }),
       env: { ...process.env, SMTP_HOST: 'test.invalid', SMTP_USERNAME: 'sender@example.com', SMTP_FROM_EMAIL: 'sender@example.com', SMTP_PASSWORD: 'mock', SMTP_PORT: '465', SMTP_ENCRYPTION: 'ssl', EMAIL_RECIPIENTS: ' SUNDEVILDI@GMAIL.COM ,extra-admin@example.com' },
-    })).mails
+    }))
+    return fullResponse ? result : result.mails
   } finally {
     rmSync(directory, { recursive: true, force: true })
   }
@@ -45,7 +46,7 @@ test('FTP artifact excludes Sundevil from admin and hotel copies but preserves g
       assert.equal(mails.filter(mail => mail.recipients.includes('sundevildi@gmail.com')).length, email === 'sundevildi@gmail.com' ? 1 : 0)
     }
   }
-  const tracking = deliver('dist-ftp/fursa-release/php/send-email.php', '', 'test-hotel', 'widget_redirect')
+  const tracking = deliver('dist-ftp/fursa-release/php/send-email.php', 'guest@example.com', 'test-hotel', 'widget_redirect')
   assert.equal(tracking.length, 1)
   assert.ok(!tracking[0].recipients.includes('sundevildi@gmail.com'))
 })
@@ -74,5 +75,39 @@ test('PHP and FTP apply locale and delivery rules to all three booking modes', (
         if (bookingMode !== 'widget') assert.ok(mails.every(mail => mail.text.includes('Flexible dates')))
       }
     }
+  }
+})
+
+test('PHP diagnostics distinguish widget notices and stay out of guest and hotel copies', () => {
+  for (const path of ['php/send-email.php', 'dist-ftp/fursa-release/php/send-email.php']) {
+    const [notice] = deliver(path, 'guest@example.com', 'test-hotel', 'widget_redirect', {
+      pageUrl: 'https://fursadolomiti.com/en?secret=hidden#private',
+    })
+    assert.match(notice.text, /Event type: widget_redirect/)
+    assert.match(notice.text, /validated by server/)
+    assert.match(notice.text, /First name: Test/)
+    assert.match(notice.text, /Last name: Guest/)
+    assert.match(notice.text, /Email: guest@example.com/)
+    assert.match(notice.text, /Request ID: [a-f0-9]{32}/)
+    assert.doesNotMatch(notice.html, /secret=hidden|#private/)
+    const mails = deliver(path, 'guest@example.com', 'chalet-zenit')
+    assert.match(mails[0].text, /validated by server/)
+    for (const mail of mails.slice(1)) assert.doesNotMatch(mail.text + mail.html, /Request ID|Connection IP/)
+    for (const fields of [{ firstName: '' }, { lastName: ' ' }, { email: '' }, { email: 'invalid' }]) {
+      for (const eventType of ['', 'widget_redirect']) {
+        assert.equal(deliver(path, 'guest@example.com', 'chalet-zenit', eventType, fields).length, 0)
+      }
+    }
+  }
+})
+
+
+test('PHP returns the same structured field errors as JavaScript', () => {
+  for (const path of ['php/send-email.php', 'dist-ftp/fursa-release/php/send-email.php']) {
+    const result = deliver(path, 'invalid', 'chalet-zenit', '', {
+      firstName: ' ', lastName: '', preferredDates: '', guests: 0,
+    }, true)
+    assert.deepEqual(result.fieldErrors, { firstName: 'required', lastName: 'required', email: 'email', preferredDates: 'required', guests: 'guests' })
+    assert.equal(result.mails.length, 0)
   }
 })

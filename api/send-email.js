@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import { randomUUID } from 'node:crypto'
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -114,36 +115,22 @@ export default async function handler(request, response) {
   const preferredDates = String(request.body?.preferredDates || '').trim()
   const guests = Number(request.body?.guests)
   const isBookingRequest = !isWidgetTrackingEvent && (['request', 'redirect'].includes(bookingMode) || Boolean(hotelRecipient))
+  // Return every invalid field in one response; the client only renders these codes.
+  const fieldErrors = {}
+  if (!normalizedFirstName) fieldErrors.firstName = 'required'
+  if (!normalizedLastName) fieldErrors.lastName = 'required'
+  if (!normalizedEmail) fieldErrors.email = 'required'
+  else if (!emailPattern.test(normalizedEmail)) fieldErrors.email = 'email'
   if (isBookingRequest) {
-    if (
-      !preferredDates ||
-      preferredDates.length > 2000 ||
-      !Number.isInteger(guests) ||
-      guests < 1 ||
-      guests > 100
-    ) {
-      return response.status(400).json({ error: 'Preferred dates and guest count are required' })
-    }
+    if (!preferredDates) fieldErrors.preferredDates = 'required'
+    else if ([...preferredDates].length > 2000) fieldErrors.preferredDates = 'datesTooLong'
+    if (!Number.isInteger(guests) || guests < 1 || guests > 100) fieldErrors.guests = 'guests'
   }
-
-  if (isWidgetTrackingEvent) {
-    if (!normalizedHotelId || !normalizedHotel || !normalizedWidgetProvider) {
-      return response.status(400).json({ error: 'Tracking payload is incomplete' })
-    }
-  } else {
-    if (
-      !normalizedFirstName ||
-      !normalizedLastName ||
-      !normalizedEmail ||
-      !normalizedHotelId ||
-      !normalizedHotel
-    ) {
-      return response.status(400).json({ error: 'All fields are required' })
-    }
-
-    if (!emailPattern.test(normalizedEmail)) {
-      return response.status(400).json({ error: 'Invalid email' })
-    }
+  if (Object.keys(fieldErrors).length) {
+    return response.status(400).json({ error: 'Validation failed', fieldErrors })
+  }
+  if (!normalizedHotelId || !normalizedHotel || (isWidgetTrackingEvent && !normalizedWidgetProvider)) {
+    return response.status(400).json({ error: 'Booking context is incomplete' })
   }
 
   const emailLocale = normalizedLocale.toLowerCase().split('-')[0]
@@ -333,6 +320,34 @@ export default async function handler(request, response) {
   } else {
     bookingDetails.push([adminCopy.hotelEmail, hotelRecipient || adminCopy.missingHotelEmail])
   }
+  // Headers and client context are diagnostic hints, not proof of a human or site origin.
+  const diagnosticValue = (value) => typeof value === 'string'
+    ? value.replace(/[\r\n\t]/g, ' ').slice(0, 512) || adminCopy.unknown
+    : adminCopy.unknown
+  const sourceUrl = (value) => {
+    try {
+      const url = new URL(value)
+      return ['http:', 'https:'].includes(url.protocol) ? `${url.origin}${url.pathname}` : adminCopy.unknown
+    } catch { return adminCopy.unknown }
+  }
+  const diagnosticLabels = {
+    ru: ['Тип события', 'Контактные данные', 'ID запроса', 'Получено сервером (UTC)', 'Браузер (User-Agent)', 'Origin (сообщён клиентом)', 'Referer (без параметров)', 'IP соединения', 'IP через прокси (не проверен)', 'Страница (сообщена клиентом)', 'Язык браузера', 'Источник Fetch'],
+    en: ['Event type', 'Contact details', 'Request ID', 'Server received at (UTC)', 'Browser (User-Agent)', 'Origin (client supplied)', 'Referer (without query)', 'Connection IP', 'Proxy IP (unverified)', 'Page (client supplied)', 'Browser language', 'Fetch source'],
+    it: ['Tipo di evento', 'Dati di contatto', 'ID richiesta', 'Ricevuto dal server (UTC)', 'Browser (User-Agent)', 'Origin (dal client)', 'Referer (senza parametri)', 'IP connessione', 'IP proxy (non verificato)', 'Pagina (dal client)', 'Lingua del browser', 'Origine Fetch'],
+  }[emailLocale] || ['Event type', 'Contact details', 'Request ID', 'Server received at (UTC)', 'Browser (User-Agent)', 'Origin (client supplied)', 'Referer (without query)', 'Connection IP', 'Proxy IP (unverified)', 'Page (client supplied)', 'Browser language', 'Fetch source']
+  const contactStatus = ({ ru: 'Имя, фамилия и email проверены сервером', en: 'First name, last name and email validated by server', it: 'Nome, cognome ed email verificati dal server' }[emailLocale] || 'First name, last name and email validated by server')
+  if (isWidgetTrackingEvent) {
+    bookingDetails.push([adminCopy.firstName, normalizedFirstName], [adminCopy.lastName, normalizedLastName], ['Email', normalizedEmail])
+  }
+  const diagnosticValues = [
+    isWidgetTrackingEvent ? 'widget_redirect' : 'booking_form', contactStatus,
+    randomUUID(), new Date().toISOString(), getHeader(request, 'user-agent'),
+    getHeader(request, 'origin'), sourceUrl(getHeader(request, 'referer')),
+    request.socket?.remoteAddress, getHeader(request, 'x-forwarded-for'),
+    sourceUrl(request.body?.pageUrl), getHeader(request, 'accept-language'),
+    getHeader(request, 'sec-fetch-site'),
+  ]
+  bookingDetails.push(...diagnosticLabels.map((label, index) => [label, diagnosticValue(diagnosticValues[index])]))
   const bookingDetailsHtml = bookingDetails.map(([label, value]) => row(label, escapeHtml(value), true)).join('')
   const bookingDetailsText = bookingDetails.map(([label, value]) => `${label}: ${value}`)
   const htmlMessage = isWidgetTrackingEvent

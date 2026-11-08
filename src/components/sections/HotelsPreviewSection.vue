@@ -51,10 +51,23 @@ const email = ref('')
 const preferredDates = ref('')
 const guests = ref('')
 const isRequestHotel = computed(() => Boolean(activeBookingHotel.value) && bookingMode.value === 'request')
+const requiresBookingDetails = computed(() => Boolean(activeBookingHotel.value) && bookingMode.value !== 'widget')
 const formError = ref('')
 const formStatus = ref<'idle' | 'sending' | 'redirecting'>('idle')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const bookingFields = ['firstName', 'lastName', 'email', 'preferredDates', 'guests'] as const
+type BookingField = typeof bookingFields[number]
+type FieldErrorCode = 'required' | 'email' | 'datesTooLong' | 'guests'
+const fieldErrors = ref<Partial<Record<BookingField, FieldErrorCode>>>({})
+const validationAttempt = ref(0)
+const fieldErrorText = (field: BookingField) => {
+  const code = fieldErrors.value[field]
+  return code ? t(`home.hotels.bookingModal.errors.${code === 'required' ? 'fieldRequired' : code}`) : ''
+}
+const clearFieldError = (field: BookingField) => {
+  delete fieldErrors.value[field]
+  formError.value = ''
+}
 const homeShownHotelsCookie = 'fd_home_shown_hotels'
 const homeShownHotelsCookieMaxAge = 60 * 60 * 24 * 180
 
@@ -265,6 +278,8 @@ const openBookingModal = (hotelId: string) => {
   lastName.value = ''
   email.value = ''
   formError.value = ''
+  fieldErrors.value = {}
+  validationAttempt.value = 0
   formStatus.value = 'idle'
   bookingSuedtirolStatus.value = 'idle'
   bookingExpertStatus.value = 'idle'
@@ -691,7 +706,11 @@ const reportWidgetTracking = async (widgetAction: string, redirectUrl = '') => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        pageUrl: `${window.location.origin}${window.location.pathname}`,
         eventType: 'widget_redirect',
+        firstName: firstName.value.trim(),
+        lastName: lastName.value.trim(),
+        email: email.value.trim(),
         widgetProvider: getWidgetProvider(),
         widgetAction,
         widgetSelection,
@@ -772,20 +791,7 @@ const submitBookingRequest = async () => {
   if (formStatus.value === 'sending') return
   formError.value = ''
 
-  if (isRequestHotel.value && (!preferredDates.value.trim() || preferredDates.value.length > 2000 || !Number.isInteger(Number(guests.value)) || Number(guests.value) < 1 || Number(guests.value) > 100)) {
-    formError.value = t('home.hotels.bookingModal.errors.required')
-    return
-  }
-
-  if (!firstName.value.trim() || !lastName.value.trim() || !email.value.trim()) {
-    formError.value = t('home.hotels.bookingModal.errors.required')
-    return
-  }
-
-  if (!emailPattern.test(email.value.trim())) {
-    formError.value = t('home.hotels.bookingModal.errors.email')
-    return
-  }
+  fieldErrors.value = {}
 
   const hotel = bookableHotelPreviews.find((item) => item.id === bookingHotelId.value)
   const hotelName = hotel ? t(hotel.nameKey) : bookingHotelId.value
@@ -798,6 +804,7 @@ const submitBookingRequest = async () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        pageUrl: `${window.location.origin}${window.location.pathname}`,
         bookingMode: bookingMode.value,
         widgetProvider: isWidgetHotel.value ? widgetProviderName.value : '',
         redirectUrl: hotel && bookingMode.value === 'redirect' ? getLocalizedBookingUrl(hotel, locale.value) : '',
@@ -820,9 +827,26 @@ const submitBookingRequest = async () => {
       }),
     })
 
-    if (!response.ok) throw new Error(await response.text())
+    const result = await response.json()
+    if (!response.ok) {
+      if (response.status === 400 && result.fieldErrors && typeof result.fieldErrors === 'object') {
+        const codes: FieldErrorCode[] = ['required', 'email', 'datesTooLong', 'guests']
+        for (const field of bookingFields) {
+          if (codes.includes(result.fieldErrors[field])) fieldErrors.value[field] = result.fieldErrors[field]
+        }
+        if (Object.keys(fieldErrors.value).length) {
+          formStatus.value = 'idle'
+          formError.value = t('home.hotels.bookingModal.errors.checkFields')
+          validationAttempt.value += 1
+          await nextTick()
+          bookingModal.value?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+          return
+        }
+      }
+      throw new Error('Booking submission rejected')
+    }
 
-    const { promoCode } = (await response.json()) as { promoCode: string }
+    const { promoCode } = result as { promoCode: string }
 
     if (isWidgetHotel.value) {
       formStatus.value = 'idle'
@@ -1197,52 +1221,152 @@ onBeforeUnmount(() => {
             <form
               v-else-if="formStatus !== 'redirecting'"
               class="booking-modal__form"
+              :aria-busy="formStatus === 'sending'"
               novalidate
               @submit.prevent="submitBookingRequest"
             >
-              <label class="booking-modal__field">
-                <span>{{ t('home.hotels.bookingModal.firstName') }}</span>
-                <input
-                  v-model="firstName"
-                  type="text"
-                  required
-                  autocomplete="given-name"
-                  :placeholder="t('home.hotels.bookingModal.firstNamePlaceholder')"
-                />
-              </label>
-
-              <label class="booking-modal__field">
-                <span>{{ t('home.hotels.bookingModal.lastName') }}</span>
-                <input
-                  v-model="lastName"
-                  type="text"
-                  required
-                  autocomplete="family-name"
-                  :placeholder="t('home.hotels.bookingModal.lastNamePlaceholder')"
-                />
-              </label>
-
-              <label class="booking-modal__field">
-                <span>{{ t('home.hotels.bookingModal.email') }}</span>
-                <input
-                  v-model="email"
-                  type="email"
-                  required
-                  autocomplete="email"
-                  :placeholder="t('home.hotels.bookingModal.emailPlaceholder')"
-                />
-              </label>
-
-              <template v-if="isRequestHotel">
-                <label class="booking-modal__field">
-                  <span>{{ t('home.hotels.bookingModal.preferredDates') }}</span>
-                  <textarea v-model="preferredDates" required maxlength="2000" rows="3" :placeholder="t('home.hotels.bookingModal.datesPlaceholder')" />
+              <fieldset class="booking-modal__fields" :disabled="formStatus === 'sending'">
+                <label
+                  class="booking-modal__field"
+                  :class="{ 'booking-modal__field--invalid': fieldErrors.firstName }"
+                >
+                  <span>{{ t('home.hotels.bookingModal.firstName') }}</span>
+                  <input
+                    v-model="firstName"
+                    :aria-invalid="Boolean(fieldErrors.firstName)"
+                    :aria-describedby="fieldErrors.firstName ? 'booking-error-firstName' : undefined"
+                    type="text"
+                    required
+                    autocomplete="given-name"
+                    :placeholder="t('home.hotels.bookingModal.firstNamePlaceholder')"
+                    @input="clearFieldError('firstName')"
+                  />
+                  <Transition name="booking-error">
+                    <span
+                      v-if="fieldErrors.firstName"
+                      id="booking-error-firstName"
+                      :key="validationAttempt"
+                      class="booking-modal__field-error"
+                    >
+                      <q-icon name="error_outline" aria-hidden="true" />
+                      {{ fieldErrorText('firstName') }}
+                    </span>
+                  </Transition>
                 </label>
-                <label class="booking-modal__field">
-                  <span>{{ t('home.hotels.bookingModal.guests') }}</span>
-                  <input v-model="guests" required type="number" min="1" max="100" step="1" />
+
+                <label
+                  class="booking-modal__field"
+                  :class="{ 'booking-modal__field--invalid': fieldErrors.lastName }"
+                >
+                  <span>{{ t('home.hotels.bookingModal.lastName') }}</span>
+                  <input
+                    v-model="lastName"
+                    :aria-invalid="Boolean(fieldErrors.lastName)"
+                    :aria-describedby="fieldErrors.lastName ? 'booking-error-lastName' : undefined"
+                    type="text"
+                    required
+                    autocomplete="family-name"
+                    :placeholder="t('home.hotels.bookingModal.lastNamePlaceholder')"
+                    @input="clearFieldError('lastName')"
+                  />
+                  <Transition name="booking-error">
+                    <span
+                      v-if="fieldErrors.lastName"
+                      id="booking-error-lastName"
+                      :key="validationAttempt"
+                      class="booking-modal__field-error"
+                    >
+                      <q-icon name="error_outline" aria-hidden="true" />
+                      {{ fieldErrorText('lastName') }}
+                    </span>
+                  </Transition>
                 </label>
-              </template>
+
+                <label
+                  class="booking-modal__field"
+                  :class="{ 'booking-modal__field--invalid': fieldErrors.email }"
+                >
+                  <span>{{ t('home.hotels.bookingModal.email') }}</span>
+                  <input
+                    v-model="email"
+                    :aria-invalid="Boolean(fieldErrors.email)"
+                    :aria-describedby="fieldErrors.email ? 'booking-error-email' : undefined"
+                    type="email"
+                    required
+                    autocomplete="email"
+                    :placeholder="t('home.hotels.bookingModal.emailPlaceholder')"
+                    @input="clearFieldError('email')"
+                  />
+                  <Transition name="booking-error">
+                    <span
+                      v-if="fieldErrors.email"
+                      id="booking-error-email"
+                      :key="validationAttempt"
+                      class="booking-modal__field-error"
+                    >
+                      <q-icon name="error_outline" aria-hidden="true" />
+                      {{ fieldErrorText('email') }}
+                    </span>
+                  </Transition>
+                </label>
+                <template v-if="requiresBookingDetails">
+                  <label
+                    class="booking-modal__field"
+                    :class="{ 'booking-modal__field--invalid': fieldErrors.preferredDates }"
+                  >
+                    <span>{{ t('home.hotels.bookingModal.preferredDates') }}</span>
+                    <textarea
+                      v-model="preferredDates"
+                      :aria-invalid="Boolean(fieldErrors.preferredDates)"
+                      :aria-describedby="fieldErrors.preferredDates ? 'booking-error-preferredDates' : undefined"
+                      required
+                      maxlength="2000"
+                      rows="3"
+                      :placeholder="t('home.hotels.bookingModal.datesPlaceholder')"
+                      @input="clearFieldError('preferredDates')"
+                    />
+                    <Transition name="booking-error">
+                      <span
+                        v-if="fieldErrors.preferredDates"
+                        id="booking-error-preferredDates"
+                        :key="validationAttempt"
+                        class="booking-modal__field-error"
+                      >
+                        <q-icon name="error_outline" aria-hidden="true" />
+                        {{ fieldErrorText('preferredDates') }}
+                      </span>
+                    </Transition>
+                  </label>
+                  <label
+                    class="booking-modal__field"
+                    :class="{ 'booking-modal__field--invalid': fieldErrors.guests }"
+                  >
+                    <span>{{ t('home.hotels.bookingModal.guests') }}</span>
+                    <input
+                      v-model="guests"
+                      :aria-invalid="Boolean(fieldErrors.guests)"
+                      :aria-describedby="fieldErrors.guests ? 'booking-error-guests' : undefined"
+                      required
+                      type="number"
+                      min="1"
+                      max="100"
+                      step="1"
+                      @input="clearFieldError('guests')"
+                    />
+                    <Transition name="booking-error">
+                      <span
+                        v-if="fieldErrors.guests"
+                        id="booking-error-guests"
+                        :key="validationAttempt"
+                        class="booking-modal__field-error"
+                      >
+                        <q-icon name="error_outline" aria-hidden="true" />
+                        {{ fieldErrorText('guests') }}
+                      </span>
+                    </Transition>
+                  </label>
+                </template>
+              </fieldset>
               <p
                 class="booking-modal__required"
                 :class="{ 'booking-modal__required--error': formError }"
@@ -1315,6 +1439,62 @@ onBeforeUnmount(() => {
 }
 
 .booking-modal__field textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #c9d3ce; border-radius: 10px; font: inherit; resize: vertical; }
+
+.booking-modal__fields {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.booking-modal__field input,
+.booking-modal__field textarea {
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.booking-modal__field--invalid input,
+.booking-modal__field--invalid textarea {
+  border-color: #a43b31;
+  background-color: rgb(164 59 49 / 4%);
+  &:focus {
+    border-color: #a43b31;
+    box-shadow: 0 0 0 3px rgb(164 59 49 / 12%);
+  }
+}
+
+.booking-modal__field-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #a43b31;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.booking-error-enter-active,
+.booking-error-leave-active {
+  overflow: hidden;
+  transition: opacity 180ms ease, transform 180ms ease, max-height 180ms ease;
+  max-height: 100px;
+}
+
+.booking-error-enter-from,
+.booking-error-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
+  max-height: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .booking-error-enter-active,
+  .booking-error-leave-active,
+  .booking-modal__field input,
+  .booking-modal__field textarea {
+    transition: none;
+  }
+}
+
 .booking-modal__panel--success {
   width: min(100%, 560px);
   min-height: 0;

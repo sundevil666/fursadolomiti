@@ -19,7 +19,7 @@ const body = {
   promoCode: 'FURSADOLOMITI',
   hotelImage: 'http://127.0.0.1:5180/chalet-zenit/chalet-zenit1.png',
 }
-async function run(locale, failCustomer = false, overrides = {}) {
+async function run(locale, failCustomer = false, overrides = {}, headers = {}) {
   const sent = []
   nodemailer.createTransport = () => ({
     sendMail: async (mail) => {
@@ -30,7 +30,7 @@ async function run(locale, failCustomer = false, overrides = {}) {
   })
   let result, status
   await handler(
-    { method: 'POST', headers: {}, body: { ...body, locale, ...overrides } },
+    { method: 'POST', headers, body: { ...body, locale, ...overrides } },
     {
       status(code) {
         status = code
@@ -217,4 +217,46 @@ test('admin mail explains widget, redirect and missing email without leaking mar
     assert.ok(!sent[0].html.includes('<value>'))
     assert.ok(sent[0].html.includes('Booking method'))
   }
+})
+
+
+test('empty contact fields cannot send a booking in any mode', async () => {
+  for (const bookingMode of ['request', 'redirect', 'widget', 'widget_redirect']) {
+    for (const fields of [{ firstName: ' ' }, { lastName: '' }, { email: '' }, { email: 'invalid' }]) {
+      const { status, sent } = await run('en', false, { bookingMode, ...(bookingMode === 'widget_redirect' ? { eventType: 'widget_redirect', widgetProvider: 'BookingExpert' } : {}), ...fields })
+      assert.equal(status, 400)
+      assert.equal(sent.length, 0)
+    }
+  }
+})
+
+test('admin diagnostics retain widget contacts and escape client hints', async () => {
+  const { status, sent } = await run('en', false, {
+    eventType: 'widget_redirect', widgetProvider: 'BookingExpert',
+    pageUrl: 'https://fursadolomiti.com/en?secret=hidden#private',
+  }, { 'user-agent': 'TestBrowser <script>', origin: 'https://fursadolomiti.com', referer: 'https://fursadolomiti.com/?secret=hidden' })
+  assert.equal(status, 200)
+  assert.equal(sent.length, 1)
+  assert.match(sent[0].text, /Event type: widget_redirect/)
+  assert.match(sent[0].text, /validated by server/)
+  assert.match(sent[0].text, /First name: Test/)
+  assert.match(sent[0].text, /Last name: Guest/)
+  assert.match(sent[0].text, /Email: guest@example.com/)
+  assert.match(sent[0].text, /Browser \(User-Agent\): TestBrowser <script>/)
+  assert.match(sent[0].html, /TestBrowser &lt;script&gt;/)
+  assert.doesNotMatch(sent[0].html, /<script>|secret=hidden|#private/)
+  assert.match(sent[0].text, /Request ID: [a-f0-9-]+/)
+  const booking = await run('en', false, {}, { 'user-agent': 'AdminOnlyBrowser' })
+  assert.match(booking.sent[0].text, /AdminOnlyBrowser/)
+  for (const mail of booking.sent.slice(1)) assert.doesNotMatch(mail.text + mail.html, /AdminOnlyBrowser|Request ID|Connection IP/)
+})
+
+
+test('validation reports all invalid fields together without sending mail', async () => {
+  const { status, result, sent } = await run('en', false, {
+    firstName: ' ', lastName: '', email: 'invalid', preferredDates: '', guests: 0,
+  })
+  assert.equal(status, 400)
+  assert.deepEqual(result.fieldErrors, { firstName: 'required', lastName: 'required', email: 'email', preferredDates: 'required', guests: 'guests' })
+  assert.equal(sent.length, 0)
 })

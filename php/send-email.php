@@ -315,31 +315,22 @@ $hotelRecipient = !$isWidgetTrackingEvent && !in_array($bookingMode, ['widget', 
 $preferredDates = trim((string) ($requestBody['preferredDates'] ?? ''));
 $guests = filter_var($requestBody['guests'] ?? null, FILTER_VALIDATE_INT);
 $isBookingRequest = !$isWidgetTrackingEvent && (in_array($bookingMode, ['request', 'redirect'], true) || (bool) $hotelRecipient);
+// Keep the field error contract identical to the JavaScript handler.
+$fieldErrors = [];
+if ($normalizedFirstName === '') $fieldErrors['firstName'] = 'required';
+if ($normalizedLastName === '') $fieldErrors['lastName'] = 'required';
+if ($normalizedEmail === '') $fieldErrors['email'] = 'required';
+elseif (preg_match($emailPattern, $normalizedEmail) !== 1) $fieldErrors['email'] = 'email';
 if ($isBookingRequest) {
-    if ($preferredDates === '' || strlen($preferredDates) > 8000 || $guests === false || $guests < 1 || $guests > 100) {
-        jsonResponse(400, ['error' => 'Preferred dates and guest count are required']);
-    }
+    if ($preferredDates === '') $fieldErrors['preferredDates'] = 'required';
+    elseif (preg_match('/^.{1,2000}$/us', $preferredDates) !== 1) $fieldErrors['preferredDates'] = 'datesTooLong';
+    if ($guests === false || $guests < 1 || $guests > 100) $fieldErrors['guests'] = 'guests';
 }
-
-
-if ($isWidgetTrackingEvent) {
-    if ($normalizedHotelId === '' || $normalizedHotel === '' || $normalizedWidgetProvider === '') {
-        jsonResponse(400, ['error' => 'Tracking payload is incomplete']);
-    }
-} else {
-    if (
-        $normalizedFirstName === '' ||
-        $normalizedLastName === '' ||
-        $normalizedEmail === '' ||
-        $normalizedHotelId === '' ||
-        $normalizedHotel === ''
-    ) {
-        jsonResponse(400, ['error' => 'All fields are required']);
-    }
-
-    if (preg_match($emailPattern, $normalizedEmail) !== 1) {
-        jsonResponse(400, ['error' => 'Invalid email']);
-    }
+if ($fieldErrors) {
+    jsonResponse(400, ['error' => 'Validation failed', 'fieldErrors' => $fieldErrors]);
+}
+if ($normalizedHotelId === '' || $normalizedHotel === '' || ($isWidgetTrackingEvent && $normalizedWidgetProvider === '')) {
+    jsonResponse(400, ['error' => 'Booking context is incomplete']);
 }
 
 $headers = getRequestHeadersMap();
@@ -534,6 +525,37 @@ if ($isWidgetTrackingEvent || $bookingMode === 'widget') {
     $bookingDetails[] = [$adminCopy['url'], $normalizedRedirectUrl !== '' ? $normalizedRedirectUrl : $adminCopy['unknown']];
 } else {
     $bookingDetails[] = [$adminCopy['hotelEmail'], $hotelRecipient ?: $adminCopy['missingHotelEmail']];
+}
+// Diagnostic hints can be spoofed; they do not authenticate the sender.
+$diagnosticValue = static function ($value) use ($adminCopy): string {
+    return is_string($value) && $value !== '' ? substr(str_replace(["\r", "\n", "\t"], ' ', $value), 0, 512) : $adminCopy['unknown'];
+};
+$sourceUrl = static function ($value) use ($adminCopy): string {
+    $parts = is_string($value) ? parse_url($value) : false;
+    if (!$parts || !in_array($parts['scheme'] ?? '', ['http', 'https'], true) || empty($parts['host'])) return $adminCopy['unknown'];
+    return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . ($parts['path'] ?? '/');
+};
+$diagnosticLabelsByLocale = [
+    'ru' => ['Тип события', 'Контактные данные', 'ID запроса', 'Получено сервером (UTC)', 'Браузер (User-Agent)', 'Origin (сообщён клиентом)', 'Referer (без параметров)', 'IP соединения', 'IP через прокси (не проверен)', 'Страница (сообщена клиентом)', 'Язык браузера', 'Источник Fetch'],
+    'en' => ['Event type', 'Contact details', 'Request ID', 'Server received at (UTC)', 'Browser (User-Agent)', 'Origin (client supplied)', 'Referer (without query)', 'Connection IP', 'Proxy IP (unverified)', 'Page (client supplied)', 'Browser language', 'Fetch source'],
+    'it' => ['Tipo di evento', 'Dati di contatto', 'ID richiesta', 'Ricevuto dal server (UTC)', 'Browser (User-Agent)', 'Origin (dal client)', 'Referer (senza parametri)', 'IP connessione', 'IP proxy (non verificato)', 'Pagina (dal client)', 'Lingua del browser', 'Origine Fetch'],
+];
+$contactStatuses = ['ru' => 'Имя, фамилия и email проверены сервером', 'en' => 'First name, last name and email validated by server', 'it' => 'Nome, cognome ed email verificati dal server'];
+if ($isWidgetTrackingEvent) {
+    $bookingDetails[] = [$adminCopy['firstName'], $normalizedFirstName];
+    $bookingDetails[] = [$adminCopy['lastName'], $normalizedLastName];
+    $bookingDetails[] = ['Email', $normalizedEmail];
+}
+$diagnosticValues = [
+    $isWidgetTrackingEvent ? 'widget_redirect' : 'booking_form', $contactStatuses[$emailLocale] ?? $contactStatuses['en'],
+    bin2hex(random_bytes(16)), gmdate('c'), getHeaderValue($headers, 'user-agent'),
+    getHeaderValue($headers, 'origin'), $sourceUrl(getHeaderValue($headers, 'referer')),
+    $_SERVER['REMOTE_ADDR'] ?? null, getHeaderValue($headers, 'x-forwarded-for'),
+    $sourceUrl($requestBody['pageUrl'] ?? null), getHeaderValue($headers, 'accept-language'),
+    getHeaderValue($headers, 'sec-fetch-site'),
+];
+foreach ($diagnosticLabelsByLocale[$emailLocale] ?? $diagnosticLabelsByLocale['en'] as $index => $label) {
+    $bookingDetails[] = [$label, $diagnosticValue($diagnosticValues[$index])];
 }
 $bookingDetailsHtml = implode('', array_map(static fn (array $detail): string => renderRow($detail[0], escapeHtmlValue($detail[1]), true), $bookingDetails));
 $bookingDetailsText = array_map(static fn (array $detail): string => $detail[0] . ': ' . $detail[1], $bookingDetails);
