@@ -78,6 +78,45 @@ test('PHP and FTP apply locale and delivery rules to all three booking modes', (
   }
 })
 
+test('FTP admin, guest and hotel emails use the same intact hotel image URL', () => {
+  const images = [
+    ['chalet-lum-dor', 'chalet-lum-dor/lum-dor-1.jpg'],
+    ['chalet-invictus', 'chalet-invictus/invictus-1.jpg'],
+    ['chalet-zenit', 'chalet-zenit/chalet-zenit1.png'],
+    ['villa-carolina', 'villa-carolina/villa-carolina1.jpg'],
+  ]
+  for (const [hotelId, imagePath] of images) {
+    const imageUrl = `https://fursadolomiti.com/${imagePath}`
+    for (const locale of ['ru', 'en', 'it']) {
+      const mails = deliver('dist-ftp/fursa-release/php/send-email.php', 'guest@example.com', hotelId, '', {
+        locale, bookingMode: 'request', hotelImage: imageUrl,
+      })
+      assert.equal(mails.length, 3)
+      for (const [role, mail] of mails.entries()) {
+        const sources = [...mail.html.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/g)].map(match => match[1])
+        assert.deepEqual(sources, [imageUrl], `${hotelId}, ${locale}, role ${role}`)
+        assert.ok(readFileSync(`public/${imagePath}`).length > 0)
+      }
+    }
+  }
+})
+
+
+test('Luna redirect admin and guest emails include the correct photo', () => {
+  const imageUrl = 'https://fursadolomiti.com/hotel-luna/luna1.jpg'
+  for (const locale of ['ru', 'en', 'it']) {
+    const mails = deliver('dist-ftp/fursa-release/php/send-email.php', 'guest@example.com', 'luna-mondschein', '', {
+      locale, bookingMode: 'redirect', hotelImage: imageUrl,
+    })
+    assert.equal(mails.length, 2)
+    for (const mail of mails) {
+      const sources = [...mail.html.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/g)].map(match => match[1])
+      assert.deepEqual(sources, [imageUrl])
+    }
+  }
+})
+
+
 test('PHP diagnostics distinguish widget notices and stay out of guest and hotel copies', () => {
   for (const path of ['php/send-email.php', 'dist-ftp/fursa-release/php/send-email.php']) {
     const [notice] = deliver(path, 'guest@example.com', 'test-hotel', 'widget_redirect', {

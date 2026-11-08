@@ -275,10 +275,10 @@ export const hotelPreviews: HotelPreview[] = [
     publicationStatus: 'published',
     category: 'fourStar',
     images: [
-      'hotel-luna/luna1.jpg',
-      'hotel-luna/luna2.jpg',
-      'hotel-luna/luna3.jpg',
-      'hotel-luna/luna4.jpg',
+      '/hotel-luna/luna1.jpg',
+      '/hotel-luna/luna2.jpg',
+      '/hotel-luna/luna3.jpg',
+      '/hotel-luna/luna4.jpg',
     ],
     promoCode: 'FURSADOLOMITI',
     bookingUrl: {
