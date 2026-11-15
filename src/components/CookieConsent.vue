@@ -1,26 +1,47 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+
+import {
+  clearOptionalCookies,
+  cookieSettingsEvent,
+  getCookieConsent,
+  saveCookieConsent,
+  type CookieConsent,
+} from '@/services/cookieConsent'
 
 const { t } = useI18n()
 
-const storageKey = 'fursadolomiti_cookie_consent_v1'
 const isVisible = ref(false)
-
-const acceptCookies = () => {
-  localStorage.setItem(storageKey, 'accepted')
+const showSettings = () => {
+  isVisible.value = true
+}
+const dismiss = () => {
   isVisible.value = false
+}
+const chooseCookies = (choice: CookieConsent) => {
+  saveCookieConsent(choice)
+  dismiss()
 }
 
 onMounted(() => {
-  isVisible.value = localStorage.getItem(storageKey) !== 'accepted'
+  const consent = getCookieConsent()
+  if (consent !== 'accepted') clearOptionalCookies()
+  isVisible.value = consent === null
+  window.addEventListener(cookieSettingsEvent, showSettings)
 })
+onUnmounted(() => window.removeEventListener(cookieSettingsEvent, showSettings))
 </script>
 
 <template>
   <Transition name="cookie-consent">
     <aside v-if="isVisible" class="cookie-consent" :aria-label="t('cookies.title')">
-      <button class="cookie-consent__close" type="button" :aria-label="t('cookies.close')" @click="acceptCookies">
+      <button
+        class="cookie-consent__close"
+        type="button"
+        :aria-label="t('cookies.close')"
+        @click="dismiss"
+      >
         <span aria-hidden="true"></span>
       </button>
 
@@ -28,9 +49,17 @@ onMounted(() => {
         {{ t('cookies.text') }}
       </p>
 
-      <button class="cookie-consent__accept" type="button" @click="acceptCookies">
-        {{ t('cookies.accept') }}
-      </button>
+      <div class="cookie-consent__actions">
+        <button class="cookie-consent__accept" type="button" @click="chooseCookies('necessary')">
+          {{ t('cookies.necessary') }}
+        </button>
+        <button class="cookie-consent__accept" type="button" @click="chooseCookies('accepted')">
+          {{ t('cookies.accept') }}
+        </button>
+        <button class="cookie-consent__cancel" type="button" @click="dismiss">
+          {{ t('cookies.cancel') }}
+        </button>
+      </div>
     </aside>
   </Transition>
 </template>
@@ -43,6 +72,8 @@ onMounted(() => {
   z-index: 80;
   width: min(100% - 32px, 320px);
   max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
   padding: 54px 36px 40px;
   border-radius: 12px;
   background: var(--panel-soft);
@@ -104,6 +135,21 @@ onMounted(() => {
   line-height: 1.3;
 }
 
+.cookie-consent__actions {
+  display: grid;
+  gap: 12px;
+}
+
+.cookie-consent__cancel {
+  padding: 10px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .cookie-consent__accept {
   display: flex;
   align-items: center;
@@ -117,7 +163,7 @@ onMounted(() => {
   color: #fff9ec;
   cursor: pointer;
   font-family: 'Manrope', sans-serif;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 800;
   line-height: 1.1;
   transition:
@@ -173,7 +219,7 @@ onMounted(() => {
 
   .cookie-consent__accept {
     min-height: 54px;
-    font-size: 19px;
+    font-size: 17px;
   }
 }
 </style>

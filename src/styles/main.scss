@@ -3672,6 +3672,20 @@ body.is-booking-modal-open {
     gap: 32px;
   }
 
+  &__cookie-settings {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      color: #fff9ea;
+    }
+  }
+
   &__legal {
     display: flex;
     align-items: center;

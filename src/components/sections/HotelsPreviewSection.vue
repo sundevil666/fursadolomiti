@@ -2,6 +2,8 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { getCookieConsent, homeShownHotelsCookie } from '@/services/cookieConsent'
+
 import KrossBookingWidget from '@/components/KrossBookingWidget.vue'
 import AnimatedText from '@/components/AnimatedText.vue'
 import { bookableHotelPreviews, type HotelCategory, type HotelPreview } from '@/data/homeSections'
@@ -80,7 +82,6 @@ const clearFieldError = (field: BookingField) => {
   delete fieldErrors.value[field]
   formError.value = ''
 }
-const homeShownHotelsCookie = 'fd_home_shown_hotels'
 const homeShownHotelsCookieMaxAge = 60 * 60 * 24 * 180
 
 const activeHotelSlides = ref<Record<string, number>>(
@@ -159,6 +160,8 @@ const getHotelStats = (key?: string) => (key ? (tm(key) as HotelStat[]) : [])
 const getActiveHotelSlide = (hotelId: string) => activeHotelSlides.value[hotelId] ?? 0
 
 const readShownHomeHotelIds = () => {
+  if (getCookieConsent() !== 'accepted') return []
+
   const cookieValue = document.cookie
     .split('; ')
     .find((cookie) => cookie.startsWith(`${homeShownHotelsCookie}=`))
@@ -180,6 +183,8 @@ const readShownHomeHotelIds = () => {
 }
 
 const writeShownHomeHotelIds = (hotelIds: string[]) => {
+  if (getCookieConsent() !== 'accepted') return
+
   document.cookie = `${homeShownHotelsCookie}=${encodeURIComponent(
     JSON.stringify(hotelIds),
   )}; path=/; max-age=${homeShownHotelsCookieMaxAge}; samesite=lax`

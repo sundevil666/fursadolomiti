@@ -2,6 +2,8 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { openCookieSettings } from '@/services/cookieConsent'
+
 import AnimatedText from '@/components/AnimatedText.vue'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import logoWhiteUrl from '@/assets/img/logo_white.svg'
@@ -131,9 +133,9 @@ const scrollToTop = () => {
             <AnimatedText :text="t('footer.privacy')" tag="span" />
           </RouterLink>
           <span aria-hidden="true" />
-          <RouterLink :to="{ name: 'privacy-policy', hash: '#cookies' }">
+          <button class="app-footer__cookie-settings" type="button" @click="openCookieSettings">
             <AnimatedText :text="t('footer.cookies')" tag="span" />
-          </RouterLink>
+          </button>
           <span aria-hidden="true" />
           <span>
             <AnimatedText :text="t('footer.vat')" tag="span" />
