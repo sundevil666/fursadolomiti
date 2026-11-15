@@ -1,6 +1,6 @@
 import type { AppLocale } from '@/i18n'
 
-export type ReviewSource = 'instagram' | 'google'
+export type ReviewSource = 'instagram' | 'google' | 'whatsapp'
 
 export type GuestReview = {
   id: number
@@ -158,6 +158,27 @@ export const guestReviews: GuestReview[] = [
       ru: 'Январь 2026',
       en: 'January 2026',
       it: 'Gennaio 2026',
+    },
+  },
+  {
+    id: 8,
+    text: 'Hi 😊\n\nThank you so much for all the excellent service you provide. I truly appreciate all your help and support.\n\nThank you again for your kind assistance!',
+    translations: {
+      ru: 'Привет 😊\n\nОгромное спасибо за превосходный сервис, который вы предоставляете. Я очень ценю всю вашу помощь и поддержку.\n\nЕщё раз спасибо за вашу добрую помощь!',
+      en: 'Hi 😊\n\nThank you so much for all the excellent service you provide. I truly appreciate all your help and support.\n\nThank you again for your kind assistance!',
+      it: 'Ciao 😊\n\nGrazie di cuore per l’eccellente servizio che offrite. Apprezzo davvero tutto il vostro aiuto e supporto.\n\nGrazie ancora per la vostra gentile assistenza!',
+    },
+    source: 'whatsapp',
+    author: 'Nina',
+    location: {
+      ru: 'Норвегия',
+      en: 'Norway',
+      it: 'Norvegia',
+    },
+    date: {
+      ru: 'Октябрь 2026',
+      en: 'October 2026',
+      it: 'Ottobre 2026',
     },
   },
 ]

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { mdiWhatsapp } from '@quasar/extras/mdi-v7'
 
 import AnimatedText from '@/components/AnimatedText.vue'
 import { guestReviews, type GuestReview } from '@/data/reviews'
@@ -256,6 +257,7 @@ onBeforeUnmount(() => {
 </svg>
 
                     </span>
+                    <q-icon v-else-if="review.source === 'whatsapp'" :name="mdiWhatsapp" size="20px" />
                     <span v-else>
                       <svg
                         width="20"
@@ -415,6 +417,7 @@ onBeforeUnmount(() => {
 </svg>
 
                   </span>
+                  <q-icon v-else-if="selectedReview.source === 'whatsapp'" :name="mdiWhatsapp" size="20px" />
                   <span v-else>
                     <svg
                       width="20"
