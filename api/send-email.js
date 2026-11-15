@@ -257,17 +257,17 @@ export default async function handler(request, response) {
   const roleSubjects = {
     ru: {
       admin: 'Администратору · Новая заявка',
-      guest: 'Гостю · Спасибо за вашу заявку',
+      guest: 'Гостю · Спасибо за интерес к отелю',
       hotel: 'Отелю · Запрос на бронирование',
     },
     en: {
       admin: 'For the administrator · New request',
-      guest: 'For our guest · Thank you for your request',
+      guest: 'For our guest · Thank you for your interest in',
       hotel: 'For the hotel · Booking request',
     },
     it: {
       admin: 'All’amministratore · Nuova richiesta',
-      guest: 'Al nostro ospite · Grazie per la vostra richiesta',
+      guest: 'Al nostro ospite · Grazie per il vostro interesse per',
       hotel: 'All’hotel · Richiesta di prenotazione',
     },
   }
@@ -520,8 +520,8 @@ export default async function handler(request, response) {
     ru: {
       subject: 'Ваша заявка получена',
       title: 'Заявка на бронирование',
-      thanks: 'Спасибо за заявку! С вами скоро свяжутся.',
-      note: 'Это подтверждение получения заявки, а не бронирования.',
+      thanks: 'Спасибо, что воспользовались сайтом FursaDolomiti!',
+      note: 'Это письмо не является подтверждением бронирования.\nДля оформления бронирования необходимо завершить процесс непосредственно на сайте отеля.',
       hotel: 'Отель',
       name: 'Имя и фамилия',
       email: 'Email',
@@ -531,8 +531,8 @@ export default async function handler(request, response) {
     en: {
       subject: 'Your request has been received',
       title: 'Booking request',
-      thanks: 'Thank you for your request! We will contact you soon.',
-      note: 'This confirms receipt of your request, not a booking.',
+      thanks: 'Thank you for using the FursaDolomiti website!',
+      note: 'This email is not a booking confirmation.\nTo make a booking, you must complete the process directly on the hotel’s website.',
       hotel: 'Hotel',
       name: 'Full name',
       email: 'Email',
@@ -542,8 +542,8 @@ export default async function handler(request, response) {
     it: {
       subject: 'La vostra richiesta è stata ricevuta',
       title: 'Richiesta di soggiorno',
-      thanks: 'Grazie per la vostra richiesta! Vi contatteremo presto.',
-      note: 'Questa è una conferma di ricezione della richiesta, non della prenotazione.',
+      thanks: 'Grazie per aver utilizzato il sito FursaDolomiti!',
+      note: 'Questa email non costituisce una conferma di prenotazione.\nPer prenotare è necessario completare la procedura direttamente sul sito della struttura.',
       hotel: 'Hotel',
       name: 'Nome e cognome',
       email: 'Email',
@@ -574,7 +574,7 @@ export default async function handler(request, response) {
       ? `<tr><td style="background-color:#e8dfcc;"><img src="${safe.hotelImage}" width="680" alt="${safe.hotel}" style="display:block;width:100%;max-width:680px;height:auto;max-height:300px;object-fit:cover;border:0;"></td></tr>`
       : ''
     const thanksHtml = customer
-      ? `<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">${escapeHtml(copy.thanks)}</p><p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;">${escapeHtml(copy.note)}</p>`
+      ? `<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">${escapeHtml(copy.thanks)}</p><p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;">${escapeHtml(copy.note).replaceAll('\n', '<br>')}</p>`
       : ''
     const lines = [
       title, '',

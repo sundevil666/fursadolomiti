@@ -74,6 +74,10 @@ test('PHP and FTP apply locale and delivery rules to all three booking modes', (
         assert.ok(mails[0].text.includes(labels[0]))
         assert.ok(mails.every(mail => !mail.subject.includes('Vercel')))
         assert.ok(mails[1].subject.includes(labels[1]))
+        const guestCopy = { ru: ['Спасибо за интерес к отелю', 'необходимо завершить процесс непосредственно на сайте отеля.'], en: ['Thank you for your interest in', 'complete the process directly on the hotel’s website.'], it: ['Grazie per il vostro interesse per', 'completare la procedura direttamente sul sito della struttura.'] }[locale]
+        assert.ok(mails[1].subject.includes(guestCopy[0]))
+        assert.ok(mails[1].text.includes(guestCopy[1]))
+        assert.ok(mails[1].html.includes(guestCopy[1]))
         assert.ok(mails[1].html.includes(labels[1]))
         assert.ok(mails[1].text.includes(labels[1]))
         if (bookingMode === 'request') {

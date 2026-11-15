@@ -45,9 +45,9 @@ async function run(locale, failCustomer = false, overrides = {}, headers = {}) {
 }
 test('separate admin, simple hotel and localized customer emails', async () => {
   for (const [locale, thanks, adminTitle] of [
-    ['ru', 'Спасибо за заявку', 'Новая заявка на бронирование'],
-    ['en', 'Thank you for your request', 'New booking request'],
-    ['it', 'Grazie per la vostra richiesta', 'Nuova richiesta di prenotazione'],
+    ['ru', 'Спасибо, что воспользовались сайтом FursaDolomiti!', 'Новая заявка на бронирование'],
+    ['en', 'Thank you for using the FursaDolomiti website!', 'New booking request'],
+    ['it', 'Grazie per aver utilizzato il sito FursaDolomiti!', 'Nuova richiesta di prenotazione'],
   ]) {
     const { sent, result } = await run(locale)
     assert.deepEqual(sent[0].to, [
@@ -87,6 +87,10 @@ test('separate admin, simple hotel and localized customer emails', async () => {
     }[locale]
     assert.ok(sent[0].subject.includes(roleLabels[0]))
     assert.ok(customer.subject.includes(roleLabels[1]))
+    const guestCopy = { ru: ['Спасибо за интерес к отелю', 'необходимо завершить процесс непосредственно на сайте отеля.'], en: ['Thank you for your interest in', 'complete the process directly on the hotel’s website.'], it: ['Grazie per il vostro interesse per', 'completare la procedura direttamente sul sito della struttura.'] }[locale]
+    assert.ok(customer.subject.includes(guestCopy[0]))
+    assert.ok(customer.text.includes(guestCopy[1]))
+    assert.ok(customer.html.includes(guestCopy[1]))
     assert.ok(sent[0].html.includes(roleLabels[0]))
     assert.ok(customer.html.includes(roleLabels[1]))
     assert.ok(customer.text.includes(roleLabels[1]))
