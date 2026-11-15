@@ -9,6 +9,7 @@ Object.assign(process.env, {
   EMAIL_RECIPIENTS: 'fursa@example.com,sundevil@example.com',
 })
 const body = {
+  privacyConsent: true,
   hotelId: 'chalet-zenit',
   hotel: 'Chalet Zenit',
   firstName: 'Test',
@@ -285,5 +286,14 @@ test('redirect guest email includes a safe booking link and prevents duplicate b
         assert.doesNotMatch(guest.html, /href="(?:javascript:|https:\/\/hotel.example)/)
       }
     }
+  }
+})
+
+test('consent must be explicitly granted before any email is sent', async () => {
+  for (const privacyConsent of [undefined, false, 'true', 1]) {
+    const { status, result, sent } = await run('en', false, { privacyConsent })
+    assert.equal(status, 400)
+    assert.equal(result.fieldErrors.privacyConsent, 'consent')
+    assert.equal(sent.length, 0)
   }
 })

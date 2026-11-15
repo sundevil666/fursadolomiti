@@ -26,7 +26,7 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
     writeFileSync(file, source)
     const result = JSON.parse(execFileSync('php', [file], {
       encoding: 'utf8',
-      input: JSON.stringify({ email, hotelId, hotel: hotelId, eventType, widgetProvider: 'Test provider', firstName: 'Test', lastName: 'Guest', promoCode: 'TEST', preferredDates: 'Flexible dates', guests: 2, locale: 'en', ...overrides }),
+      input: JSON.stringify({ privacyConsent: true, email, hotelId, hotel: hotelId, eventType, widgetProvider: 'Test provider', firstName: 'Test', lastName: 'Guest', promoCode: 'TEST', preferredDates: 'Flexible dates', guests: 2, locale: 'en', ...overrides }),
       env: { ...process.env, SMTP_HOST: 'test.invalid', SMTP_USERNAME: 'sender@example.com', SMTP_FROM_EMAIL: 'sender@example.com', SMTP_PASSWORD: 'mock', SMTP_PORT: '465', SMTP_ENCRYPTION: 'ssl', EMAIL_RECIPIENTS: ' SUNDEVILDI@GMAIL.COM ,extra-admin@example.com' },
     }))
     return fullResponse ? result : result.mails
@@ -179,5 +179,13 @@ test('PHP and FTP redirect guest emails include only safe booking links and expl
         }
       }
     }
+  }
+})
+
+test('PHP rejects missing or unaccepted consent before sending email', () => {
+  for (const privacyConsent of [undefined, false, 'true', 1]) {
+    const result = deliver('dist-ftp/fursa-release/php/send-email.php', 'guest@example.com', 'chalet-zenit', '', { privacyConsent }, true)
+    assert.equal(result.fieldErrors.privacyConsent, 'consent')
+    assert.deepEqual(result.mails, [])
   }
 })

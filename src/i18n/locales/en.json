@@ -78,7 +78,8 @@
           "guests": "Enter a whole number of guests from 1 to 100",
           "required": "Please complete all fields",
           "email": "Enter a valid email address",
-          "send": "Could not send your details. Please try again"
+          "send": "Could not send your details. Please try again",
+          "consent": "Please consent to the processing of your personal data to continue"
         },
         "continue": "Continue with bonus",
         "agreement": "By clicking “Continue with bonus”, you agree to the",
@@ -92,7 +93,9 @@
           "loading": "Loading {provider} widget...",
           "ready": "Widget loaded",
           "error": "Could not load the widget"
-        }
+        },
+        "consentText": "I consent to the processing of my personal data collected through the FursaDolomiti website and to their possible sharing with the selected hotel or chalet, solely for handling my inquiry and verifying any potential booking.",
+        "consentInfo": "For more information, please see the"
       },
       "devOnlyNotice": "This hotel is displayed only on dev",
       "features": "Features:",

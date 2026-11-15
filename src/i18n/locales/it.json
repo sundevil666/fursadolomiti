@@ -78,11 +78,12 @@
           "guests": "Inserisci un numero intero di ospiti da 1 a 100",
           "required": "Compila tutti i campi",
           "email": "Inserisci un indirizzo email valido",
-          "send": "Impossibile inviare i dati. Riprova"
+          "send": "Impossibile inviare i dati. Riprova",
+          "consent": "Per continuare, acconsenti al trattamento dei tuoi dati personali"
         },
         "continue": "Continua con il bonus",
         "agreement": "Facendo clic su “Continua con il bonus”, accetti la",
-        "privacyPolicy": "Informativa sulla privacy",
+        "privacyPolicy": "l’Informativa sulla Privacy",
         "close": "Chiudi finestra",
         "widgetTitle": "Prenotazione\n{hotel}",
         "widgetDescription": "Scegli date, ospiti e camera preferita nel widget ufficiale di prenotazione {provider}.",
@@ -92,7 +93,9 @@
           "loading": "Caricamento widget {provider}...",
           "ready": "Widget caricato",
           "error": "Impossibile caricare il widget"
-        }
+        },
+        "consentText": "Acconsento al trattamento dei miei dati personali raccolti tramite il sito FursaDolomiti e alla loro eventuale comunicazione all’hotel o chalet selezionato, esclusivamente per la gestione della mia richiesta e la verifica dell’eventuale prenotazione.",
+        "consentInfo": "Per maggiori informazioni, consulta"
       },
       "devOnlyNotice": "Questo hotel è visibile solo su dev",
       "features": "Caratteristiche:",

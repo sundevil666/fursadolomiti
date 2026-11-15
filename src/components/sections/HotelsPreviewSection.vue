@@ -50,6 +50,7 @@ const bookingExpertStatus = ref<'idle' | 'loading' | 'ready' | 'error'>('idle')
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
+const privacyConsent = ref(false)
 const preferredDates = ref('')
 const guests = ref('')
 const isRequestHotel = computed(() => Boolean(activeBookingHotel.value) && bookingMode.value === 'request')
@@ -57,9 +58,9 @@ const requiresBookingDetails = computed(() => Boolean(activeBookingHotel.value) 
 const formError = ref('')
 const formStatus = ref<'idle' | 'sending' | 'redirecting'>('idle')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
-const bookingFields = ['firstName', 'lastName', 'email', 'preferredDates', 'guests'] as const
+const bookingFields = ['firstName', 'lastName', 'email', 'preferredDates', 'guests', 'privacyConsent'] as const
 type BookingField = typeof bookingFields[number]
-type FieldErrorCode = 'required' | 'email' | 'datesTooLong' | 'guests'
+type FieldErrorCode = 'required' | 'email' | 'datesTooLong' | 'guests' | 'consent'
 const fieldErrors = ref<Partial<Record<BookingField, FieldErrorCode>>>({})
 const validationAttempt = ref(0)
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -294,6 +295,7 @@ const openBookingModal = (hotelId: string) => {
   firstName.value = ''
   lastName.value = ''
   email.value = ''
+  privacyConsent.value = false
   formError.value = ''
   fieldErrors.value = {}
   validationAttempt.value = 0
@@ -726,6 +728,7 @@ const reportWidgetTracking = async (widgetAction: string, redirectUrl = '') => {
         firstName: firstName.value.trim(),
         lastName: lastName.value.trim(),
         email: email.value.trim(),
+        privacyConsent: privacyConsent.value,
         widgetProvider: getWidgetProvider(),
         widgetAction,
         widgetSelection,
@@ -807,6 +810,11 @@ const submitBookingRequest = async () => {
   formError.value = ''
 
   fieldErrors.value = {}
+  if (!privacyConsent.value) {
+    fieldErrors.value.privacyConsent = 'consent'
+    await focusInvalidField()
+    return
+  }
   // Catch malformed email immediately; the server remains authoritative for the full form.
   if (email.value.trim() && !emailPattern.test(email.value.trim())) {
     validateEmail()
@@ -834,6 +842,7 @@ const submitBookingRequest = async () => {
         firstName: firstName.value.trim(),
         lastName: lastName.value.trim(),
         email: email.value.trim(),
+        privacyConsent: privacyConsent.value,
         hotelId: hotel?.id,
         hotel: hotelName,
         promoCode: hotel?.promoCode,
@@ -851,7 +860,7 @@ const submitBookingRequest = async () => {
     const result = await response.json()
     if (!response.ok) {
       if (response.status === 400 && result.fieldErrors && typeof result.fieldErrors === 'object') {
-        const codes: FieldErrorCode[] = ['required', 'email', 'datesTooLong', 'guests']
+        const codes: FieldErrorCode[] = ['required', 'email', 'datesTooLong', 'guests', 'consent']
         for (const field of bookingFields) {
           if (codes.includes(result.fieldErrors[field])) fieldErrors.value[field] = result.fieldErrors[field]
         }
@@ -1395,6 +1404,27 @@ onBeforeUnmount(() => {
                     </span>
                   </label>
                 </template>
+                <div class="booking-modal__consent">
+                  <label class="booking-modal__consent-label">
+                    <input
+                      v-model="privacyConsent"
+                      type="checkbox"
+                      required
+                      :aria-invalid="Boolean(fieldErrors.privacyConsent)"
+                      :aria-describedby="fieldErrors.privacyConsent ? 'booking-error-privacyConsent' : undefined"
+                      @change="clearFieldError('privacyConsent')"
+                    />
+                    <span>{{ t('home.hotels.bookingModal.consentText') }}</span>
+                  </label>
+                  <p class="booking-modal__consent-info">
+                    {{ t('home.hotels.bookingModal.consentInfo') }}
+                    <RouterLink :to="{ name: 'privacy-policy' }" target="_blank" rel="noopener">
+                      {{ t('home.hotels.bookingModal.privacyPolicy') }}</RouterLink>.
+                  </p>
+                  <p v-if="fieldErrors.privacyConsent" id="booking-error-privacyConsent" class="booking-modal__field-error" role="alert">
+                    {{ fieldErrorText('privacyConsent') }}
+                  </p>
+                </div>
               </fieldset>
               <p
                 class="booking-modal__required"
@@ -1468,6 +1498,36 @@ onBeforeUnmount(() => {
 }
 
 .booking-modal__field textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #c9d3ce; border-radius: 10px; font: inherit; resize: vertical; }
+
+.booking-modal__consent {
+  margin: 8px 0 18px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.booking-modal__consent-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.booking-modal__consent-label input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin: 4px 0 0;
+  accent-color: #345b47;
+}
+
+.booking-modal__consent-info {
+  margin: 8px 0 0 28px;
+}
+
+.booking-modal__consent-info a {
+  color: inherit;
+  text-decoration: underline;
+}
 
 .booking-modal__fields {
   min-width: 0;

@@ -117,6 +117,7 @@ export default async function handler(request, response) {
   const isBookingRequest = !isWidgetTrackingEvent && (['request', 'redirect'].includes(bookingMode) || Boolean(hotelRecipient))
   // Return every invalid field in one response; the client only renders these codes.
   const fieldErrors = {}
+  if (request.body?.privacyConsent !== true) fieldErrors.privacyConsent = 'consent'
   if (!normalizedFirstName) fieldErrors.firstName = 'required'
   if (!normalizedLastName) fieldErrors.lastName = 'required'
   if (!normalizedEmail) fieldErrors.email = 'required'

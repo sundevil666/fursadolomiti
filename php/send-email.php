@@ -317,6 +317,7 @@ $guests = filter_var($requestBody['guests'] ?? null, FILTER_VALIDATE_INT);
 $isBookingRequest = !$isWidgetTrackingEvent && (in_array($bookingMode, ['request', 'redirect'], true) || (bool) $hotelRecipient);
 // Keep the field error contract identical to the JavaScript handler.
 $fieldErrors = [];
+if (($requestBody['privacyConsent'] ?? null) !== true) $fieldErrors['privacyConsent'] = 'consent';
 if ($normalizedFirstName === '') $fieldErrors['firstName'] = 'required';
 if ($normalizedLastName === '') $fieldErrors['lastName'] = 'required';
 if ($normalizedEmail === '') $fieldErrors['email'] = 'required';
