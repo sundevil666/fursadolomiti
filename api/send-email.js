@@ -553,6 +553,26 @@ export default async function handler(request, response) {
   }
   const bookingEmail = (language, customer) => {
     const copy = copies[language] || copies.en
+    const redirectNotes = {
+  "ru": "Спасибо за интерес к отелю «{hotel}»!\nЭто письмо не является подтверждением бронирования.\nЕсли вы уже завершили оформление на сайте отеля, повторно отправлять заявку или оформлять бронирование по ссылке из этого письма не нужно. Дальнейший ответ вы получите от отеля.\nЕсли вы ещё не завершили оформление, необходимо завершить процесс непосредственно на сайте отеля.",
+  "en": "Thank you for your interest in {hotel}!\nThis email is not a booking confirmation.\nIf you have already completed the process on the hotel’s website, you do not need to submit another request or book again using the link in this email. The hotel will respond to you directly.\nIf you have not finished yet, you must complete the process directly on the hotel’s website.",
+  "it": "Grazie per il vostro interesse per {hotel}!\nQuesta email non costituisce una conferma di prenotazione.\nSe avete già completato la procedura sul sito della struttura, non dovete inviare un’altra richiesta né prenotare di nuovo tramite il link in questa email. Riceverete la risposta direttamente dalla struttura.\nSe non avete ancora terminato, è necessario completare la procedura direttamente sul sito della struttura."
+}
+    const redirectLabels = {"ru": "Перейти на сайт отеля", "en": "Go to the hotel’s website", "it": "Vai al sito della struttura"}
+    const note = customer && bookingMode === 'redirect'
+      ? (redirectNotes[language] || redirectNotes.en).replace('{hotel}', normalizedHotel)
+      : copy.note
+    let bookingUrl = ''
+    if (customer && bookingMode === 'redirect') {
+      try {
+        const url = new URL(normalizedRedirectUrl)
+        if (['https:', 'http:'].includes(url.protocol)) bookingUrl = url.href
+      } catch { /* No booking link when the destination is missing or invalid. */ }
+    }
+    const linkLabel = redirectLabels[language] || redirectLabels.en
+    const bookingLinkHtml = bookingUrl
+      ? `<p style="margin:0 0 24px;"><a href="${escapeHtml(bookingUrl)}" style="display:inline-block;padding:12px 20px;background-color:#175445;color:#ffffff;text-decoration:none;border-radius:8px;">${escapeHtml(linkLabel)}</a></p>`
+      : ''
     const title = `${(roleSubjects[language] || roleSubjects.en)[customer ? 'guest' : 'hotel'].split(' · ')[0]} · ${copy.title}`
     const fields = [
       [copy.hotel, normalizedHotel],
@@ -574,11 +594,11 @@ export default async function handler(request, response) {
       ? `<tr><td style="background-color:#e8dfcc;"><img src="${safe.hotelImage}" width="680" alt="${safe.hotel}" style="display:block;width:100%;max-width:680px;height:auto;max-height:300px;object-fit:cover;border:0;"></td></tr>`
       : ''
     const thanksHtml = customer
-      ? `<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">${escapeHtml(copy.thanks)}</p><p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;">${escapeHtml(copy.note).replaceAll('\n', '<br>')}</p>`
+      ? `<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">${escapeHtml(copy.thanks)}</p><p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;">${escapeHtml(note).replaceAll('\n', '<br>')}</p>`
       : ''
     const lines = [
       title, '',
-      ...(customer ? [copy.thanks, '', copy.note, ''] : []),
+      ...(customer ? [copy.thanks, '', note, '', ...(bookingUrl ? [`${linkLabel}: ${bookingUrl}`, ''] : [])] : []),
       `${copy.hotel}: ${normalizedHotel}`,
       `${copy.name}: ${fullName}`,
       ...(!customer ? [`${copy.email}: ${normalizedEmail}`] : []),
@@ -597,6 +617,7 @@ export default async function handler(request, response) {
     ${imageHtml}
     <tr><td style="padding:28px 32px 32px;">
       ${thanksHtml}
+      ${bookingLinkHtml}
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">${detailRows}</table>
       <div style="margin-top:24px;padding-top:18px;border-top:1px solid #e8dfcc;color:#998d7b;font-size:11px;line-height:17px;text-align:center;">fursadolomiti.com</div>
     </td></tr>

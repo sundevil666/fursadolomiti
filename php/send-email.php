@@ -749,13 +749,33 @@ Per prenotare è necessario completare la procedura direttamente sul sito della 
 'email' => 'Email',
 'dates' => 'Date desiderate e richieste',
 'guests' => 'Numero di ospiti']];
-$bookingEmail = static function (string $language, bool $customer) use ($roleSubjects, $customerCopies, $normalizedHotel, $fullName, $normalizedEmail, $isBookingRequest, $preferredDates, $guests, $safe): array {
+$bookingEmail = static function (string $language, bool $customer) use ($bookingMode, $normalizedRedirectUrl, $roleSubjects, $customerCopies, $normalizedHotel, $fullName, $normalizedEmail, $isBookingRequest, $preferredDates, $guests, $safe): array {
     $copy = $customerCopies[$language] ?? $customerCopies['en'];
+    $redirectNotes = ['ru' => 'Спасибо за интерес к отелю «{hotel}»!
+Это письмо не является подтверждением бронирования.
+Если вы уже завершили оформление на сайте отеля, повторно отправлять заявку или оформлять бронирование по ссылке из этого письма не нужно. Дальнейший ответ вы получите от отеля.
+Если вы ещё не завершили оформление, необходимо завершить процесс непосредственно на сайте отеля.', 'en' => 'Thank you for your interest in {hotel}!
+This email is not a booking confirmation.
+If you have already completed the process on the hotel’s website, you do not need to submit another request or book again using the link in this email. The hotel will respond to you directly.
+If you have not finished yet, you must complete the process directly on the hotel’s website.', 'it' => 'Grazie per il vostro interesse per {hotel}!
+Questa email non costituisce una conferma di prenotazione.
+Se avete già completato la procedura sul sito della struttura, non dovete inviare un’altra richiesta né prenotare di nuovo tramite il link in questa email. Riceverete la risposta direttamente dalla struttura.
+Se non avete ancora terminato, è necessario completare la procedura direttamente sul sito della struttura.'];
+    $redirectLabels = ['ru' => 'Перейти на сайт отеля', 'en' => 'Go to the hotel’s website', 'it' => 'Vai al sito della struttura'];
+    $note = $customer && $bookingMode === 'redirect'
+        ? str_replace('{hotel}', $normalizedHotel, $redirectNotes[$language] ?? $redirectNotes['en'])
+        : $copy['note'];
+    $bookingUrl = '';
+    if ($customer && $bookingMode === 'redirect' && filter_var($normalizedRedirectUrl, FILTER_VALIDATE_URL) && in_array(strtolower(parse_url($normalizedRedirectUrl, PHP_URL_SCHEME) ?? ''), ['http', 'https'], true)) {
+        $bookingUrl = $normalizedRedirectUrl;
+    }
+    $linkLabel = $redirectLabels[$language] ?? $redirectLabels['en'];
+    $bookingLinkHtml = $bookingUrl !== '' ? '<p style="margin:0 0 24px;"><a href="' . escapeHtmlValue($bookingUrl) . '" style="display:inline-block;padding:12px 20px;background-color:#175445;color:#ffffff;text-decoration:none;border-radius:8px;">' . escapeHtmlValue($linkLabel) . '</a></p>' : '';
     $roleSubject = ($roleSubjects[$language] ?? $roleSubjects['en'])[$customer ? 'guest' : 'hotel'];
     $title = explode(' · ', $roleSubject)[0] . ' · ' . $copy['title'];
     $lines = array_merge(
         [$title, ''],
-        $customer ? [$copy['thanks'], '', $copy['note'], ''] : [],
+        $customer ? [$copy['thanks'], '', $note, '', ...($bookingUrl !== '' ? [$linkLabel . ': ' . $bookingUrl, ''] : [])] : [],
         [
             $copy['hotel'] . ': ' . $normalizedHotel,
             $copy['name'] . ': ' . $fullName,
@@ -774,7 +794,7 @@ $bookingEmail = static function (string $language, bool $customer) use ($roleSub
     }
     $detailRows = implode('', array_map(static fn (array $field): string => renderRow(escapeHtmlValue($field[0]), nl2br(escapeHtmlValue($field[1])), true), $fields));
     $imageHtml = $safe['hotelImage'] !== '' ? '<tr><td style="background-color:#e8dfcc;"><img src="' . $safe['hotelImage'] . '" width="680" alt="' . $safe['hotel'] . '" style="display:block;width:100%;max-width:680px;height:auto;max-height:300px;object-fit:cover;border:0;"></td></tr>' : '';
-    $thanksHtml = $customer ? '<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">' . escapeHtmlValue($copy['thanks']) . '</p><p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;">' . nl2br(escapeHtmlValue($copy['note'])) . '</p>' : '';
+    $thanksHtml = $customer ? '<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">' . escapeHtmlValue($copy['thanks']) . '</p><p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;">' . nl2br(escapeHtmlValue($note)) . '</p>' : '';
     $safeTitle = escapeHtmlValue($title);
     $safeHotel = $safe['hotel'];
     $html = <<<HTML
@@ -788,6 +808,7 @@ $bookingEmail = static function (string $language, bool $customer) use ($roleSub
     {$imageHtml}
     <tr><td style="padding:28px 32px 32px;">
       {$thanksHtml}
+      {$bookingLinkHtml}
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background-color:#ffffff;border:1px solid #e8dfcc;border-radius:10px;">{$detailRows}</table>
       <div style="margin-top:24px;padding-top:18px;border-top:1px solid #e8dfcc;color:#998d7b;font-size:11px;line-height:17px;text-align:center;">fursadolomiti.com</div>
     </td></tr>

@@ -269,3 +269,21 @@ test('validation reports all invalid fields together without sending mail', asyn
   assert.deepEqual(result.fieldErrors, { firstName: 'required', lastName: 'required', email: 'email', preferredDates: 'required', guests: 'guests' })
   assert.equal(sent.length, 0)
 })
+
+test('redirect guest email includes a safe booking link and prevents duplicate bookings', async () => {
+  for (const locale of ['ru', 'en', 'it']) {
+    for (const redirectUrl of ['https://hotel.example/booking?a=1&b=2', 'javascript:alert(1)', '']) {
+      const { sent } = await run(locale, false, { bookingMode: 'redirect', redirectUrl })
+      const guest = sent.find(mail => mail.to === body.email)
+      const warning = { ru: 'повторно отправлять заявку', en: 'you do not need to submit another request', it: 'non dovete inviare un’altra richiesta' }[locale]
+      assert.ok(guest.text.includes(warning))
+      assert.ok(guest.html.includes(warning))
+      if (redirectUrl.startsWith('https:')) {
+        assert.ok(guest.text.includes(redirectUrl))
+        assert.ok(guest.html.includes('href="https://hotel.example/booking?a=1&amp;b=2"'))
+      } else {
+        assert.doesNotMatch(guest.html, /href="(?:javascript:|https:\/\/hotel.example)/)
+      }
+    }
+  }
+})

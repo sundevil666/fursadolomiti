@@ -162,3 +162,22 @@ test('PHP returns the same structured field errors as JavaScript', () => {
     assert.equal(result.mails.length, 0)
   }
 })
+
+test('PHP and FTP redirect guest emails include only safe booking links and explain when to use them', () => {
+  for (const path of ['php/send-email.php', 'dist-ftp/fursa-release/php/send-email.php']) {
+    for (const locale of ['ru', 'en', 'it']) {
+      for (const redirectUrl of ['https://hotel.example/booking?a=1&b=2', 'javascript:alert(1)', '']) {
+        const [, guest] = deliver(path, 'guest@example.com', 'chalet-zenit', '', { locale, bookingMode: 'redirect', redirectUrl })
+        const warning = { ru: 'повторно отправлять заявку', en: 'you do not need to submit another request', it: 'non dovete inviare un’altra richiesta' }[locale]
+        assert.ok(guest.text.includes(warning))
+        assert.ok(guest.html.includes(warning))
+        if (redirectUrl.startsWith('https:')) {
+          assert.ok(guest.text.includes(redirectUrl))
+          assert.ok(guest.html.includes('href="https://hotel.example/booking?a=1&amp;b=2"'))
+        } else {
+          assert.doesNotMatch(guest.html, /href="(?:javascript:|https:\/\/hotel.example)/)
+        }
+      }
+    }
+  }
+})
