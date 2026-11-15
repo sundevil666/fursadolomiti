@@ -87,6 +87,9 @@ test('separate admin, simple hotel and localized customer emails', async () => {
     }[locale]
     assert.ok(sent[0].subject.includes(roleLabels[0]))
     assert.ok(customer.subject.includes(roleLabels[1]))
+    assert.ok(sent[0].html.includes(roleLabels[0]))
+    assert.ok(customer.html.includes(roleLabels[1]))
+    assert.ok(customer.text.includes(roleLabels[1]))
     assert.match(hotel.subject, locale === 'it' ? /All’hotel · Richiesta di prenotazione/ : /For the hotel/)
     assert.equal(new Set([sent[0].subject, customer.subject, hotel.subject]).size, 3)
     assert.match(customer.text, new RegExp(thanks))
@@ -214,6 +217,8 @@ test('admin mail explains widget, redirect and missing email without leaking mar
     const { sent, status } = await run('en', false, overrides)
     assert.equal(status, 200)
     for (const value of expected) assert.ok(sent[0].text.includes(value))
+    assert.ok(sent[0].subject.includes(expected[0]))
+    assert.match(sent[0].text, /Request status:/)
     assert.ok(!sent[0].html.includes('<value>'))
     assert.ok(sent[0].html.includes('Booking method'))
   }

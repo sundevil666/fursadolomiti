@@ -65,11 +65,19 @@ test('PHP and FTP apply locale and delivery rules to all three booking modes', (
       for (const bookingMode of ['request', 'redirect', 'widget']) {
         const mails = deliver(path, 'guest@example.com', 'chalet-zenit', '', { locale, bookingMode, promoCode: '', ...(bookingMode === 'widget' ? { preferredDates: '', guests: 0 } : {}) })
         assert.equal(mails.length, bookingMode === 'request' ? 3 : 2)
-        assert.ok(!mails[0].subject.includes(labels[0]))
+        const method = { ru: { request: 'Заявка по email', widget: 'Бронирование через виджет', redirect: 'Переход по ссылке' }, en: { request: 'Email request', widget: 'Booking through a widget', redirect: 'Redirect to booking website' }, it: { request: 'Richiesta via email', widget: 'Prenotazione tramite widget', redirect: 'Reindirizzamento al sito di prenotazione' } }[locale][bookingMode]
+        assert.ok(mails[0].subject.includes(method))
+        assert.ok(mails[0].html.includes(method))
+        assert.ok(mails[0].text.includes(method))
+        assert.ok(mails[0].subject.includes(labels[0]))
+        assert.ok(mails[0].html.includes(labels[0]))
+        assert.ok(mails[0].text.includes(labels[0]))
         assert.ok(mails.every(mail => !mail.subject.includes('Vercel')))
-        assert.ok(!mails[1].subject.includes(labels[1]))
+        assert.ok(mails[1].subject.includes(labels[1]))
+        assert.ok(mails[1].html.includes(labels[1]))
+        assert.ok(mails[1].text.includes(labels[1]))
         if (bookingMode === 'request') {
-          assert.ok(!mails[2].subject.includes(locale === 'it' ? 'All’hotel' : 'For the hotel'))
+          assert.ok(mails[2].subject.includes(locale === 'it' ? 'All’hotel' : 'For the hotel'))
           assert.ok(mails[2].text.includes(locale === 'it' ? 'Date desiderate e richieste' : 'Preferred dates and requests'))
         }
         if (bookingMode !== 'widget') assert.ok(mails.every(mail => mail.text.includes('Flexible dates')))

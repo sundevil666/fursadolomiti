@@ -478,7 +478,7 @@ $locationTimezone = getHeaderValue($headers, 'x-vercel-ip-timezone')
     ?? getHeaderValue($headers, 'x-timezone')
     ?? $adminCopy['unknown'];
 $subjectDate = substr($normalizedSubmittedAt, 0, 10);
-$subject = 'FursaDolomiti — ' . $adminCopy['title'] . ' — ' . $normalizedHotel . ' — ' . $fullName . ' — ' . $subjectDate;
+
 
 $safe = [
     'fullName' => escapeHtmlValue($fullName),
@@ -518,7 +518,12 @@ $localeUpper = escapeHtmlValue(strtoupper($normalizedLocale));
 $bookingMethod = $isWidgetTrackingEvent || $bookingMode === 'widget'
     ? $adminCopy['widgetBooking']
     : ($bookingMode === 'redirect' ? $adminCopy['linkBooking'] : $adminCopy['emailRequest']);
+$adminTitle = explode(' · ', $roleSubject['admin'])[0] . ' · ' . ($isWidgetTrackingEvent ? $adminCopy['tracking'] : $adminCopy['title']) . ' · ' . $bookingMethod;
+$subject = 'FursaDolomiti — ' . $adminTitle . ' — ' . $normalizedHotel . ' — ' . $fullName . ' — ' . $subjectDate;
+$modeNotes = ['ru' => ['Статус заявки', 'Получены контакты гостя для бронирования через виджет. Дальнейшее оформление проходит в виджете.', 'Получены контакты гостя для бронирования на внешнем сайте по ссылке ниже.', 'Получена заявка по email. Администратору или отелю нужно связаться с гостем для дальнейшего оформления.'], 'en' => ['Request status', 'Guest contact details received for booking through a widget. The guest completes the booking in the widget.', 'Guest contact details received for booking on the external website linked below.', 'Email request received. The administrator or hotel needs to contact the guest to arrange the booking.'], 'it' => ['Stato della richiesta', 'Ricevuti i recapiti dell’ospite per la prenotazione tramite widget. L’ospite prosegue nel widget.', 'Ricevuti i recapiti dell’ospite per la prenotazione sul sito esterno indicato sotto.', 'Richiesta ricevuta via email. L’amministratore o la struttura deve contattare l’ospite per proseguire.']];
+$modeNote = $modeNotes[$emailLocale] ?? $modeNotes['en'];
 $bookingDetails = [[$adminCopy['bookingMethod'], $bookingMethod]];
+$bookingDetails[] = [$modeNote[0], $modeNote[$isWidgetTrackingEvent || $bookingMode === 'widget' ? 1 : ($bookingMode === 'redirect' ? 2 : 3)]];
 if ($isWidgetTrackingEvent || $bookingMode === 'widget') {
     $bookingDetails[] = [$adminCopy['provider'], $normalizedWidgetProvider !== '' ? $normalizedWidgetProvider : $adminCopy['unknown']];
 } elseif ($bookingMode === 'redirect') {
@@ -567,7 +572,7 @@ $htmlMessage = $isWidgetTrackingEvent
         <tr>
           <td style="padding:28px 32px 30px;background-color:#175445;color:#fffaf0;">
             <div style="color:#d7e3d9;font-size:11px;line-height:16px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">FursaDolomiti · Widget Tracking</div>
-            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">' . $adminCopy['tracking'] . '</div>
+            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">' . escapeHtmlValue($adminTitle) . '</div>
             <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;"><strong style="color:#ffffff;">' . $safe['hotel'] . '</strong> · ' . escapeHtmlValue($normalizedWidgetProvider) . '</div>
           </td>
         </tr>
@@ -614,7 +619,7 @@ $htmlMessage = $isWidgetTrackingEvent
                 <td align="right" style="color:#d7e3d9;font-size:11px;line-height:16px;">' . $localeUpper . '</td>
               </tr>
             </table>
-            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">' . $adminCopy['title'] . '</div>
+            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">' . escapeHtmlValue($adminTitle) . '</div>
             <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;"><strong style="color:#ffffff;">' . $safe['fullName'] . '</strong> ' . $adminCopy['interest'] . ' <strong style="color:#ffffff;">' . $safe['hotel'] . '</strong></div>
             <div style="margin-top:18px;display:inline-block;padding:8px 12px;background-color:#fffaf0;border-radius:999px;color:#175445;font-size:12px;line-height:16px;font-weight:700;">' . $adminCopy['promo'] . ': ' . $safe['promoCode'] . '</div>
           </td>
@@ -672,7 +677,7 @@ $htmlMessage = $isWidgetTrackingEvent
 
 $message = $isWidgetTrackingEvent
     ? implode("\n", [
-        $adminCopy['tracking'],
+        $adminTitle,
         '',
         $adminCopy['hotel'] . ': ' . $normalizedHotel,
         ...$bookingDetailsText,
@@ -690,7 +695,7 @@ $message = $isWidgetTrackingEvent
         $adminCopy['locationTimezone'] . ': ' . $locationTimezone,
     ])
     : implode("\n", [
-    $adminCopy['title'],
+    $adminTitle,
     '',
     $adminCopy['firstName'] . ': ' . $normalizedFirstName,
     $adminCopy['lastName'] . ': ' . $normalizedLastName,
@@ -743,8 +748,10 @@ $customerCopies = ['ru' => ['subject' => 'Ваша заявка получена
 'guests' => 'Numero di ospiti']];
 $bookingEmail = static function (string $language, bool $customer) use ($roleSubjects, $customerCopies, $normalizedHotel, $fullName, $normalizedEmail, $isBookingRequest, $preferredDates, $guests, $safe): array {
     $copy = $customerCopies[$language] ?? $customerCopies['en'];
-    $title = $copy['title'];
+    $roleSubject = ($roleSubjects[$language] ?? $roleSubjects['en'])[$customer ? 'guest' : 'hotel'];
+    $title = explode(' · ', $roleSubject)[0] . ' · ' . $copy['title'];
     $lines = array_merge(
+        [$title, ''],
         $customer ? [$copy['thanks'], '', $copy['note'], ''] : [],
         [
             $copy['hotel'] . ': ' . $normalizedHotel,
@@ -785,7 +792,7 @@ $bookingEmail = static function (string $language, bool $customer) use ($roleSub
 </div>
 HTML;
     return [
-        'subject' => 'FursaDolomiti — ' . ($customer ? $copy['subject'] : $copy['title']) . ' — ' . $normalizedHotel,
+        'subject' => 'FursaDolomiti — ' . $roleSubject . ' — ' . $normalizedHotel,
         'text' => $text,
         'html' => $html,
     ];

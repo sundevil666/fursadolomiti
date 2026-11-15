@@ -111,7 +111,7 @@ export default async function handler(request, response) {
   const bookingMode = String(request.body?.bookingMode || '').trim()
   const hotelRecipient = !isWidgetTrackingEvent && !['widget', 'redirect'].includes(bookingMode) && hotelRecipients.get(normalizedHotelId)
   const isEmailOnlyRequest = !isWidgetTrackingEvent && !['widget', 'redirect'].includes(bookingMode) && Boolean(hotelRecipient)
-  const subjectPrefix = isEmailOnlyRequest ? '[Vercel] ' : ''
+  const subjectPrefix = '[Vercel] '
   const preferredDates = String(request.body?.preferredDates || '').trim()
   const guests = Number(request.body?.guests)
   const isBookingRequest = !isWidgetTrackingEvent && (['request', 'redirect'].includes(bookingMode) || Boolean(hotelRecipient))
@@ -278,7 +278,6 @@ export default async function handler(request, response) {
   const city = decodeHeader(getHeader(request, 'x-vercel-ip-city'))
   const locationTimezone = getHeader(request, 'x-vercel-ip-timezone') || adminCopy.unknown
   const subjectDate = normalizedSubmittedAt.slice(0, 10)
-  const subject = `${subjectPrefix}FursaDolomiti — ${roleSubject.admin} — ${normalizedHotel} — ${fullName} — ${subjectDate}`
   const safe = {
     fullName: escapeHtml(fullName),
     firstName: escapeHtml(normalizedFirstName),
@@ -312,7 +311,12 @@ export default async function handler(request, response) {
   const bookingMethod = isWidgetTrackingEvent || bookingMode === 'widget'
     ? adminCopy.widgetBooking
     : bookingMode === 'redirect' ? adminCopy.linkBooking : adminCopy.emailRequest
+  const adminTitle = `${roleSubject.admin.split(' · ')[0]} · ${isWidgetTrackingEvent ? adminCopy.tracking : adminCopy.title} · ${bookingMethod}`
+  const subject = `${subjectPrefix}FursaDolomiti — ${adminTitle} — ${normalizedHotel} — ${fullName} — ${subjectDate}`
+  const modeNotes = {"ru": ["Статус заявки", "Получены контакты гостя для бронирования через виджет. Дальнейшее оформление проходит в виджете.", "Получены контакты гостя для бронирования на внешнем сайте по ссылке ниже.", "Получена заявка по email. Администратору или отелю нужно связаться с гостем для дальнейшего оформления."], "en": ["Request status", "Guest contact details received for booking through a widget. The guest completes the booking in the widget.", "Guest contact details received for booking on the external website linked below.", "Email request received. The administrator or hotel needs to contact the guest to arrange the booking."], "it": ["Stato della richiesta", "Ricevuti i recapiti dell’ospite per la prenotazione tramite widget. L’ospite prosegue nel widget.", "Ricevuti i recapiti dell’ospite per la prenotazione sul sito esterno indicato sotto.", "Richiesta ricevuta via email. L’amministratore o la struttura deve contattare l’ospite per proseguire."]}
+  const modeNote = modeNotes[emailLocale] || modeNotes.en
   const bookingDetails = [[adminCopy.bookingMethod, bookingMethod]]
+  bookingDetails.push([modeNote[0], modeNote[isWidgetTrackingEvent || bookingMode === 'widget' ? 1 : bookingMode === 'redirect' ? 2 : 3]])
   if (isWidgetTrackingEvent || bookingMode === 'widget') {
     bookingDetails.push([adminCopy.provider, normalizedWidgetProvider || adminCopy.unknown])
   } else if (bookingMode === 'redirect') {
@@ -357,7 +361,7 @@ export default async function handler(request, response) {
         <tr>
           <td style="padding:28px 32px 30px;background-color:#175445;color:#fffaf0;">
             <div style="color:#d7e3d9;font-size:11px;line-height:16px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">FursaDolomiti · Widget Tracking</div>
-            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">${adminCopy.tracking}</div>
+            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">${escapeHtml(adminTitle)}</div>
             <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;"><strong style="color:#ffffff;">${safe.hotel}</strong> · ${escapeHtml(normalizedWidgetProvider)}</div>
           </td>
         </tr>
@@ -406,7 +410,7 @@ export default async function handler(request, response) {
                 <td align="right" style="color:#d7e3d9;font-size:11px;line-height:16px;">${safe.locale.toUpperCase()}</td>
               </tr>
             </table>
-            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">${adminCopy.title}</div>
+            <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">${escapeHtml(adminTitle)}</div>
             <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;"><strong style="color:#ffffff;">${safe.fullName}</strong> ${adminCopy.interest} <strong style="color:#ffffff;">${safe.hotel}</strong></div>
             <div style="margin-top:18px;display:inline-block;padding:8px 12px;background-color:#fffaf0;border-radius:999px;color:#175445;font-size:12px;line-height:16px;font-weight:700;">${adminCopy.promo}: ${safe.promoCode}</div>
           </td>
@@ -465,7 +469,7 @@ export default async function handler(request, response) {
     </div>`
   const message = isWidgetTrackingEvent
     ? [
-        adminCopy.tracking,
+        adminTitle,
         '',
         `${adminCopy.hotel}: ${normalizedHotel}`,
         ...bookingDetailsText,
@@ -485,7 +489,7 @@ export default async function handler(request, response) {
         `${adminCopy.locationTimezone}: ${locationTimezone}`,
       ].join('\n')
     : [
-        adminCopy.title,
+        adminTitle,
         '',
         `${adminCopy.firstName}: ${normalizedFirstName}`,
         `${adminCopy.lastName}: ${normalizedLastName}`,
@@ -549,7 +553,7 @@ export default async function handler(request, response) {
   }
   const bookingEmail = (language, customer) => {
     const copy = copies[language] || copies.en
-    const title = copy.title
+    const title = `${(roleSubjects[language] || roleSubjects.en)[customer ? 'guest' : 'hotel'].split(' · ')[0]} · ${copy.title}`
     const fields = [
       [copy.hotel, normalizedHotel],
       [copy.name, fullName],
@@ -573,6 +577,7 @@ export default async function handler(request, response) {
       ? `<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">${escapeHtml(copy.thanks)}</p><p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;">${escapeHtml(copy.note)}</p>`
       : ''
     const lines = [
+      title, '',
       ...(customer ? [copy.thanks, '', copy.note, ''] : []),
       `${copy.hotel}: ${normalizedHotel}`,
       `${copy.name}: ${fullName}`,
