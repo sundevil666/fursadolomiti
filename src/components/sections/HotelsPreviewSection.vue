@@ -462,8 +462,6 @@ const mountBookingSuedtirolWidget = async (hotel: HotelPreview) => {
       id: widgetConfig.id,
       propertyId: widgetConfig.propertyId,
       lang: getBookingSuedtirolLocale(locale.value),
-      privacyURL: `${window.location.origin}/privacy-policy`,
-      termsURL: `${window.location.origin}/terms?lang=${getBookingSuedtirolLocale(locale.value)}`,
       source: 'fursadolomiti.com',
     }
 
