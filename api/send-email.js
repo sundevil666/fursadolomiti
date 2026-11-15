@@ -413,7 +413,7 @@ export default async function handler(request, response) {
             </table>
             <div style="margin-top:13px;color:#fffaf0;font-size:27px;line-height:34px;font-weight:700;">${escapeHtml(adminTitle)}</div>
             <div style="margin-top:12px;color:#f5eedf;font-size:15px;line-height:22px;"><strong style="color:#ffffff;">${safe.fullName}</strong> ${adminCopy.interest} <strong style="color:#ffffff;">${safe.hotel}</strong></div>
-            <div style="margin-top:18px;display:inline-block;padding:8px 12px;background-color:#fffaf0;border-radius:999px;color:#175445;font-size:12px;line-height:16px;font-weight:700;">${adminCopy.promo}: ${safe.promoCode}</div>
+            ${normalizedPromoCode ? `<div style="margin-top:18px;display:inline-block;padding:8px 12px;background-color:#fffaf0;border-radius:999px;color:#175445;font-size:12px;line-height:16px;font-weight:700;">${adminCopy.promo}: ${safe.promoCode}</div>` : ''}
           </td>
         </tr>
         ${
@@ -431,7 +431,7 @@ export default async function handler(request, response) {
               ${row(adminCopy.hotel, safe.hotel, true)}
               ${bookingDetailsHtml}
               ${isBookingRequest ? row(adminCopy.dates, escapeHtml(preferredDates), true) + row(adminCopy.guests, String(guests), true) : ''}
-              ${row(adminCopy.promo, safe.promoCode, true)}
+              ${normalizedPromoCode ? row(adminCopy.promo, safe.promoCode, true) : ''}
               ${row(adminCopy.date, safe.localDateTime, true)}
             </table>
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;">
@@ -501,7 +501,7 @@ export default async function handler(request, response) {
         ...(isBookingRequest
           ? [`${adminCopy.dates}: ${preferredDates}`, `${adminCopy.guests}: ${guests}`]
           : []),
-        `${adminCopy.promo}: ${normalizedPromoCode}`,
+        ...(normalizedPromoCode ? [`${adminCopy.promo}: ${normalizedPromoCode}`] : []),
         '',
         `${adminCopy.locale}: ${normalizedLocale}`,
         `${adminCopy.date}: ${normalizedLocalDateTime}`,
