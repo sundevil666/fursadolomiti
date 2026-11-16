@@ -47,6 +47,7 @@
       "subtitle": "Book direct at hotel rates, with perks and personal recommendations from FursaDolomiti.",
       "viewAll": "View all hotels",
       "bookWithBonus": "Book with a bonus",
+      "chaletBookWithBonus": "Booking with a bonus",
       "bookingModal": {
         "requestTitle": "Request to {hotel}",
         "redirectDescription": "Enter your preferred dates and number of guests. After submitting the request, you will continue to the hotel website to complete your booking.",

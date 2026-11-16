@@ -1116,7 +1116,7 @@ onBeforeUnmount(() => {
             class="fd-btn fd-btn--outline"
             @click.stop="openBookingModal(hotel.id)"
           >
-            <AnimatedText :text="t(hasBookingWidget(hotel) ? 'home.hotels.bookWithBonus' : 'home.hotels.bookingModal.requestSubmit')" tag="span" />
+            <AnimatedText :text="t(hotel.category === 'chalet' && hotel.id !== 'luxury-chalet-p' ? 'home.hotels.chaletBookWithBonus' : hasBookingWidget(hotel) ? 'home.hotels.bookWithBonus' : 'home.hotels.bookingModal.requestSubmit')" tag="span" />
           </q-btn>
         </div>
       </article>
