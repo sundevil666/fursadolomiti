@@ -1340,6 +1340,10 @@ onBeforeUnmount(() => {
                       @input="clearFieldError('preferredDates')"
                     />
                     <span class="booking-modal__error-slot" aria-live="polite">
+                      <span class="booking-modal__field-error booking-modal__error-reserve" aria-hidden="true">
+                        <q-icon name="error_outline" />
+                        {{ t('home.hotels.bookingModal.errors.datesTooLong') }}
+                      </span>
                       <Transition name="booking-error">
                         <span
                           v-if="fieldErrors.preferredDates"
@@ -1370,6 +1374,10 @@ onBeforeUnmount(() => {
                       @input="clearFieldError('guests')"
                     />
                     <span class="booking-modal__error-slot" aria-live="polite">
+                      <span class="booking-modal__field-error booking-modal__error-reserve" aria-hidden="true">
+                        <q-icon name="error_outline" />
+                        {{ t('home.hotels.bookingModal.errors.guests') }}
+                      </span>
                       <Transition name="booking-error">
                         <span
                           v-if="fieldErrors.guests"
@@ -1401,9 +1409,14 @@ onBeforeUnmount(() => {
                     <RouterLink :to="{ name: 'privacy-policy' }" target="_blank" rel="noopener">
                       {{ t('home.hotels.bookingModal.privacyPolicy') }}</RouterLink>.
                   </p>
-                  <p v-if="fieldErrors.privacyConsent" id="booking-error-privacyConsent" class="booking-modal__field-error" role="alert">
-                    {{ fieldErrorText('privacyConsent') }}
-                  </p>
+                  <div class="booking-modal__error-slot booking-modal__consent-error" aria-live="polite">
+                    <span class="booking-modal__field-error booking-modal__error-reserve" aria-hidden="true">
+                      {{ t('home.hotels.bookingModal.errors.consent') }}
+                    </span>
+                    <span v-if="fieldErrors.privacyConsent" id="booking-error-privacyConsent" class="booking-modal__field-error">
+                      {{ fieldErrorText('privacyConsent') }}
+                    </span>
+                  </div>
                 </div>
               </fieldset>
               <p
@@ -1411,7 +1424,10 @@ onBeforeUnmount(() => {
                 :class="{ 'booking-modal__required--error': formError }"
                 aria-live="polite"
               >
-                {{ formError || t('home.hotels.bookingModal.required') }}
+                <span class="booking-modal__error-reserve" aria-hidden="true">
+                  {{ t('home.hotels.bookingModal.errors.send') }}
+                </span>
+                <span>{{ formError || t('home.hotels.bookingModal.required') }}</span>
               </p>
 
               <div class="booking-modal__actions">
@@ -1480,7 +1496,7 @@ onBeforeUnmount(() => {
 .booking-modal__field textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #c9d3ce; border-radius: 10px; font: inherit; resize: vertical; }
 
 .booking-modal__consent {
-  margin: 8px 0 18px;
+  margin: 4px 0 8px;
   font-size: 13px;
   line-height: 1.6;
 }
@@ -1505,7 +1521,7 @@ onBeforeUnmount(() => {
   outline-offset: 2px;
 }
 .booking-modal__consent-info {
-  margin: 8px 0 0 28px;
+  margin: 4px 0 0 28px;
 }
 
 .booking-modal__consent-info a {
@@ -1536,13 +1552,29 @@ onBeforeUnmount(() => {
 }
 
 .booking-modal__field {
-  gap: 6px;
-  margin-bottom: 14px;
+  row-gap: 3px;
+  margin-bottom: 4px;
+}
+
+.booking-modal__error-slot,
+.booking-modal__required {
+  display: grid;
+
+  > span {
+    grid-area: 1 / 1;
+  }
 }
 
 .booking-modal__error-slot {
-  display: block;
-  height: 36px;
+  min-height: 16px;
+}
+
+.booking-modal__error-reserve {
+  visibility: hidden;
+}
+
+.booking-modal__consent-error {
+  margin: 2px 0 0 28px;
 }
 
 .booking-modal__field-error {
@@ -1552,7 +1584,7 @@ onBeforeUnmount(() => {
   color: #a43b31;
   font-size: 12px;
   font-weight: 500;
-  line-height: 18px;
+  line-height: 16px;
 
   .q-icon {
     flex-shrink: 0;
@@ -1562,7 +1594,8 @@ onBeforeUnmount(() => {
 }
 
 .booking-modal__required {
-  min-height: 36px;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
   line-height: 18px;
 }
 
