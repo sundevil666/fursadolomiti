@@ -7,7 +7,6 @@ import {
   cookieSettingsEvent,
   getCookieConsent,
   saveCookieConsent,
-  type CookieConsent,
 } from '@/services/cookieConsent'
 
 const { t } = useI18n()
@@ -19,8 +18,8 @@ const showSettings = () => {
 const dismiss = () => {
   isVisible.value = false
 }
-const chooseCookies = (choice: CookieConsent) => {
-  saveCookieConsent(choice)
+const acceptCookies = () => {
+  saveCookieConsent()
   dismiss()
 }
 
@@ -50,10 +49,7 @@ onUnmounted(() => window.removeEventListener(cookieSettingsEvent, showSettings))
       </p>
 
       <div class="cookie-consent__actions">
-        <button class="cookie-consent__accept" type="button" @click="chooseCookies('necessary')">
-          {{ t('cookies.necessary') }}
-        </button>
-        <button class="cookie-consent__accept" type="button" @click="chooseCookies('accepted')">
+        <button class="cookie-consent__accept" type="button" @click="acceptCookies">
           {{ t('cookies.accept') }}
         </button>
         <button class="cookie-consent__cancel" type="button" @click="dismiss">
