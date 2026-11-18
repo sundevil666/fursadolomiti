@@ -456,13 +456,13 @@ $adminCopies = [
 ];
 $adminCopy = $adminCopies[$emailLocale] ?? $adminCopies['en'];
 $roleSubjects = ['ru' => ['admin' => 'Администратору · Новая заявка',
-'guest' => 'Гостю · Спасибо за интерес к отелю',
+'guest' => 'Спасибо за интерес к отелю',
 'hotel' => 'Отелю · Запрос на бронирование'],
 'en' => ['admin' => 'For the administrator · New request',
-'guest' => 'For our guest · Thank you for your interest in',
+'guest' => 'Thank you for your interest in',
 'hotel' => 'For the hotel · Booking request'],
 'it' => ['admin' => 'All’amministratore · Nuova richiesta',
-'guest' => 'Al nostro ospite · Grazie per il vostro interesse per',
+'guest' => 'Grazie per il vostro interesse per',
 'hotel' => 'All’hotel · Richiesta di prenotazione']];
 $roleSubject = $roleSubjects[$emailLocale] ?? $roleSubjects['en'];
 $fullName = $normalizedFirstName . ' ' . $normalizedLastName;
@@ -782,7 +782,7 @@ Se non avete ancora terminato, è necessario completare la procedura direttament
     $linkLabel = $redirectLabels[$language] ?? $redirectLabels['en'];
     $bookingLinkHtml = $bookingUrl !== '' ? '<p style="margin:0 0 24px;"><a href="' . escapeHtmlValue($bookingUrl) . '" style="display:inline-block;padding:12px 20px;background-color:#175445;color:#ffffff;text-decoration:none;border-radius:8px;">' . escapeHtmlValue($linkLabel) . '</a></p>' : '';
     $roleSubject = ($roleSubjects[$language] ?? $roleSubjects['en'])[$customer ? 'guest' : 'hotel'];
-    $title = explode(' · ', $roleSubject)[0] . ' · ' . $copy['title'];
+    $title = $customer ? $copy['title'] : explode(' · ', $roleSubject)[0] . ' · ' . $copy['title'];
     $lines = array_merge(
         [$title, ''],
         $customer ? [...$intro, ...($bookingUrl !== '' ? [$linkLabel . ': ' . $bookingUrl, ''] : [])] : [],
