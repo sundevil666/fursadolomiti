@@ -113,7 +113,8 @@ export default async function handler(request, response) {
   const isEmailOnlyRequest = !isWidgetTrackingEvent && !['widget', 'redirect'].includes(bookingMode) && Boolean(hotelRecipient)
   const subjectPrefix = '[Vercel] '
   const preferredDates = String(request.body?.preferredDates || '').trim()
-  const guests = Number(request.body?.guests)
+  const submittedGuests = request.body?.guests
+  const guests = Number(submittedGuests)
   const isBookingRequest = !isWidgetTrackingEvent && (['request', 'redirect'].includes(bookingMode) || Boolean(hotelRecipient))
   // Return every invalid field in one response; the client only renders these codes.
   const fieldErrors = {}
@@ -125,7 +126,8 @@ export default async function handler(request, response) {
   if (isBookingRequest) {
     if (!preferredDates) fieldErrors.preferredDates = 'required'
     else if ([...preferredDates].length > 2000) fieldErrors.preferredDates = 'datesTooLong'
-    if (!Number.isInteger(guests) || guests < 1 || guests > 100) fieldErrors.guests = 'guests'
+    if (submittedGuests == null || (typeof submittedGuests === 'string' && !submittedGuests.trim())) fieldErrors.guests = 'required'
+    else if (!Number.isInteger(guests) || guests < 1 || guests > 100) fieldErrors.guests = 'guests'
   }
   if (Object.keys(fieldErrors).length) {
     return response.status(400).json({ error: 'Validation failed', fieldErrors })
@@ -522,6 +524,7 @@ export default async function handler(request, response) {
       subject: 'Ваша заявка получена',
       title: 'Заявка на бронирование',
       thanks: 'Спасибо, что воспользовались сайтом FursaDolomiti!',
+      requestThanks: 'Спасибо за Ваш запрос! Отель или шале свяжется с Вами в ближайшее время.',
       note: 'Это письмо не является подтверждением бронирования.\nДля оформления бронирования необходимо завершить процесс непосредственно на сайте отеля.',
       hotel: 'Отель',
       name: 'Имя и фамилия',
@@ -533,6 +536,7 @@ export default async function handler(request, response) {
       subject: 'Your request has been received',
       title: 'Booking request',
       thanks: 'Thank you for using the FursaDolomiti website!',
+      requestThanks: 'Thank you for your inquiry! The hotel or chalet will contact you shortly.',
       note: 'This email is not a booking confirmation.\nTo make a booking, you must complete the process directly on the hotel’s website.',
       hotel: 'Hotel',
       name: 'Full name',
@@ -544,6 +548,7 @@ export default async function handler(request, response) {
       subject: 'La vostra richiesta è stata ricevuta',
       title: 'Richiesta di soggiorno',
       thanks: 'Grazie per aver utilizzato il sito FursaDolomiti!',
+      requestThanks: 'Grazie per la Sua richiesta! L’hotel o lo chalet vi contatterà a breve.',
       note: 'Questa email non costituisce una conferma di prenotazione.\nPer prenotare è necessario completare la procedura direttamente sul sito della struttura.',
       hotel: 'Hotel',
       name: 'Nome e cognome',
@@ -560,9 +565,13 @@ export default async function handler(request, response) {
   "it": "Grazie per il vostro interesse per {hotel}!\nQuesta email non costituisce una conferma di prenotazione.\nSe avete già completato la procedura sul sito della struttura, non dovete inviare un’altra richiesta né prenotare di nuovo tramite il link in questa email. Riceverete la risposta direttamente dalla struttura.\nSe non avete ancora terminato, è necessario completare la procedura direttamente sul sito della struttura."
 }
     const redirectLabels = {"ru": "Перейти на сайт отеля", "en": "Go to the hotel’s website", "it": "Vai al sito della struttura"}
-    const note = customer && bookingMode === 'redirect'
+    const isWidgetBooking = bookingMode === 'widget'
+    const usesInquiryCopy = !isWidgetBooking && (hotelRecipients.has(normalizedHotelId) || normalizedHotelId === 'luna-mondschein')
+    const thanks = usesInquiryCopy ? copy.requestThanks : copy.thanks
+    const note = bookingMode === 'redirect'
       ? (redirectNotes[language] || redirectNotes.en).replace('{hotel}', normalizedHotel)
       : copy.note
+    const intro = usesInquiryCopy ? [thanks, ''] : [thanks, '', note, '']
     let bookingUrl = ''
     if (customer && bookingMode === 'redirect') {
       try {
@@ -594,12 +603,13 @@ export default async function handler(request, response) {
     const imageHtml = safe.hotelImage
       ? `<tr><td style="background-color:#e8dfcc;"><img src="${safe.hotelImage}" width="680" alt="${safe.hotel}" style="display:block;width:100%;max-width:680px;height:auto;max-height:300px;object-fit:cover;border:0;"></td></tr>`
       : ''
+    const noteHtml = usesInquiryCopy ? '' : `<p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;${isWidgetBooking ? 'font-weight:700;' : ''}">${escapeHtml(note).replaceAll('\n', '<br>')}</p>`
     const thanksHtml = customer
-      ? `<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">${escapeHtml(copy.thanks)}</p><p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;">${escapeHtml(note).replaceAll('\n', '<br>')}</p>`
+      ? `<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">${escapeHtml(thanks)}</p>${noteHtml}`
       : ''
     const lines = [
       title, '',
-      ...(customer ? [copy.thanks, '', note, '', ...(bookingUrl ? [`${linkLabel}: ${bookingUrl}`, ''] : [])] : []),
+      ...(customer ? [...intro, ...(bookingUrl ? [`${linkLabel}: ${bookingUrl}`, ''] : [])] : []),
       `${copy.hotel}: ${normalizedHotel}`,
       `${copy.name}: ${fullName}`,
       ...(!customer ? [`${copy.email}: ${normalizedEmail}`] : []),

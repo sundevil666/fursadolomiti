@@ -46,9 +46,9 @@ async function run(locale, failCustomer = false, overrides = {}, headers = {}) {
 }
 test('separate admin, simple hotel and localized customer emails', async () => {
   for (const [locale, thanks, adminTitle] of [
-    ['ru', 'Спасибо, что воспользовались сайтом FursaDolomiti!', 'Новая заявка на бронирование'],
-    ['en', 'Thank you for using the FursaDolomiti website!', 'New booking request'],
-    ['it', 'Grazie per aver utilizzato il sito FursaDolomiti!', 'Nuova richiesta di prenotazione'],
+    ['ru', 'Спасибо за Ваш запрос! Отель или шале свяжется с Вами в ближайшее время.', 'Новая заявка на бронирование'],
+    ['en', 'Thank you for your inquiry! The hotel or chalet will contact you shortly.', 'New booking request'],
+    ['it', 'Grazie per la Sua richiesta! L’hotel o lo chalet vi contatterà a breve.', 'Nuova richiesta di prenotazione'],
   ]) {
     const { sent, result } = await run(locale)
     assert.deepEqual(sent[0].to, [
@@ -88,16 +88,15 @@ test('separate admin, simple hotel and localized customer emails', async () => {
     }[locale]
     assert.ok(sent[0].subject.includes(roleLabels[0]))
     assert.ok(customer.subject.includes(roleLabels[1]))
-    const guestCopy = { ru: ['Спасибо за интерес к отелю', 'необходимо завершить процесс непосредственно на сайте отеля.'], en: ['Thank you for your interest in', 'complete the process directly on the hotel’s website.'], it: ['Grazie per il vostro interesse per', 'completare la procedura direttamente sul sito della struttura.'] }[locale]
-    assert.ok(customer.subject.includes(guestCopy[0]))
-    assert.ok(customer.text.includes(guestCopy[1]))
-    assert.ok(customer.html.includes(guestCopy[1]))
+    const guestCopy = { ru: 'Спасибо за интерес к отелю', en: 'Thank you for your interest in', it: 'Grazie per il vostro interesse per' }[locale]
+    assert.ok(customer.subject.includes(guestCopy))
+    assert.ok(customer.text.includes(thanks))
+    assert.ok(customer.html.includes(thanks))
     assert.ok(sent[0].html.includes(roleLabels[0]))
     assert.ok(customer.html.includes(roleLabels[1]))
     assert.ok(customer.text.includes(roleLabels[1]))
     assert.match(hotel.subject, locale === 'it' ? /All’hotel · Richiesta di prenotazione/ : /For the hotel/)
     assert.equal(new Set([sent[0].subject, customer.subject, hotel.subject]).size, 3)
-    assert.match(customer.text, new RegExp(thanks))
     for (const mail of [hotel, customer]) {
       assert.match(mail.text, /January <flexible>/)
       assert.doesNotMatch(mail.text, /timezone|geolocation|IP address/i)
@@ -271,14 +270,14 @@ test('validation reports all invalid fields together without sending mail', asyn
   assert.equal(sent.length, 0)
 })
 
-test('redirect guest email includes a safe booking link and prevents duplicate bookings', async () => {
+test('redirect guest email includes a safe booking link and localized inquiry text', async () => {
   for (const locale of ['ru', 'en', 'it']) {
     for (const redirectUrl of ['https://hotel.example/booking?a=1&b=2', 'javascript:alert(1)', '']) {
-      const { sent } = await run(locale, false, { bookingMode: 'redirect', redirectUrl })
+      const { sent } = await run(locale, false, { hotelId: 'luna-mondschein', bookingMode: 'redirect', redirectUrl })
       const guest = sent.find(mail => mail.to === body.email)
-      const warning = { ru: 'повторно отправлять заявку', en: 'you do not need to submit another request', it: 'non dovete inviare un’altra richiesta' }[locale]
-      assert.ok(guest.text.includes(warning))
-      assert.ok(guest.html.includes(warning))
+      const inquiry = { ru: 'Спасибо за Ваш запрос! Отель или шале свяжется с Вами в ближайшее время.', en: 'Thank you for your inquiry! The hotel or chalet will contact you shortly.', it: 'Grazie per la Sua richiesta! L’hotel o lo chalet vi contatterà a breve.' }[locale]
+      assert.ok(guest.text.includes(inquiry))
+      assert.ok(guest.html.includes(inquiry))
       if (redirectUrl.startsWith('https:')) {
         assert.ok(guest.text.includes(redirectUrl))
         assert.ok(guest.html.includes('href="https://hotel.example/booking?a=1&amp;b=2"'))

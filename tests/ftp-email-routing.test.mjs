@@ -63,7 +63,8 @@ test('PHP and FTP apply locale and delivery rules to all three booking modes', (
     for (const locale of ['ru', 'en', 'it']) {
       const labels = { ru: ['Администратору', 'Гостю'], en: ['For the administrator', 'For our guest'], it: ['All’amministratore', 'Al nostro ospite'] }[locale]
       for (const bookingMode of ['request', 'redirect', 'widget']) {
-        const mails = deliver(path, 'guest@example.com', 'chalet-zenit', '', { locale, bookingMode, promoCode: '', ...(bookingMode === 'widget' ? { preferredDates: '', guests: 0 } : {}) })
+        const hotelId = { request: 'chalet-zenit', redirect: 'luna-mondschein', widget: 'luxury-chalet-p' }[bookingMode]
+        const mails = deliver(path, 'guest@example.com', hotelId, '', { locale, bookingMode, promoCode: '', ...(bookingMode === 'widget' ? { preferredDates: '', guests: 0 } : {}) })
         assert.equal(mails.length, bookingMode === 'request' ? 3 : 2)
         const method = { ru: { request: 'Заявка по email', widget: 'Бронирование через виджет', redirect: 'Переход по ссылке' }, en: { request: 'Email request', widget: 'Booking through a widget', redirect: 'Redirect to booking website' }, it: { request: 'Richiesta via email', widget: 'Prenotazione tramite widget', redirect: 'Reindirizzamento al sito di prenotazione' } }[locale][bookingMode]
         assert.ok(mails[0].subject.includes(method))
@@ -76,8 +77,11 @@ test('PHP and FTP apply locale and delivery rules to all three booking modes', (
         assert.ok(mails[1].subject.includes(labels[1]))
         const guestCopy = { ru: ['Спасибо за интерес к отелю', 'необходимо завершить процесс непосредственно на сайте отеля.'], en: ['Thank you for your interest in', 'complete the process directly on the hotel’s website.'], it: ['Grazie per il vostro interesse per', 'completare la procedura direttamente sul sito della struttura.'] }[locale]
         assert.ok(mails[1].subject.includes(guestCopy[0]))
-        assert.ok(mails[1].text.includes(guestCopy[1]))
-        assert.ok(mails[1].html.includes(guestCopy[1]))
+        const inquiry = { ru: 'Спасибо за Ваш запрос! Отель или шале свяжется с Вами в ближайшее время.', en: 'Thank you for your inquiry! The hotel or chalet will contact you shortly.', it: 'Grazie per la Sua richiesta! L’hotel o lo chalet vi contatterà a breve.' }[locale]
+        for (const content of [mails[1].text, mails[1].html]) {
+          assert.equal(content.includes(guestCopy[1]), bookingMode === 'widget')
+          assert.equal(content.includes(inquiry), bookingMode !== 'widget')
+        }
         assert.ok(mails[1].html.includes(labels[1]))
         assert.ok(mails[1].text.includes(labels[1]))
         if (bookingMode === 'request') {
@@ -163,14 +167,14 @@ test('PHP returns the same structured field errors as JavaScript', () => {
   }
 })
 
-test('PHP and FTP redirect guest emails include only safe booking links and explain when to use them', () => {
+test('PHP and FTP redirect guest emails include only safe booking links and localized inquiry text', () => {
   for (const path of ['php/send-email.php', 'dist-ftp/fursa-release/php/send-email.php']) {
     for (const locale of ['ru', 'en', 'it']) {
       for (const redirectUrl of ['https://hotel.example/booking?a=1&b=2', 'javascript:alert(1)', '']) {
-        const [, guest] = deliver(path, 'guest@example.com', 'chalet-zenit', '', { locale, bookingMode: 'redirect', redirectUrl })
-        const warning = { ru: 'повторно отправлять заявку', en: 'you do not need to submit another request', it: 'non dovete inviare un’altra richiesta' }[locale]
-        assert.ok(guest.text.includes(warning))
-        assert.ok(guest.html.includes(warning))
+        const [, guest] = deliver(path, 'guest@example.com', 'luna-mondschein', '', { locale, bookingMode: 'redirect', redirectUrl })
+        const inquiry = { ru: 'Спасибо за Ваш запрос! Отель или шале свяжется с Вами в ближайшее время.', en: 'Thank you for your inquiry! The hotel or chalet will contact you shortly.', it: 'Grazie per la Sua richiesta! L’hotel o lo chalet vi contatterà a breve.' }[locale]
+        assert.ok(guest.text.includes(inquiry))
+        assert.ok(guest.html.includes(inquiry))
         if (redirectUrl.startsWith('https:')) {
           assert.ok(guest.text.includes(redirectUrl))
           assert.ok(guest.html.includes('href="https://hotel.example/booking?a=1&amp;b=2"'))

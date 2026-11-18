@@ -313,7 +313,8 @@ $hotelRecipients = [
 $bookingMode = trim((string) ($requestBody['bookingMode'] ?? ''));
 $hotelRecipient = !$isWidgetTrackingEvent && !in_array($bookingMode, ['widget', 'redirect'], true) ? ($hotelRecipients[$normalizedHotelId] ?? null) : null;
 $preferredDates = trim((string) ($requestBody['preferredDates'] ?? ''));
-$guests = filter_var($requestBody['guests'] ?? null, FILTER_VALIDATE_INT);
+$submittedGuests = $requestBody['guests'] ?? null;
+$guests = filter_var($submittedGuests, FILTER_VALIDATE_INT);
 $isBookingRequest = !$isWidgetTrackingEvent && (in_array($bookingMode, ['request', 'redirect'], true) || (bool) $hotelRecipient);
 // Keep the field error contract identical to the JavaScript handler.
 $fieldErrors = [];
@@ -325,7 +326,8 @@ elseif (preg_match($emailPattern, $normalizedEmail) !== 1) $fieldErrors['email']
 if ($isBookingRequest) {
     if ($preferredDates === '') $fieldErrors['preferredDates'] = 'required';
     elseif (preg_match('/^.{1,2000}$/us', $preferredDates) !== 1) $fieldErrors['preferredDates'] = 'datesTooLong';
-    if ($guests === false || $guests < 1 || $guests > 100) $fieldErrors['guests'] = 'guests';
+    if ($submittedGuests === null || (is_string($submittedGuests) && trim($submittedGuests) === '')) $fieldErrors['guests'] = 'required';
+    elseif ($guests === false || $guests < 1 || $guests > 100) $fieldErrors['guests'] = 'guests';
 }
 if ($fieldErrors) {
     jsonResponse(400, ['error' => 'Validation failed', 'fieldErrors' => $fieldErrors]);
@@ -723,6 +725,7 @@ $customerLocale = strtolower(explode('-', $normalizedLocale)[0]);
 $customerCopies = ['ru' => ['subject' => 'Ваша заявка получена',
  'title' => 'Заявка на бронирование',
 'thanks' => 'Спасибо, что воспользовались сайтом FursaDolomiti!',
+'requestThanks' => 'Спасибо за Ваш запрос! Отель или шале свяжется с Вами в ближайшее время.',
 'note' => 'Это письмо не является подтверждением бронирования.
 Для оформления бронирования необходимо завершить процесс непосредственно на сайте отеля.',
 'hotel' => 'Отель',
@@ -733,6 +736,7 @@ $customerCopies = ['ru' => ['subject' => 'Ваша заявка получена
 'en' => ['subject' => 'Your request has been received',
  'title' => 'Booking request',
 'thanks' => 'Thank you for using the FursaDolomiti website!',
+'requestThanks' => 'Thank you for your inquiry! The hotel or chalet will contact you shortly.',
 'note' => 'This email is not a booking confirmation.
 To make a booking, you must complete the process directly on the hotel’s website.',
 'hotel' => 'Hotel',
@@ -743,6 +747,7 @@ To make a booking, you must complete the process directly on the hotel’s websi
 'it' => ['subject' => 'La vostra richiesta è stata ricevuta',
  'title' => 'Richiesta di soggiorno',
 'thanks' => 'Grazie per aver utilizzato il sito FursaDolomiti!',
+'requestThanks' => 'Grazie per la Sua richiesta! L’hotel o lo chalet vi contatterà a breve.',
 'note' => 'Questa email non costituisce una conferma di prenotazione.
 Per prenotare è necessario completare la procedura direttamente sul sito della struttura.',
 'hotel' => 'Hotel',
@@ -750,7 +755,7 @@ Per prenotare è necessario completare la procedura direttamente sul sito della 
 'email' => 'Email',
 'dates' => 'Date desiderate e richieste',
 'guests' => 'Numero di ospiti']];
-$bookingEmail = static function (string $language, bool $customer) use ($bookingMode, $normalizedRedirectUrl, $roleSubjects, $customerCopies, $normalizedHotel, $fullName, $normalizedEmail, $isBookingRequest, $preferredDates, $guests, $safe): array {
+$bookingEmail = static function (string $language, bool $customer) use ($bookingMode, $normalizedHotelId, $hotelRecipients, $normalizedRedirectUrl, $roleSubjects, $customerCopies, $normalizedHotel, $fullName, $normalizedEmail, $isBookingRequest, $preferredDates, $guests, $safe): array {
     $copy = $customerCopies[$language] ?? $customerCopies['en'];
     $redirectNotes = ['ru' => 'Спасибо за интерес к отелю «{hotel}»!
 Это письмо не является подтверждением бронирования.
@@ -763,9 +768,13 @@ Questa email non costituisce una conferma di prenotazione.
 Se avete già completato la procedura sul sito della struttura, non dovete inviare un’altra richiesta né prenotare di nuovo tramite il link in questa email. Riceverete la risposta direttamente dalla struttura.
 Se non avete ancora terminato, è necessario completare la procedura direttamente sul sito della struttura.'];
     $redirectLabels = ['ru' => 'Перейти на сайт отеля', 'en' => 'Go to the hotel’s website', 'it' => 'Vai al sito della struttura'];
-    $note = $customer && $bookingMode === 'redirect'
+    $isWidgetBooking = $bookingMode === 'widget';
+    $usesInquiryCopy = !$isWidgetBooking && (isset($hotelRecipients[$normalizedHotelId]) || $normalizedHotelId === 'luna-mondschein');
+    $thanks = $usesInquiryCopy ? $copy['requestThanks'] : $copy['thanks'];
+    $note = $bookingMode === 'redirect'
         ? str_replace('{hotel}', $normalizedHotel, $redirectNotes[$language] ?? $redirectNotes['en'])
         : $copy['note'];
+    $intro = $usesInquiryCopy ? [$thanks, ''] : [$thanks, '', $note, ''];
     $bookingUrl = '';
     if ($customer && $bookingMode === 'redirect' && filter_var($normalizedRedirectUrl, FILTER_VALIDATE_URL) && in_array(strtolower(parse_url($normalizedRedirectUrl, PHP_URL_SCHEME) ?? ''), ['http', 'https'], true)) {
         $bookingUrl = $normalizedRedirectUrl;
@@ -776,7 +785,7 @@ Se non avete ancora terminato, è necessario completare la procedura direttament
     $title = explode(' · ', $roleSubject)[0] . ' · ' . $copy['title'];
     $lines = array_merge(
         [$title, ''],
-        $customer ? [$copy['thanks'], '', $note, '', ...($bookingUrl !== '' ? [$linkLabel . ': ' . $bookingUrl, ''] : [])] : [],
+        $customer ? [...$intro, ...($bookingUrl !== '' ? [$linkLabel . ': ' . $bookingUrl, ''] : [])] : [],
         [
             $copy['hotel'] . ': ' . $normalizedHotel,
             $copy['name'] . ': ' . $fullName,
@@ -795,7 +804,10 @@ Se non avete ancora terminato, è necessario completare la procedura direttament
     }
     $detailRows = implode('', array_map(static fn (array $field): string => renderRow(escapeHtmlValue($field[0]), nl2br(escapeHtmlValue($field[1])), true), $fields));
     $imageHtml = $safe['hotelImage'] !== '' ? '<tr><td style="background-color:#e8dfcc;"><img src="' . $safe['hotelImage'] . '" width="680" alt="' . $safe['hotel'] . '" style="display:block;width:100%;max-width:680px;height:auto;max-height:300px;object-fit:cover;border:0;"></td></tr>' : '';
-    $thanksHtml = $customer ? '<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">' . escapeHtmlValue($copy['thanks']) . '</p><p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;">' . nl2br(escapeHtmlValue($note)) . '</p>' : '';
+    $thanksHtml = $customer ? '<p style="margin:0 0 14px;color:#175445;font-size:18px;line-height:26px;font-weight:700;">' . escapeHtmlValue($thanks) . '</p>' : '';
+    if ($customer && !$usesInquiryCopy) {
+        $thanksHtml .= '<p style="margin:0 0 24px;color:#756b5c;font-size:14px;line-height:22px;' . ($isWidgetBooking ? 'font-weight:700;' : '') . '">' . nl2br(escapeHtmlValue($note)) . '</p>';
+    }
     $safeTitle = escapeHtmlValue($title);
     $safeHotel = $safe['hotel'];
     $html = <<<HTML

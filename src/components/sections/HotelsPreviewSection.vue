@@ -63,13 +63,6 @@ type BookingField = typeof bookingFields[number]
 type FieldErrorCode = 'required' | 'email' | 'datesTooLong' | 'guests' | 'consent'
 const fieldErrors = ref<Partial<Record<BookingField, FieldErrorCode>>>({})
 const validationAttempt = ref(0)
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const validateEmail = () => {
-  const value = email.value.trim()
-  if (!value) fieldErrors.value.email = 'required'
-  else if (!emailPattern.test(value)) fieldErrors.value.email = 'email'
-  else delete fieldErrors.value.email
-}
 const focusInvalidField = async () => {
   validationAttempt.value += 1
   await nextTick()
@@ -810,18 +803,6 @@ const submitBookingRequest = async () => {
   formError.value = ''
 
   fieldErrors.value = {}
-  if (!privacyConsent.value) {
-    fieldErrors.value.privacyConsent = 'consent'
-    await focusInvalidField()
-    return
-  }
-  // Catch malformed email immediately; the server remains authoritative for the full form.
-  if (email.value.trim() && !emailPattern.test(email.value.trim())) {
-    validateEmail()
-    await focusInvalidField()
-    return
-  }
-
   const hotel = bookableHotelPreviews.find((item) => item.id === bookingHotelId.value)
   const hotelName = hotel ? t(hotel.nameKey) : bookingHotelId.value
   formStatus.value = 'sending'
@@ -838,7 +819,7 @@ const submitBookingRequest = async () => {
         widgetProvider: isWidgetHotel.value ? widgetProviderName.value : '',
         redirectUrl: hotel && bookingMode.value === 'redirect' ? getLocalizedBookingUrl(hotel, locale.value) : '',
         preferredDates: preferredDates.value.trim(),
-        guests: Number(guests.value),
+        guests: guests.value === '' ? null : Number(guests.value),
         firstName: firstName.value.trim(),
         lastName: lastName.value.trim(),
         email: email.value.trim(),
@@ -1327,7 +1308,6 @@ onBeforeUnmount(() => {
                     autocomplete="email"
                     :placeholder="t('home.hotels.bookingModal.emailPlaceholder')"
                     @input="clearFieldError('email')"
-                    @blur="validateEmail"
                   />
                   <span class="booking-modal__error-slot" aria-live="polite">
                     <Transition name="booking-error">
@@ -1520,6 +1500,10 @@ onBeforeUnmount(() => {
   accent-color: #345b47;
 }
 
+.booking-modal__consent-label input[aria-invalid='true'] {
+  outline: 2px solid #a12b24;
+  outline-offset: 2px;
+}
 .booking-modal__consent-info {
   margin: 8px 0 0 28px;
 }
