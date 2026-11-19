@@ -192,6 +192,9 @@ onBeforeUnmount(stopAutoplay)
         <p>
           <AnimatedText :text="t('home.hero.quote')" tag="span" />
         </p>
+        <p>
+          <AnimatedText :text="t('home.hero.introduction')" tag="span" />
+        </p>
         <div class="hero-card__actions">
           <q-btn unelevated no-caps class="hero-card__primary" :to="{ name: 'hotels' }">
             <AnimatedText :text="t('home.hero.watchHotels')" tag="span" />
