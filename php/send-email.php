@@ -724,6 +724,7 @@ $message = $isWidgetTrackingEvent
 $customerLocale = strtolower(explode('-', $normalizedLocale)[0]);
 $customerCopies = ['ru' => ['subject' => 'Ваша заявка получена',
  'title' => 'Заявка на бронирование',
+'guestTitle' => 'Вы выбрали…',
 'thanks' => 'Спасибо, что воспользовались сайтом FursaDolomiti!',
 'requestThanks' => 'Спасибо за Ваш запрос! Отель или шале свяжется с Вами в ближайшее время.',
 'note' => 'Это письмо не является подтверждением бронирования.
@@ -735,6 +736,7 @@ $customerCopies = ['ru' => ['subject' => 'Ваша заявка получена
 'guests' => 'Количество гостей'],
 'en' => ['subject' => 'Your request has been received',
  'title' => 'Booking request',
+'guestTitle' => 'You chose…',
 'thanks' => 'Thank you for using the FursaDolomiti website!',
 'requestThanks' => 'Thank you for your inquiry! The hotel or chalet will contact you shortly.',
 'note' => 'This email is not a booking confirmation.
@@ -746,6 +748,7 @@ To make a booking, you must complete the process directly on the hotel’s websi
 'guests' => 'Number of guests'],
 'it' => ['subject' => 'La vostra richiesta è stata ricevuta',
  'title' => 'Richiesta di soggiorno',
+'guestTitle' => 'Avete scelto…',
 'thanks' => 'Grazie per aver utilizzato il sito FursaDolomiti!',
 'requestThanks' => 'Grazie per la Sua richiesta! L’hotel o lo chalet vi contatterà a breve.',
 'note' => 'Questa email non costituisce una conferma di prenotazione.
@@ -782,7 +785,7 @@ Se non avete ancora terminato, è necessario completare la procedura direttament
     $linkLabel = $redirectLabels[$language] ?? $redirectLabels['en'];
     $bookingLinkHtml = $bookingUrl !== '' ? '<p style="margin:0 0 24px;"><a href="' . escapeHtmlValue($bookingUrl) . '" style="display:inline-block;padding:12px 20px;background-color:#175445;color:#ffffff;text-decoration:none;border-radius:8px;">' . escapeHtmlValue($linkLabel) . '</a></p>' : '';
     $roleSubject = ($roleSubjects[$language] ?? $roleSubjects['en'])[$customer ? 'guest' : 'hotel'];
-    $title = $customer ? $copy['title'] : explode(' · ', $roleSubject)[0] . ' · ' . $copy['title'];
+    $title = $customer ? $copy['guestTitle'] : explode(' · ', $roleSubject)[0] . ' · ' . $copy['title'];
     $lines = array_merge(
         [$title, ''],
         $customer ? [...$intro, ...($bookingUrl !== '' ? [$linkLabel . ': ' . $bookingUrl, ''] : [])] : [],

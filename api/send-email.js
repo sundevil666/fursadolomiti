@@ -523,6 +523,7 @@ export default async function handler(request, response) {
     ru: {
       subject: 'Ваша заявка получена',
       title: 'Заявка на бронирование',
+      guestTitle: 'Вы выбрали…',
       thanks: 'Спасибо, что воспользовались сайтом FursaDolomiti!',
       requestThanks: 'Спасибо за Ваш запрос! Отель или шале свяжется с Вами в ближайшее время.',
       note: 'Это письмо не является подтверждением бронирования.\nДля оформления бронирования необходимо завершить процесс непосредственно на сайте отеля.',
@@ -535,6 +536,7 @@ export default async function handler(request, response) {
     en: {
       subject: 'Your request has been received',
       title: 'Booking request',
+      guestTitle: 'You chose…',
       thanks: 'Thank you for using the FursaDolomiti website!',
       requestThanks: 'Thank you for your inquiry! The hotel or chalet will contact you shortly.',
       note: 'This email is not a booking confirmation.\nTo make a booking, you must complete the process directly on the hotel’s website.',
@@ -547,6 +549,7 @@ export default async function handler(request, response) {
     it: {
       subject: 'La vostra richiesta è stata ricevuta',
       title: 'Richiesta di soggiorno',
+      guestTitle: 'Avete scelto…',
       thanks: 'Grazie per aver utilizzato il sito FursaDolomiti!',
       requestThanks: 'Grazie per la Sua richiesta! L’hotel o lo chalet vi contatterà a breve.',
       note: 'Questa email non costituisce una conferma di prenotazione.\nPer prenotare è necessario completare la procedura direttamente sul sito della struttura.',
@@ -583,7 +586,7 @@ export default async function handler(request, response) {
     const bookingLinkHtml = bookingUrl
       ? `<p style="margin:0 0 24px;"><a href="${escapeHtml(bookingUrl)}" style="display:inline-block;padding:12px 20px;background-color:#175445;color:#ffffff;text-decoration:none;border-radius:8px;">${escapeHtml(linkLabel)}</a></p>`
       : ''
-    const title = `${(roleSubjects[language] || roleSubjects.en)[customer ? 'guest' : 'hotel'].split(' · ')[0]} · ${copy.title}`
+    const title = `${(roleSubjects[language] || roleSubjects.en)[customer ? 'guest' : 'hotel'].split(' · ')[0]} · ${customer ? copy.guestTitle : copy.title}`
     const fields = [
       [copy.hotel, normalizedHotel],
       [copy.name, fullName],
