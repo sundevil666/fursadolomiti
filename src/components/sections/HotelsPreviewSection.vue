@@ -121,6 +121,16 @@ const isBookingSuedtirolHotel = computed(() => Boolean(activeBookingHotel.value?
 const isBookingExpertHotel = computed(() => Boolean(activeBookingHotel.value?.bookingExpert))
 const isBookingKrossHotel = computed(() => Boolean(activeBookingHotel.value?.bookingKross))
 const hasBookingWidget = (hotel: HotelPreview) => Boolean(hotel.bookingSuedtirol || hotel.bookingExpert || hotel.bookingKross)
+const bonusBookingHotelIds = new Set(['somont', 'diamant', 'luna-mondschein'])
+const bookingButtonLabelKey = (hotel: HotelPreview) => {
+  if (hotel.category === 'chalet' && hotel.id !== 'luxury-chalet-p') {
+    return 'home.hotels.chaletBookWithBonus'
+  }
+  if (hasBookingWidget(hotel) || bonusBookingHotelIds.has(hotel.id)) {
+    return 'home.hotels.bookWithBonus'
+  }
+  return 'home.hotels.bookingModal.requestSubmit'
+}
 const isWidgetHotel = computed(() => Boolean(activeBookingHotel.value && hasBookingWidget(activeBookingHotel.value)))
 const showWidget = computed(() => isWidgetHotel.value && bookingStep.value === 'widget')
 const widgetStatus = computed(() =>
@@ -1097,7 +1107,7 @@ onBeforeUnmount(() => {
             class="fd-btn fd-btn--outline"
             @click.stop="openBookingModal(hotel.id)"
           >
-            <AnimatedText :text="t(hotel.category === 'chalet' && hotel.id !== 'luxury-chalet-p' ? 'home.hotels.chaletBookWithBonus' : hasBookingWidget(hotel) ? 'home.hotels.bookWithBonus' : 'home.hotels.bookingModal.requestSubmit')" tag="span" />
+            <AnimatedText :text="t(bookingButtonLabelKey(hotel))" tag="span" />
           </q-btn>
         </div>
       </article>
