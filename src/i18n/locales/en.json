@@ -1,4 +1,28 @@
 {
+  "skiRental": {
+    "title": "Ski and snowboard rental in Val Gardena",
+    "intro": "Planning to ski in Val Gardena? I work with local rental shops to offer my guests special rates on ski and snowboard equipment. Get ready for the slopes in advance and enjoy extra rental benefits.",
+    "howTitle": "How to use the FursaDolomiti offer",
+    "howText": "Choose a rental location and leave your contact details. I’ll send you a booking link with the special rates.",
+    "formTitle": "Get a rental link with special rates",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "firstExample": "Anna",
+    "lastExample": "Smith",
+    "arrival": "Planned arrival date",
+    "quantity": "Number of sets",
+    "location": "Choose a rental location",
+    "ortisei": "Ortisei",
+    "santaCristina": "Santa Cristina",
+    "selva": "Selva di Val Gardena",
+    "required": "Required fields: first name, email, rental location and consent.",
+    "submit": "Request a discount link",
+    "consent": "I consent to the processing of my personal data collected through FursaDolomiti and its possible transfer to the selected rental shop solely to handle my request and check booking availability.",
+    "privacyIntro": "For more information, see the",
+    "privacyLink": "Privacy Policy",
+    "sent": "Your rental request has been sent.",
+    "preview": "This form is a preview. Requests cannot be sent yet."
+  },
   "app": {
     "name": "FursaDolomiti",
     "logo": "Logo",

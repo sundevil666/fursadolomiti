@@ -2,6 +2,7 @@
 import HeroSliderSection from '@/components/sections/HeroSliderSection.vue'
 import HotelsPreviewSection from '@/components/sections/HotelsPreviewSection.vue'
 import HowItWorksSection from '@/components/sections/HowItWorksSection.vue'
+import SkiRentalSection from '@/components/sections/SkiRentalSection.vue'
 import InstructorSection from '@/components/sections/InstructorSection.vue'
 import DolomitesExpertSection from '@/components/sections/DolomitesExpertSection.vue'
 import PersonalSelectionSection from '@/components/sections/PersonalSelectionSection.vue'
@@ -33,6 +34,7 @@ const { t } = useI18n()
     </section>
     <HotelsPreviewSection :limit="2" />
     <HowItWorksSection />
+    <SkiRentalSection />
     <WhyBookWithMeSection />
     <PersonalSelectionSection />
     <InstructorSection />

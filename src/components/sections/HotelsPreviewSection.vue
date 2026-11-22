@@ -1587,42 +1587,13 @@ onBeforeUnmount(() => {
   margin: 2px 0 0 28px;
 }
 
-.booking-modal__field-error {
-  display: flex;
-  align-items: flex-start;
-  gap: 5px;
-  color: #a43b31;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
-
-  .q-icon {
-    flex-shrink: 0;
-    margin-top: 2px;
-    font-size: 14px;
-  }
-}
-
 .booking-modal__required {
   margin: 0 0 12px;
   padding-bottom: 8px;
   line-height: 18px;
 }
 
-.booking-error-enter-active,
-.booking-error-leave-active {
-  transition: opacity 180ms ease, transform 180ms ease;
-}
-
-.booking-error-enter-from,
-.booking-error-leave-to {
-  opacity: 0;
-  transform: translateY(-5px);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .booking-error-enter-active,
-  .booking-error-leave-active,
   .booking-modal__field input,
   .booking-modal__field textarea {
     transition: none;

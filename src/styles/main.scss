@@ -1,5 +1,39 @@
 @import './animations.scss';
 
+.booking-modal__field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  color: #a43b31;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+
+  .q-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 14px;
+  }
+}
+
+.booking-error-enter-active,
+.booking-error-leave-active {
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.booking-error-enter-from,
+.booking-error-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .booking-error-enter-active,
+  .booking-error-leave-active {
+    transition: none;
+  }
+}
+
 @mixin figma-button-transition {
   --button-fill-hover: #174136;
   --button-text-hover: #fff9ea;

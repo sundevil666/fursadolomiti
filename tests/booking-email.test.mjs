@@ -296,3 +296,24 @@ test('consent must be explicitly granted before any email is sent', async () => 
     assert.equal(sent.length, 0)
   }
 })
+
+test('Vercel sends a valid ski rental request only to Fursa and Sundevil', async () => {
+  const rental = {
+    eventType: 'ski_rental_request',
+    location: 'ortisei',
+    arrival: '2026-12-13',
+    quantity: '3',
+  }
+  const { status, sent } = await run('ru', false, rental)
+  assert.equal(status, 200)
+  assert.equal(sent.length, 1)
+  assert.deepEqual(sent[0].to, ['booking@fursadolomiti.com', 'sundevildi@gmail.com'])
+  for (const value of ['Ортизеи', body.email, '2026-12-13', 'Количество комплектов: 3']) {
+    assert.ok(sent[0].text.includes(value))
+  }
+
+  const invalid = await run('ru', false, { ...rental, privacyConsent: false })
+  assert.equal(invalid.status, 400)
+  assert.deepEqual(invalid.result.fieldErrors, { privacyConsent: 'consent' })
+  assert.deepEqual(invalid.sent, [])
+})

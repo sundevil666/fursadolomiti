@@ -1,4 +1,28 @@
 {
+  "skiRental": {
+    "title": "Noleggio sci e snowboard in Val Gardena",
+    "intro": "Hai in programma di sciare in Val Gardena? Collaboro con i noleggi locali per offrire ai miei ospiti condizioni speciali sull’attrezzatura da sci e snowboard. Puoi prepararti in anticipo e approfittare di vantaggi sul noleggio.",
+    "howTitle": "Come usufruire dell’offerta FursaDolomiti",
+    "howText": "Scegli dove noleggiare l’attrezzatura e lascia i tuoi contatti. Ti invierò un link per prenotare a condizioni speciali.",
+    "formTitle": "Ricevi un link per il noleggio a condizioni speciali",
+    "firstName": "Nome",
+    "lastName": "Cognome",
+    "firstExample": "Anna",
+    "lastExample": "Rossi",
+    "arrival": "Data di arrivo prevista",
+    "quantity": "Numero di set",
+    "location": "Scegli dove noleggiare",
+    "ortisei": "Ortisei",
+    "santaCristina": "Santa Cristina",
+    "selva": "Selva di Val Gardena",
+    "required": "Campi obbligatori: nome, email, luogo di noleggio e consenso.",
+    "submit": "Richiedi il link con lo sconto",
+    "consent": "Acconsento al trattamento dei miei dati personali raccolti tramite FursaDolomiti e alla loro eventuale trasmissione al noleggio selezionato esclusivamente per gestire la mia richiesta e verificare la disponibilità per la prenotazione.",
+    "privacyIntro": "Per maggiori informazioni consulta la",
+    "privacyLink": "Informativa sulla privacy",
+    "sent": "La richiesta di noleggio è stata inviata.",
+    "preview": "Questo modulo è in anteprima. L’invio delle richieste non è ancora disponibile."
+  },
   "app": {
     "name": "FursaDolomiti",
     "logo": "Logo",

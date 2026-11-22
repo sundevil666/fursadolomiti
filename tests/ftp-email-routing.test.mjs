@@ -193,3 +193,21 @@ test('PHP rejects missing or unaccepted consent before sending email', () => {
     assert.deepEqual(result.mails, [])
   }
 })
+
+test('production sends ski rental requests only to Fursa', () => {
+  const path = 'dist-ftp/fursa-release/php/send-email.php'
+  const rental = { location: 'selva', arrival: '2026-12-13', quantity: '2' }
+  const mails = deliver(path, 'guest@example.com', '', 'ski_rental_request', rental)
+  assert.equal(mails.length, 1)
+  assert.deepEqual(mails[0].recipients, ['booking@fursadolomiti.com'])
+  for (const value of ['Сельва-ди-Валь-Гардена', 'guest@example.com', '2026-12-13', 'Количество комплектов: 2']) {
+    assert.ok(mails[0].text.includes(value))
+  }
+
+  const invalid = deliver(path, 'guest@example.com', '', 'ski_rental_request', {
+    ...rental,
+    privacyConsent: false,
+  }, true)
+  assert.deepEqual(invalid.fieldErrors, { privacyConsent: 'consent' })
+  assert.deepEqual(invalid.mails, [])
+})

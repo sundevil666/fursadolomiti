@@ -252,6 +252,25 @@ if (!is_array($requestBody)) {
     jsonResponse(400, ['error' => 'Invalid JSON body']);
 }
 
+$isSkiRentalRequest = ($requestBody['eventType'] ?? null) === 'ski_rental_request';
+$validationOnly = ($requestBody['eventType'] ?? null) === 'ski_rental_validation';
+if ($isSkiRentalRequest || $validationOnly) {
+    $readText = static fn ($value): string => is_string($value)
+        ? (preg_replace('/^[\s\x{FEFF}]+|[\s\x{FEFF}]+$/u', '', $value) ?? '')
+        : '';
+    $fieldErrors = [];
+    $email = $readText($requestBody['email'] ?? null);
+    if ($readText($requestBody['firstName'] ?? null) === '') $fieldErrors['firstName'] = 'required';
+    if ($email === '') $fieldErrors['email'] = 'required';
+    elseif (preg_match($emailPattern . 'u', $email) !== 1) $fieldErrors['email'] = 'email';
+    if (!in_array($requestBody['location'] ?? null, ['ortisei', 'santaCristina', 'selva'], true)) {
+        $fieldErrors['location'] = 'required';
+    }
+    if (($requestBody['privacyConsent'] ?? null) !== true) $fieldErrors['privacyConsent'] = 'consent';
+    if ($fieldErrors) jsonResponse(400, ['error' => 'Validation failed', 'fieldErrors' => $fieldErrors]);
+    if ($validationOnly) jsonResponse(200, ['ok' => true]);
+}
+
 $smtpHost = getEnvValue('SMTP_HOST');
 $smtpPort = (int) (getEnvValue('SMTP_PORT', '465') ?? '465');
 $smtpEncryption = strtolower(getEnvValue('SMTP_ENCRYPTION', 'ssl') ?? 'ssl');
@@ -263,7 +282,52 @@ $recipients = array_values(array_unique(array_filter(array_map(
     static fn (string $recipient): string => strtolower(trim($recipient)),
     array_merge(explode(',', $recipientsValue), ['booking@fursadolomiti.com', 'sundevildi@gmail.com'])
 ))));
-$recipients = array_values(array_diff($recipients, EXCLUDED_ADMIN_RECIPIENTS));
+$recipients = $isSkiRentalRequest
+    ? ['booking@fursadolomiti.com']
+    : array_values(array_diff($recipients, EXCLUDED_ADMIN_RECIPIENTS));
+
+if (!$smtpHost || !$smtpUsername || !$smtpPassword || !$smtpFromEmail || $smtpPort < 1 ||
+    !in_array($smtpEncryption, ['ssl', 'tls', 'none'], true) ||
+    preg_match($emailPattern, $smtpFromEmail) !== 1 || count($recipients) === 0 ||
+    count(array_filter($recipients, static fn (string $recipient): bool => preg_match('/^[^\s@]+@[^\s@]+\.[^\s@]+$/', $recipient) !== 1)) > 0
+) {
+    jsonResponse(500, ['error' => 'Email service is not configured']);
+}
+
+$smtpConfig = [
+    'host' => $smtpHost,
+    'port' => $smtpPort,
+    'encryption' => $smtpEncryption,
+    'username' => $smtpUsername,
+    'password' => $smtpPassword,
+    'fromEmail' => $smtpFromEmail,
+];
+
+if ($isSkiRentalRequest) {
+    $locations = [
+        'ortisei' => 'Ортизеи',
+        'santaCristina' => 'Санта-Кристина',
+        'selva' => 'Сельва-ди-Валь-Гардена',
+    ];
+    $text = implode("\n", [
+        'Имя: ' . $readText($requestBody['firstName']),
+        'Фамилия: ' . ($readText($requestBody['lastName'] ?? null) ?: '—'),
+        'Email: ' . $email,
+        'Место проката: ' . $locations[$requestBody['location']],
+        'Дата приезда: ' . ($readText($requestBody['arrival'] ?? null) ?: '—'),
+        'Количество комплектов: ' . ($readText($requestBody['quantity'] ?? null) ?: '—'),
+        'Согласие на обработку данных: да',
+    ]);
+    $delivery = sendSmtpEmail(
+        $smtpConfig,
+        $recipients,
+        'Заявка на прокат лыж и сноубордов',
+        $text,
+        '<p>' . str_replace("\n", '<br>', escapeHtmlValue($text)) . '</p>'
+    );
+    if (!$delivery['ok']) jsonResponse(502, ['error' => 'Rental email delivery failed']);
+    jsonResponse(200, ['ok' => true]);
+}
 
 $normalizedEventType = trim((string) ($requestBody['eventType'] ?? ''));
 $normalizedWidgetProvider = trim((string) ($requestBody['widgetProvider'] ?? ''));
@@ -285,23 +349,6 @@ $normalizedLocale = trim((string) ($requestBody['locale'] ?? '')) ?: 'Not availa
 $normalizedLocalDateTime = trim((string) ($requestBody['localDateTime'] ?? '')) ?: 'Not available';
 $normalizedTimezone = trim((string) ($requestBody['timezone'] ?? '')) ?: 'Not available';
 $normalizedSubmittedAt = trim((string) ($requestBody['submittedAt'] ?? '')) ?: gmdate('c');
-
-if (!$smtpHost || !$smtpUsername || !$smtpPassword || !$smtpFromEmail || $smtpPort < 1 ||
-    !in_array($smtpEncryption, ['ssl', 'tls', 'none'], true) ||
-    preg_match($emailPattern, $smtpFromEmail) !== 1 || count($recipients) === 0 ||
-    count(array_filter($recipients, static fn (string $recipient): bool => preg_match('/^[^\s@]+@[^\s@]+\.[^\s@]+$/', $recipient) !== 1)) > 0
-) {
-    jsonResponse(500, ['error' => 'Email service is not configured']);
-}
-
-$smtpConfig = [
-    'host' => $smtpHost,
-    'port' => $smtpPort,
-    'encryption' => $smtpEncryption,
-    'username' => $smtpUsername,
-    'password' => $smtpPassword,
-    'fromEmail' => $smtpFromEmail,
-];
 
 $isWidgetTrackingEvent = $normalizedEventType === 'widget_redirect';
 $hotelRecipients = [

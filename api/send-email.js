@@ -3,6 +3,23 @@ import { randomUUID } from 'node:crypto'
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+const readRentalText = (value) => (typeof value === 'string' ? value.trim() : '')
+
+export function validateSkiRental(body) {
+  const fieldErrors = {}
+  const email = readRentalText(body.email)
+  if (!readRentalText(body.firstName)) fieldErrors.firstName = 'required'
+  if (!email) fieldErrors.email = 'required'
+  else if (!emailPattern.test(email)) fieldErrors.email = 'email'
+  if (!['ortisei', 'santaCristina', 'selva'].includes(body.location)) {
+    fieldErrors.location = 'required'
+  }
+  if (body.privacyConsent !== true) fieldErrors.privacyConsent = 'consent'
+  return Object.keys(fieldErrors).length
+    ? { status: 400, body: { error: 'Validation failed', fieldErrors } }
+    : { status: 200, body: { ok: true } }
+}
+
 const getHeader = (request, name) => {
   const value = request.headers?.[name] ?? request.headers?.[name.toLowerCase()]
   return Array.isArray(value) ? value[0] : value
@@ -34,17 +51,85 @@ export default async function handler(request, response) {
   const smtpPassword = process.env.SMTP_PASSWORD
   const smtpFromEmail = process.env.SMTP_FROM_EMAIL || smtpUsername
   const recipientsValue = process.env.EMAIL_RECIPIENTS || 'sundevildi@gmail.com'
-  const recipients = [
-    ...new Set(
-      [...recipientsValue.split(','), 'booking@fursadolomiti.com', 'sundevildi@gmail.com']
-        .map((recipient) => recipient.trim().toLowerCase())
-        .filter(Boolean),
-    ),
-  ]
+  const isSkiRentalRequest = request.body?.eventType === 'ski_rental_request'
+  const recipients = isSkiRentalRequest
+    ? ['booking@fursadolomiti.com', 'sundevildi@gmail.com']
+    : [
+        ...new Set(
+          [...recipientsValue.split(','), 'booking@fursadolomiti.com', 'sundevildi@gmail.com']
+            .map((recipient) => recipient.trim().toLowerCase())
+            .filter(Boolean),
+        ),
+      ]
 
   if (request.method !== 'POST') {
     response.setHeader('Allow', 'POST')
     return response.status(405).json({ error: 'Method not allowed' })
+  }
+
+  const validationOnly = request.body?.eventType === 'ski_rental_validation'
+  if (isSkiRentalRequest || validationOnly) {
+    const result = validateSkiRental(request.body)
+    if (result.status !== 200 || validationOnly) {
+      return response.status(result.status).json(result.body)
+    }
+  }
+
+  if (
+    !smtpHost ||
+    !smtpUsername ||
+    !smtpPassword ||
+    !smtpFromEmail ||
+    !Number.isInteger(smtpPort) ||
+    smtpPort < 1 ||
+    !['ssl', 'tls', 'none'].includes(smtpEncryption) ||
+    !emailPattern.test(smtpFromEmail) ||
+    recipients.length === 0 ||
+    recipients.some((recipient) => !emailPattern.test(recipient))
+  ) {
+    return response.status(500).json({ error: 'Email service is not configured' })
+  }
+
+  const createTransport = () =>
+    nodemailer.createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpEncryption === 'ssl',
+      requireTLS: smtpEncryption === 'tls',
+      auth: { user: smtpUsername, pass: smtpPassword },
+    })
+
+  if (isSkiRentalRequest) {
+    const locations = {
+      ortisei: 'Ортизеи',
+      santaCristina: 'Санта-Кристина',
+      selva: 'Сельва-ди-Валь-Гардена',
+    }
+    const text = [
+      `Имя: ${readRentalText(request.body.firstName)}`,
+      `Фамилия: ${readRentalText(request.body.lastName) || '—'}`,
+      `Email: ${readRentalText(request.body.email)}`,
+      `Место проката: ${locations[request.body.location]}`,
+      `Дата приезда: ${readRentalText(request.body.arrival) || '—'}`,
+      `Количество комплектов: ${readRentalText(request.body.quantity) || '—'}`,
+      'Согласие на обработку данных: да',
+    ].join('\n')
+
+    try {
+      const delivery = await createTransport().sendMail({
+        from: `FursaDolomiti <${smtpFromEmail}>`,
+        to: recipients,
+        subject: '[Vercel] Заявка на прокат лыж и сноубордов',
+        text,
+        html: `<p>${escapeHtml(text).replaceAll('\n', '<br>')}</p>`,
+      })
+      if (delivery.accepted?.length !== recipients.length || delivery.rejected?.length) {
+        return response.status(502).json({ error: 'Rental email was not accepted by every recipient' })
+      }
+      return response.status(200).json({ ok: true })
+    } catch {
+      return response.status(502).json({ error: 'Rental email delivery failed' })
+    }
   }
 
   const {
@@ -85,21 +170,6 @@ export default async function handler(request, response) {
   const normalizedLocalDateTime = String(localDateTime || '').trim() || 'Not available'
   const normalizedTimezone = String(timezone || '').trim() || 'Not available'
   const normalizedSubmittedAt = String(submittedAt || '').trim() || new Date().toISOString()
-
-  if (
-    !smtpHost ||
-    !smtpUsername ||
-    !smtpPassword ||
-    !smtpFromEmail ||
-    !Number.isInteger(smtpPort) ||
-    smtpPort < 1 ||
-    !['ssl', 'tls', 'none'].includes(smtpEncryption) ||
-    !emailPattern.test(smtpFromEmail) ||
-    recipients.length === 0 ||
-    recipients.some((recipient) => !emailPattern.test(recipient))
-  ) {
-    return response.status(500).json({ error: 'Email service is not configured' })
-  }
 
   const isWidgetTrackingEvent = normalizedEventType === 'widget_redirect'
   const hotelRecipients = new Map([
@@ -643,13 +713,7 @@ export default async function handler(request, response) {
   const hotelMail = bookingEmail(customerLocale === 'it' ? 'it' : 'en', false)
 
   try {
-    const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: smtpPort,
-      secure: smtpEncryption === 'ssl',
-      requireTLS: smtpEncryption === 'tls',
-      auth: { user: smtpUsername, pass: smtpPassword },
-    })
+    const transporter = createTransport()
 
     await transporter.sendMail({
       from: `FursaDolomiti <${smtpFromEmail}>`,
