@@ -102,7 +102,7 @@ export default async function handler(request, response) {
   if (isSkiRentalRequest) {
     const locations = {
       ortisei: 'Ортизеи',
-      santaCristina: 'Санта-Кристина',
+      santaCristina: 'Санта-Кристина-Вальгардена',
       selva: 'Сельва-ди-Валь-Гардена',
     }
     const text = [

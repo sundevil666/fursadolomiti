@@ -306,7 +306,7 @@ $smtpConfig = [
 if ($isSkiRentalRequest) {
     $locations = [
         'ortisei' => 'Ортизеи',
-        'santaCristina' => 'Санта-Кристина',
+        'santaCristina' => 'Санта-Кристина-Вальгардена',
         'selva' => 'Сельва-ди-Валь-Гардена',
     ];
     $text = implode("\n", [
