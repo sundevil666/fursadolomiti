@@ -2,10 +2,10 @@
 import HeroSliderSection from '@/components/sections/HeroSliderSection.vue'
 import HotelsPreviewSection from '@/components/sections/HotelsPreviewSection.vue'
 import HowItWorksSection from '@/components/sections/HowItWorksSection.vue'
-import SkiRentalSection from '@/components/sections/SkiRentalSection.vue'
 import InstructorSection from '@/components/sections/InstructorSection.vue'
 import DolomitesExpertSection from '@/components/sections/DolomitesExpertSection.vue'
 import PersonalSelectionSection from '@/components/sections/PersonalSelectionSection.vue'
+import SkiRentalSection from '@/components/sections/SkiRentalSection.vue'
 import ReviewsSection from '@/components/sections/ReviewsSection.vue'
 import WhyBookWithMeSection from '@/components/sections/WhyBookWithMeSection.vue'
 import AnimatedText from '@/components/AnimatedText.vue'
@@ -34,9 +34,9 @@ const { t } = useI18n()
     </section>
     <HotelsPreviewSection :limit="2" />
     <HowItWorksSection />
-    <SkiRentalSection />
     <WhyBookWithMeSection />
     <PersonalSelectionSection />
+    <SkiRentalSection />
     <InstructorSection />
     <ReviewsSection />
     <DolomitesExpertSection />
