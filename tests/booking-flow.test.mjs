@@ -16,13 +16,28 @@ vm.runInNewContext(transpile(readFileSync('src/data/homeSections.ts', 'utf8').re
 const hotels = data.exports.bookableHotelPreviews
 const code = transpile(source.replaceAll('import.meta.env', '({})') + `
 ;globalThis.subject = { openBookingModal, closeBookingModal, submitBookingRequest, bookingStep,
- firstName, lastName, email, preferredDates, guests, privacyConsent, formStatus, formError, fieldErrors, clearFieldError, showWidget, isRequestHotel };
+ firstName, lastName, email, preferredDates, guests, privacyConsent, formStatus, formError, fieldErrors, clearFieldError, showWidget, isRequestHotel, bookingRedirectUrl };
 `)
-function setup(ok = true) {
-  const requests = [], redirects = []
+function setup(ok = true, allowTabs = true) {
+  const requests = [], redirects = [], tabs = []
   const context = {
     exports: {}, defineProps: () => ({}), console, URL, Intl, Date,
-    window: { location: { hostname: 'localhost', origin: 'http://localhost', pathname: '/', assign: url => redirects.push(url) }, setTimeout: fn => fn() },
+    window: {
+      location: { hostname: 'localhost', origin: 'http://localhost', pathname: '/' },
+      open(url, target) {
+        assert.equal(url, 'about:blank')
+        assert.equal(target, '_blank')
+        assert.equal(requests.length, 0)
+        if (!allowTabs) return null
+        const tab = {
+          closed: false,
+          close() { this.closed = true },
+          location: { replace: url => redirects.push(url) },
+        }
+        tabs.push(tab)
+        return tab
+      },
+    },
     fetch: async (_url, options) => {
       requests.push(JSON.parse(options.body))
       if (!ok) return { ok: false, status: 500, json: async () => ({ error: 'Simulated failure' }) }
@@ -41,7 +56,7 @@ function setup(ok = true) {
   vm.runInNewContext(code, context)
   const s = context.subject
   const fill = () => { s.firstName.value = 'Test'; s.lastName.value = 'Guest'; s.email.value = 'guest@example.com'; s.privacyConsent.value = true }
-  return { s, requests, redirects, fill }
+  return { s, requests, redirects, tabs, fill }
 }
 
 test('every configured widget begins with personal details and opens only after successful submission', async () => {
@@ -79,7 +94,7 @@ test('request-only hotels require dates and guests, then stay on confirmation', 
 })
 
 test('Luna uses the same contact fields as Portillo before redirecting with attribution', async () => {
-  const { s, requests, redirects, fill } = setup()
+  const { s, requests, redirects, tabs, fill } = setup()
   s.openBookingModal('portillo-dolomites')
   assert.equal(s.isRequestHotel.value, false)
   s.closeBookingModal()
@@ -88,6 +103,9 @@ test('Luna uses the same contact fields as Portillo before redirecting with attr
   await s.submitBookingRequest()
   assert.equal(requests.length, 1)
   assert.equal(requests[0].bookingMode, 'redirect')
+  assert.equal(tabs.length, 1)
+  assert.equal(tabs[0].opener, null)
+  assert.equal(tabs[0].closed, false)
   const target = new URL(redirects[0])
   assert.equal(target.hostname, 'booking.hotel-luna.com')
   assert.equal(target.searchParams.get('canale'), 'FURSADOLOMITI')
@@ -100,6 +118,26 @@ test('Diamant uses the short form and redirects directly to online booking', asy
   await s.submitBookingRequest()
   assert.equal(requests[0].bookingMode, 'redirect')
   assert.equal(new URL(redirects[0]).hostname, 'booking.hoteldiamant.it')
+})
+
+test('a blocked booking tab leaves a direct link on the confirmation', async () => {
+  const { s, redirects, fill } = setup(true, false)
+  s.openBookingModal('luna-mondschein'); fill()
+  await s.submitBookingRequest()
+  assert.equal(redirects.length, 0)
+  assert.equal(s.formStatus.value, 'redirecting')
+  assert.equal(new URL(s.bookingRedirectUrl.value).searchParams.get('canale'), 'FURSADOLOMITI')
+})
+
+test('invalid contact details close the reserved tab without navigating', async () => {
+  const { s, redirects, tabs } = setup()
+  s.openBookingModal('luna-mondschein')
+  await s.submitBookingRequest()
+  assert.equal(tabs.length, 1)
+  assert.equal(tabs[0].closed, true)
+  assert.equal(redirects.length, 0)
+  assert.equal(s.formStatus.value, 'idle')
+  assert.equal(s.fieldErrors.value.email, 'required')
 })
 
 test('mail failure keeps the personal form and does not open a widget', async () => {

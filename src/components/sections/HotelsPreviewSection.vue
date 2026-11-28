@@ -55,6 +55,7 @@ const preferredDates = ref('')
 const guests = ref('')
 const isRequestHotel = computed(() => Boolean(activeBookingHotel.value) && bookingMode.value === 'request')
 const formError = ref('')
+const bookingRedirectUrl = ref('')
 const formStatus = ref<'idle' | 'sending' | 'redirecting'>('idle')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
 const bookingFields = ['firstName', 'lastName', 'email', 'preferredDates', 'guests', 'privacyConsent'] as const
@@ -290,6 +291,7 @@ const restartHotelAutoplay = () => {
 
 const openBookingModal = (hotelId: string) => {
   bookingStep.value = 'details'
+  bookingRedirectUrl.value = ''
   bookingHotelId.value = hotelId
   widgetTrackingSentForSession = false
   preferredDates.value = ''
@@ -816,7 +818,15 @@ const submitBookingRequest = async () => {
   const hotelName = hotel ? t(hotel.nameKey) : bookingHotelId.value
   formStatus.value = 'sending'
 
+  let bookingTab: Window | null = null
+
   try {
+    // Open during the submit gesture, before awaiting validation and email delivery.
+    if (bookingMode.value === 'redirect') {
+      bookingTab = window.open('about:blank', '_blank')
+      if (bookingTab) bookingTab.opener = null
+    }
+
     const submittedAt = new Date()
 
     const response = await fetch(bookingEmailEndpoint, {
@@ -903,15 +913,19 @@ const submitBookingRequest = async () => {
         bookingUrl.searchParams.set(paramName, paramValue)
       })
 
+      bookingRedirectUrl.value = bookingUrl.href
       formStatus.value = 'redirecting'
-      window.setTimeout(() => {
-        if (bookingHotelId.value === hotel.id) window.location.assign(bookingUrl.href)
-      }, 1400)
+      if (bookingTab && !bookingTab.closed) {
+        bookingTab.location.replace(bookingUrl.href)
+        bookingTab = null
+      }
     }
   } catch (error) {
     console.error('Booking request failed', error)
     formStatus.value = 'idle'
     formError.value = t('home.hotels.bookingModal.errors.send')
+  } finally {
+    bookingTab?.close()
   }
 }
 
@@ -1192,6 +1206,15 @@ onBeforeUnmount(() => {
               <p class="booking-modal__redirect-text">
                 {{ t(bookingMode === 'request' ? 'home.hotels.bookingModal.requestSuccessText' : 'home.hotels.bookingModal.redirectText') }}
               </p>
+              <a
+                v-if="bookingRedirectUrl"
+                class="booking-modal__booking-link"
+                :href="bookingRedirectUrl"
+                target="_blank"
+                rel="noopener"
+              >
+                {{ t('home.hotels.bookingModal.openBookingSite') }}
+              </a>
               <button class="booking-modal__primary" type="button" @click="closeBookingModal">
                 {{ t('home.hotels.bookingModal.ok') }}
               </button>
@@ -1633,6 +1656,11 @@ onBeforeUnmount(() => {
 .booking-modal__panel--success .booking-modal__redirect-text {
   max-width: 420px;
   margin-bottom: 30px;
+}
+
+.booking-modal__booking-link {
+  margin-bottom: 20px;
+  color: #175445;
 }
 
 .booking-modal__panel--success .booking-modal__primary {

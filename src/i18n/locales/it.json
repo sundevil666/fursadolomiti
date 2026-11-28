@@ -96,7 +96,8 @@
         "required": "Tutti i campi sono obbligatori",
         "sending": "Invio della richiesta...",
         "redirectTitle": "Richiesta inviata",
-        "redirectText": "Ora sarete reindirizzati al sito ufficiale dell’hotel per completare la prenotazione.",
+        "redirectText": "Il sito di prenotazione dell’hotel si aprirà in una nuova scheda.",
+        "openBookingSite": "Apri il sito di prenotazione in una nuova scheda",
         "ok": "OK",
         "errors": {
           "fieldRequired": "Compila questo campo",

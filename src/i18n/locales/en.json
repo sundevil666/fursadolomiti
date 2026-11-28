@@ -96,7 +96,8 @@
         "required": "All fields are required",
         "sending": "Sending your request...",
         "redirectTitle": "Request sent",
-        "redirectText": "You will now be redirected to the hotel’s official website to complete your booking.",
+        "redirectText": "The hotel’s booking site will open in a new tab.",
+        "openBookingSite": "Open the hotel’s booking site in a new tab",
         "ok": "OK",
         "errors": {
           "fieldRequired": "Please fill in this field",
