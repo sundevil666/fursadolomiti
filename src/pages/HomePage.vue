@@ -27,8 +27,13 @@ const { t } = useI18n()
         <h2 class="hotels-section__title">
           <AnimatedText :text="t('home.hotels.title')" tag="span" />
         </h2>
-        <div class="hotels-section__subtitle">
-          <AnimatedText :text="t('home.hotels.subtitle')" tag="span" />
+        <div class="hotels-section__intro">
+          <div class="hotels-section__subtitle">
+            <AnimatedText :text="t('home.hotels.subtitle')" tag="span" />
+          </div>
+          <q-btn unelevated no-caps class="fd-btn fd-btn--filled" :to="{ name: 'hotels' }">
+            <AnimatedText :text="t('home.hotels.viewAll')" tag="span" />
+          </q-btn>
         </div>
       </div>
     </section>

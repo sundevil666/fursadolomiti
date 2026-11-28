@@ -1099,19 +1099,20 @@
     letter-spacing: 0;
   }
 
+  &__intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 44px;
+  }
+
   &__subtitle {
-    max-width: 435px;
+    width: min(334px, 100%);
     color: #08211f;
     font-size: 17px;
     font-weight: 700;
     line-height: 1.3;
     font-family: 'Manrope', sans-serif;
-  }
-
-  &__footer {
-    color: #fffaf0;
-    padding-top: 24px;
-    padding-bottom: 120px;
   }
 }
 
@@ -4145,10 +4146,6 @@ body.is-booking-modal-open {
     &__header {
       padding: 78px 20px 77px;
     }
-
-    &__footer {
-      padding: 54px 20px 86px;
-    }
   }
 
   .hotel-preview {
@@ -5216,12 +5213,6 @@ body.is-booking-modal-open {
     &__header {
       padding: 40px 24px 32px !important;
     }
-
-    &__footer {
-      margin-bottom: 0;
-      padding: 30px 24px 54px;
-      text-align: center;
-    }
   }
 
   .hotel-preview {
@@ -5547,10 +5538,6 @@ body.is-booking-modal-open {
   .hotels-section {
     &__header {
       padding: 28px 16px 24px !important;
-    }
-
-    &__footer {
-      padding: 22px 16px 44px;
     }
   }
 

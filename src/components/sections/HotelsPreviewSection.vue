@@ -1112,12 +1112,6 @@ onBeforeUnmount(() => {
       </article>
     </TransitionGroup>
 
-    <div v-if="hasLimit" class="hotels-section__footer w-1336">
-      <q-btn unelevated no-caps class="fd-btn fd-btn--filled" :to="{ name: 'hotels' }">
-        <AnimatedText :text="t('home.hotels.viewAll')" tag="span" />
-      </q-btn>
-    </div>
-
     <Teleport to="body">
       <Transition name="booking-modal">
         <div
