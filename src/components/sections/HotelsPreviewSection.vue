@@ -1063,20 +1063,6 @@ onBeforeUnmount(() => {
           >
             <q-icon name="chevron_right" />
           </button>
-          <div class="hotel-preview__progress">
-            <button
-              v-for="(_, index) in hotel.images"
-              :key="index"
-              class="hotel-preview__progress-part"
-              :class="{
-                'hotel-preview__progress-part--active': index === getActiveHotelSlide(hotel.id),
-              }"
-              :style="{ '--hotel-slide-duration': `${hotelAutoplayDelay}ms` }"
-              type="button"
-              :aria-label="`${t(hotel.nameKey)} ${index + 1}`"
-              @click="setHotelSlide(hotel.id, index)"
-            />
-          </div>
         </div>
 
         <div class="hotel-preview__content" @click="openBookingModal(hotel.id)">

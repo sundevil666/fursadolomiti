@@ -161,18 +161,6 @@ onBeforeUnmount(stopAutoplay)
       </svg>
     </q-btn>
 
-    <div class="hero-slider__progress" aria-hidden="true">
-      <button
-        v-for="(_, index) in heroSlides"
-        :key="index"
-        class="hero-slider__progress-part"
-        :class="{ 'hero-slider__progress-part--active': index === activeSlide }"
-        :style="{ '--slide-duration': `${autoplayDelay}ms` }"
-        type="button"
-        @click="setSlide(index)"
-      />
-    </div>
-
     <aside class="hero-card">
       <div class="hero-card__quote" aria-hidden="true">
         <svg

@@ -101,26 +101,6 @@ body:not(.aos-disabled) .app-header__mobile-menu [data-aos='text-rise'] {
   }
 }
 
-@keyframes progressFill {
-  from {
-    transform: scaleX(0);
-  }
-
-  to {
-    transform: scaleX(1);
-  }
-}
-
-@keyframes hotelProgressFill {
-  from {
-    transform: scaleX(0);
-  }
-
-  to {
-    transform: scaleX(1);
-  }
-}
-
 @keyframes hotelFilterDepartFade {
   0% {
     opacity: 0.58;
@@ -279,24 +259,6 @@ body:not(.aos-disabled) .app-header__mobile-menu [data-aos='text-rise'] {
     opacity: 0;
     filter: blur(12px);
     transform: translate3d(-22px, 0, 0);
-  }
-}
-
-@keyframes progressGlint {
-  0%,
-  18% {
-    opacity: 0;
-    transform: translateX(-120%);
-  }
-
-  45% {
-    opacity: 1;
-  }
-
-  78%,
-  100% {
-    opacity: 0;
-    transform: translateX(240%);
   }
 }
 

@@ -166,17 +166,6 @@ onBeforeUnmount(stopAutoplay)
                   />
                 </svg>
               </q-btn>
-              <div class="personal-selection__progress" aria-hidden="true">
-                <button
-                  v-for="(_, index) in videoIds"
-                  :key="index"
-                  class="personal-selection__progress-part"
-                  :class="{ 'personal-selection__progress-part--active': index === activeVideo }"
-                  :style="{ '--slide-duration': `${autoplayDelay}ms` }"
-                  type="button"
-                  @click="setActiveVideo(index)"
-                />
-              </div>
               <div class="personal-selection__dots" />
             </div>
 

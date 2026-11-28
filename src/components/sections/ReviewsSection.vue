@@ -348,25 +348,6 @@ onBeforeUnmount(() => {
             />
           </svg>
         </button>
-
-        <div
-          v-if="totalReviewSlides > 1"
-          class="reviews-section__dots"
-          :style="{ '--review-dot-count': totalReviewSlides }"
-          aria-hidden="true"
-        >
-          <button
-            v-for="index in totalReviewSlides"
-            :key="index"
-            class="reviews-section__dot"
-            :class="{ 'reviews-section__dot--active': index - 1 === activeReviewIndex }"
-            :style="{
-              '--review-slide-duration': `${reviewAutoplayDelay}ms`,
-            }"
-            type="button"
-            @click="setReview(index - 1)"
-          />
-        </div>
       </div>
     </div>
 

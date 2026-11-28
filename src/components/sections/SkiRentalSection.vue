@@ -221,7 +221,7 @@ const submitForm = async (event: SubmitEvent) => {
   font:
     400 17px/1.29 Manrope,
     sans-serif;
-  padding-block: 46px 64px;
+  padding-block: 100px 100px;
   scroll-margin-top: 80px;
 }
 
@@ -251,13 +251,17 @@ p {
   margin-top: 20px;
   font-weight: 800;
 }
-
+.ski-rental__intro {
+  display: flex;
+  flex-direction: column;
+}
 .ski-rental__details {
   display: grid;
   grid-template-columns: minmax(0, 312fr) minmax(0, 264fr);
   gap: 24px;
   align-items: end;
-  margin-top: 40px;
+  margin-top: auto;
+  margin-bottom: 16px;
 }
 
 .ski-rental__details img {
