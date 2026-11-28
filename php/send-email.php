@@ -362,7 +362,7 @@ $hotelRecipient = !$isWidgetTrackingEvent && !in_array($bookingMode, ['widget', 
 $preferredDates = trim((string) ($requestBody['preferredDates'] ?? ''));
 $submittedGuests = $requestBody['guests'] ?? null;
 $guests = filter_var($submittedGuests, FILTER_VALIDATE_INT);
-$isBookingRequest = !$isWidgetTrackingEvent && (in_array($bookingMode, ['request', 'redirect'], true) || (bool) $hotelRecipient);
+$isBookingRequest = !$isWidgetTrackingEvent && ($bookingMode === 'request' || (bool) $hotelRecipient);
 // Keep the field error contract identical to the JavaScript handler.
 $fieldErrors = [];
 if (($requestBody['privacyConsent'] ?? null) !== true) $fieldErrors['privacyConsent'] = 'consent';

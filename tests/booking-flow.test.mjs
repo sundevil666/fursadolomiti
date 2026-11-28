@@ -16,7 +16,7 @@ vm.runInNewContext(transpile(readFileSync('src/data/homeSections.ts', 'utf8').re
 const hotels = data.exports.bookableHotelPreviews
 const code = transpile(source.replaceAll('import.meta.env', '({})') + `
 ;globalThis.subject = { openBookingModal, closeBookingModal, submitBookingRequest, bookingStep,
- firstName, lastName, email, preferredDates, guests, privacyConsent, formStatus, formError, fieldErrors, clearFieldError, showWidget, isRequestHotel, requiresBookingDetails };
+ firstName, lastName, email, preferredDates, guests, privacyConsent, formStatus, formError, fieldErrors, clearFieldError, showWidget, isRequestHotel };
 `)
 function setup(ok = true) {
   const requests = [], redirects = []
@@ -65,9 +65,10 @@ test('every configured widget begins with personal details and opens only after 
 })
 
 test('request-only hotels require dates and guests, then stay on confirmation', async () => {
-  for (const id of ['chalet-zenit', 'villa-carolina']) {
+  for (const id of ['chalet-zenit', 'chalet-lum-dor', 'chalet-invictus', 'villa-carolina', 'somont']) {
     const { s, requests, redirects, fill } = setup()
     s.openBookingModal(id); fill()
+    assert.equal(s.isRequestHotel.value, true)
     await s.submitBookingRequest(); assert.equal(requests.length, 1)
     s.preferredDates.value = 'Flexible January dates'; s.guests.value = '2'
     await s.submitBookingRequest()
@@ -77,17 +78,28 @@ test('request-only hotels require dates and guests, then stay on confirmation', 
   }
 })
 
-test('link-only hotel collects request details before redirecting with attribution', async () => {
+test('Luna uses the same contact fields as Portillo before redirecting with attribution', async () => {
   const { s, requests, redirects, fill } = setup()
+  s.openBookingModal('portillo-dolomites')
+  assert.equal(s.isRequestHotel.value, false)
+  s.closeBookingModal()
   s.openBookingModal('luna-mondschein'); fill()
-  assert.equal(s.requiresBookingDetails.value, true)
-  await s.submitBookingRequest(); assert.equal(requests.length, 1)
-  s.preferredDates.value = 'January'; s.guests.value = '2'
+  assert.equal(s.isRequestHotel.value, false)
   await s.submitBookingRequest()
+  assert.equal(requests.length, 1)
   assert.equal(requests[0].bookingMode, 'redirect')
   const target = new URL(redirects[0])
   assert.equal(target.hostname, 'booking.hotel-luna.com')
   assert.equal(target.searchParams.get('canale'), 'FURSADOLOMITI')
+})
+
+test('Diamant uses the short form and redirects directly to online booking', async () => {
+  const { s, requests, redirects, fill } = setup()
+  s.openBookingModal('diamant'); fill()
+  assert.equal(s.isRequestHotel.value, false)
+  await s.submitBookingRequest()
+  assert.equal(requests[0].bookingMode, 'redirect')
+  assert.equal(new URL(redirects[0]).hostname, 'booking.hoteldiamant.it')
 })
 
 test('mail failure keeps the personal form and does not open a widget', async () => {
@@ -102,7 +114,7 @@ test('mail failure keeps the personal form and does not open a widget', async ()
 
 test('an empty form shows all server field errors together and stays open', async () => {
   const { s, requests, redirects } = setup()
-  s.openBookingModal('luna-mondschein')
+  s.openBookingModal('chalet-zenit')
   await s.submitBookingRequest()
   assert.equal(requests.length, 1)
   assert.equal(requests[0].privacyConsent, false)

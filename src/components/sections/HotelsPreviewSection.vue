@@ -54,7 +54,6 @@ const privacyConsent = ref(false)
 const preferredDates = ref('')
 const guests = ref('')
 const isRequestHotel = computed(() => Boolean(activeBookingHotel.value) && bookingMode.value === 'request')
-const requiresBookingDetails = computed(() => Boolean(activeBookingHotel.value) && bookingMode.value !== 'widget')
 const formError = ref('')
 const formStatus = ref<'idle' | 'sending' | 'redirecting'>('idle')
 const hotelFilters: HotelFilter[] = ['all', 'fiveStar', 'fourStar', 'chalet']
@@ -1333,7 +1332,7 @@ onBeforeUnmount(() => {
                     </Transition>
                   </span>
                 </label>
-                <template v-if="requiresBookingDetails">
+                <template v-if="isRequestHotel">
                   <label
                     class="booking-modal__field"
                     :class="{ 'booking-modal__field--invalid': fieldErrors.preferredDates }"

@@ -142,25 +142,21 @@ test('widget and link submissions send only admin and guest mail in the selected
     for (const locale of ['ru', 'en', 'it']) {
       const { sent, status, result } = await run(locale, false, {
         bookingMode, promoCode: '',
-        ...(bookingMode === 'widget' ? { preferredDates: '', guests: 0 } : {}),
+        preferredDates: '', guests: null,
       })
       assert.equal(status, 200)
       assert.equal(sent.length, 2)
       assert.equal(result.hotelEmailSent, null)
       assert.equal(result.customerEmailSent, true)
       assert.ok(sent.every(mail => !(Array.isArray(mail.to) && /For the hotel|All’hotel/.test(mail.subject))))
-      if (bookingMode === 'redirect') {
-        assert.ok(sent.every(mail => mail.text.includes(body.preferredDates)))
-      } else {
-        assert.ok(sent.every(mail => !mail.text.includes(body.preferredDates)))
-      }
+      assert.ok(sent.every(mail => !mail.text.includes(body.preferredDates)))
     }
   }
 })
 
-test('redirect requests validate dates and guest count even without a hotel recipient', async () => {
+test('email requests validate dates and guest count even without a hotel recipient', async () => {
   for (const fields of [{ preferredDates: '' }, { guests: 0 }, { guests: 1.5 }, { guests: 101 }]) {
-    const { status, sent } = await run('en', false, { hotelId: 'luna-mondschein', bookingMode: 'redirect', ...fields })
+    const { status, sent } = await run('en', false, { hotelId: 'somont', bookingMode: 'request', ...fields })
     assert.equal(status, 400)
     assert.equal(sent.length, 0)
   }

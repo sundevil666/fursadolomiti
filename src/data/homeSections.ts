@@ -301,7 +301,7 @@ export const hotelPreviews: HotelPreview[] = [
     category: 'fourStar',
     images: ['/diamant/diamant-1.webp', '/diamant/diamant-2.webp'],
     promoCode: '',
-    bookingUrl: 'https://www.hoteldiamant.it/',
+    bookingUrl: 'https://booking.hoteldiamant.it/?skd-language-code=en',
     bookingParams: {
       promoCode: 'promo_code',
     },
